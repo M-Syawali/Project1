@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Admin UMKM Kuliner</title>
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- Chart JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">
+        <i data-feather="coffee"></i>
+        <span>SagalaLada</span>
+      </div>
+
+      <ul class="menu">
+        <li class="active">
+          <a href="#">
+            <i data-feather="home"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="../crud/index_admin.php">
+            <i data-feather="package"></i>
+            <span>Menu</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <i data-feather="grid"></i>
+            <span>Kategori Menu</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <i data-feather="shopping-bag"></i>
+            <span>Pesanan</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <i data-feather="bar-chart-2"></i>
+            <span>Laporan</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <i data-feather="settings"></i>
+            <span>Pengaturan</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <!-- NAVBAR -->
+    <main class="main-content" id="main-content">
+      <header class="navbar">
+        <div class="navbar-left">
+          <button class="menu-toggle" id="menu-toggle">
+            <i data-feather="menu"></i>
+          </button>
+
+          <h2>Dashboard Admin</h2>
+        </div>
+
+        <div class="navbar-right">
+          <div class="profile">
+            <button id="profile-btn">
+              <i data-feather="user"></i>
+
+              <span>Admin</span>
+
+              <i data-feather="chevron-down"></i>
+            </button>
+
+            <div class="profile-menu" id="profile-menu">
+              <a href="#">
+                <i data-feather="user"></i>
+                Profil
+              </a>
+
+              <a href="#">
+                <i data-feather="lock"></i>
+                Ubah Password
+              </a>
+
+              <a href="#">
+                <i data-feather="settings"></i>
+                Pengaturan Akun
+              </a>
+
+              <a href="#">
+                <i data-feather="log-out"></i>
+                Logout
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CARD STATISTIK -->
+      <section class="cards">
+        <div class="card">
+          <div class="card-icon">
+            <i data-feather="package"></i>
+          </div>
+
+          <div>
+            <h4>Total Produk</h4>
+            <h2 class="counter" data-target="120">0</h2>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">
+            <i data-feather="shopping-cart"></i>
+          </div>
+
+          <div>
+            <h4>Pesanan Hari Ini</h4>
+            <h2 class="counter" data-target="48">0</h2>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">
+            <i data-feather="dollar-sign"></i>
+          </div>
+
+          <div>
+            <h4>Pendapatan Hari Ini</h4>
+            <h2>Rp 2,3 Jt</h2>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">
+            <i data-feather="trending-up"></i>
+          </div>
+
+          <div>
+            <h4>Pendapatan Keseluruhan</h4>
+            <h2>Rp 38 Jt</h2>
+          </div>
+        </div>
+      </section>
+
+      <!-- GRAFIK -->
+      <section class="chart-box">
+        <div class="section-title">Grafik Penjualan Bulanan</div>
+
+        <canvas id="salesChart"></canvas>
+      </section>
+
+      <!-- TABEL -->
+      <section class="table-box">
+        <div class="section-title">Pesanan Terbaru</div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Menu</th>
+              <th>Jumlah</th>
+              <th>Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>#001</td>
+              <td>Nasi Goreng Spesial</td>
+              <td>2</td>
+              <td>Rp 50.000</td>
+              <td><span class="status selesai">Selesai</span></td>
+            </tr>
+
+            <tr>
+              <td>#002</td>
+              <td>Mie Ayam Bakso</td>
+              <td>1</td>
+              <td>Rp 25.000</td>
+              <td><span class="status proses">Diproses</span></td>
+            </tr>
+
+            <tr>
+              <td>#003</td>
+              <td>Es Teh Manis</td>
+              <td>4</td>
+              <td>Rp 20.000</td>
+              <td><span class="status kirim">Dikirim</span></td>
+            </tr>
+
+            <tr>
+              <td>#004</td>
+              <td>Sate Ayam</td>
+              <td>3</td>
+              <td>Rp 75.000</td>
+              <td><span class="status selesai">Selesai</span></td>
+            </tr>
+
+            <tr>
+              <td>#005</td>
+              <td>Ayam Geprek</td>
+              <td>2</td>
+              <td>Rp 40.000</td>
+              <td><span class="status proses">Diproses</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
