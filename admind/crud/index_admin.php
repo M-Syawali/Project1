@@ -29,14 +29,14 @@ $result = mysqli_query($conn, $query);
 
     body {
         font-family: 'Segoe UI', sans-serif;
-        background: var(--bg);
+        background: linear-gradient(135deg,#5c0f16,#8b1e2d,#b33646);
         margin: 0;
         padding: 20px;
         color: var(--text);
     }
 
     .container {
-        max-width: 1100px;
+        max-width: 1200px; /* Diperlebar sedikit agar muat deskripsi */
         margin: auto;
     }
 
@@ -49,7 +49,7 @@ $result = mysqli_query($conn, $query);
 
     h2 {
         margin: 0;
-        color: var(--primary);
+        color: white;
     }
 
     .card {
@@ -57,6 +57,7 @@ $result = mysqli_query($conn, $query);
         border-radius: 12px;
         padding: 20px;
         box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        overflow-x: auto;
     }
 
     .btn {
@@ -66,34 +67,14 @@ $result = mysqli_query($conn, $query);
         font-weight: 600;
         font-size: 13px;
         transition: 0.2s;
+        display: inline-block;
     }
 
-    .btn-primary {
-        background: var(--accent);
-        color: white;
-    }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-success { background: var(--success); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
 
-    .btn-primary:hover {
-        background: #ea580c;
-    }
-
-    .btn-success {
-        background: var(--success);
-        color: white;
-    }
-
-    .btn-success:hover {
-        background: #16a34a;
-    }
-
-    .btn-danger {
-        background: var(--danger);
-        color: white;
-    }
-
-    .btn-danger:hover {
-        background: #dc2626;
-    }
+    .top-buttons { display: flex; gap: 10px; }
 
     table {
         width: 100%;
@@ -105,16 +86,22 @@ $result = mysqli_query($conn, $query);
         color: white;
         padding: 12px;
         font-size: 14px;
+        text-align: left;
     }
 
     td {
         padding: 12px;
         font-size: 14px;
         border-bottom: 1px solid #e5e7eb;
+        vertical-align: top;
     }
 
-    tr:hover {
-        background: #f9fafb;
+    /* Styling khusus untuk teks deskripsi */
+    .deskripsi-col {
+        max-width: 300px;
+        color: #475569;
+        font-size: 13px;
+        line-height: 1.5;
     }
 
     .menu-img {
@@ -125,23 +112,25 @@ $result = mysqli_query($conn, $query);
         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
-    .aksi a {
-        margin-right: 5px;
-    }
-
+    .aksi { white-space: nowrap; }
     </style>
 </head>
 <body>
 
 <div class="container">
-
     <div class="header">
         <h2>Menu SagalaLada</h2>
+        <div class="top-buttons">
+            <a href="../main_page/dashboard.html" class="btn btn-danger">Dashboard</a>
+            <a href="kategori/index_kategori.php" class="btn btn-danger">Kategori</a>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
         <a href="menu/tambah.php" class="btn btn-success">+ Tambah Menu</a>
     </div>
 
     <div class="card">
-
         <table>
             <thead>
                 <tr>
@@ -149,54 +138,47 @@ $result = mysqli_query($conn, $query);
                     <th>Gambar</th>
                     <th>Nama Menu</th>
                     <th>Kategori</th>
-                    <th>Harga</th>
+                    <th>Deskripsi</th> <th>Harga</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-
             <?php 
             $no = 1;
             while($row = mysqli_fetch_assoc($result)) { 
             ?>
+                <tr>
+                    <td><?= $no++; ?></td>
+                    <td>
+                        <?php if (!empty($row['gambar'])) { ?>
+                            <img src="menu/upload/<?= $row['gambar']; ?>" class="menu-img">
+                        <?php } else { ?>
+                            <span>-</span>
+                        <?php } ?>
+                    </td>
+                    <td><b><?= htmlspecialchars($row['nama_menu']); ?></b></td>
+                    <td><?= htmlspecialchars($row['nama_kategori_menu'] ?? 'Tanpa Kategori'); ?></td>
+                    
+                    <td>
+                        <div class="deskripsi-col">
+                            <?= nl2br(htmlspecialchars($row['deskripsi_menu'] ?? '-')); ?>
+                        </div>
+                    </td>
 
-            <tr>
-                <td><?= $no++; ?></td>
-
-                <td>
-                <?php if (!empty($row['gambar'])) { ?>
-                    <img src="menu/upload/<?= $row['gambar']; ?>" class="menu-img">
-                <?php } else { ?>
-                    <span>-</span>
-                <?php } ?>
-                </td>
-
-                <td><b><?= htmlspecialchars($row['nama_menu']); ?></b></td>
-
-                <td><?= htmlspecialchars($row['nama_kategori_menu'] ?? 'Tanpa Kategori'); ?></td>
-
-                <td>Rp <?= number_format($row['harga'], 0, ',', '.'); ?></td>
-
-                <td class="aksi">
-                    <a href="menu/edit.php?id=<?= $row['id_menu']; ?>" class="btn btn-primary">Edit</a>
-                    <a href="menu/hapus.php?id=<?= $row['id_menu']; ?>" 
-                       class="btn btn-danger"
-                       onclick="return confirm('Yakin ingin menghapus menu ini?')">
-                       Hapus
-                    </a>
-                </td>
-            </tr>
-
+                    <td>Rp <?= number_format($row['harga'], 0, ',', '.'); ?></td>
+                    <td class="aksi">
+                        <a href="menu/edit.php?id=<?= $row['id_menu']; ?>" class="btn btn-primary">Edit</a>
+                        <a href="menu/hapus.php?id=<?= $row['id_menu']; ?>" 
+                           class="btn btn-danger"
+                           onclick="return confirm('Yakin ingin menghapus menu ini?')">
+                           Hapus
+                        </a>
+                    </td>
+                </tr>
             <?php } ?>
-
             </tbody>
         </table>
-
     </div>
-   <br>
-    <a href="../main_page/dashboard.html" class="btn btn-success">Dashboard</a>
-    <a href="kategori/index_kategori.php" class="btn btn-success">Kategori</a>
-
 </div>
 
 </body>

@@ -1,321 +1,122 @@
+<?php
+session_start();
+include "koneksi.php";
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beranda Pembeli</title>
+    <title>Keranjang Belanja - SagalaLada</title>
+
+    <link rel="stylesheet" href="css/style_keranjang.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Styling gambar agar seragam dan rapi */
+        .img-cart {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        table td { vertical-align: middle !important; }
+    </style>
 </head>
-<style>
-       :root {
-    --primary-red: #e42121;
-    --dark-red: #b71c1c;
-    --black: #212121;
-    --dark-gray: #383838;
-    --light-gray: #f5f5f5;
-    --text-light: #ffffff;
-    --white: #ffffff;
-    --text-dark: #212121;
-    --shadow: 0 2px 10px rgba(0,0,0,0.2);
-}
-
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins';
-}
-
-body{
-    background: var(--light-gray);
-    padding-bottom: 120px;
-}
-
-/* ========================= */
-/* HEADER */
-/* ========================= */
-
-.dashboard-header{
-    background: var(--primary-red);
-    color: var(--white);
-    padding: 1.2rem 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: var(--shadow);
-}
-
-.logo{
-    font-size: 1.5rem;
-    font-weight: bold;
-    letter-spacing: 2px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.back-icon{
-    font-size: 25px;
-    color: white;
-    text-decoration: none;
-}
-
-.menu-right{
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.dashboard-link{
-    text-decoration: none;
-    color: white;
-    padding: 8px 18px;
-    border: 2px solid white;
-    border-radius: 30px;
-    font-weight: 600;
-    transition: 0.3s;
-}
-
-.dashboard-link:hover{
-    background: white;
-    color: var(--primary-red);
-}
-
-/* ========================= */
-/* JUDUL */
-/* ========================= */
-
-.keranjang p{
-    font-size: 28px;
-    font-weight: bold;
-    color: var(--primary-red);
-    margin: 20px;
-}
-
-/* ========================= */
-/* CHECKOUT BAR */
-/* ========================= */
-
-.checkout-bar{
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: white;
-    padding: 18px 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-    z-index: 999;
-}
-
-/* ========================= */
-/* KIRI */
-/* ========================= */
-
-.checkout-left{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.check-all{
-    width: 22px;
-    height: 22px;
-    accent-color: var(--primary-red);
-    cursor: pointer;
-}
-
-.checkout-left label{
-    font-size: 17px;
-    font-weight: 600;
-}
-
-/* ========================= */
-/* KANAN */
-/* ========================= */
-
-.checkout-right{
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-/* ========================= */
-/* TOTAL */
-/* ========================= */
-
-.total-section p{
-    font-size: 13px;
-    color: gray;
-}
-
-.total-section h3{
-    color: var(--primary-red);
-    font-size: 24px;
-    font-weight: bold;
-}
-
-/* ========================= */
-/* BUTTON */
-/* ========================= */
-
-.checkout-btn{
-    background: var(--primary-red);
-    color: white;
-    text-decoration: none;
-    padding: 14px 28px;
-    border-radius: 40px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    transition: 0.3s;
-}
-
-.checkout-btn:hover{
-    background: var(--dark-red);
-    transform: scale(1.05);
-}
-
-/* ========================= */
-/* RESPONSIVE TABLET */
-/* ========================= */
-
-@media (max-width: 768px){
-
-    .dashboard-header{
-        padding: 1rem;
-    }
-
-    .logo{
-        font-size: 1.2rem;
-        gap: 8px;
-    }
-
-    .back-icon{
-        font-size: 22px;
-    }
-
-    .dashboard-link{
-        padding: 6px 14px;
-        font-size: 14px;
-    }
-
-    .keranjang p{
-        font-size: 24px;
-    }
-
-    .checkout-bar{
-        padding: 15px;
-        gap: 15px;
-    }
-
-    .checkout-right{
-        gap: 15px;
-    }
-
-    .total-section h3{
-        font-size: 20px;
-    }
-
-    .checkout-btn{
-        padding: 12px 20px;
-        font-size: 14px;
-    }
-}
-
-/* ========================= */
-/* RESPONSIVE HP */
-/* ========================= */
-
-@media (max-width: 480px){
-
-    .dashboard-header{
-        padding: 0.9rem;
-    }
-
-    .logo{
-        font-size: 1rem;
-        letter-spacing: 1px;
-    }
-
-    .back-icon{
-        font-size: 18px;
-    }
-
-    .dashboard-link{
-        padding: 5px 10px;
-        font-size: 12px;
-    }
-
-    .keranjang p{
-        font-size: 20px;
-        margin: 15px;
-    }
-
-    .checkout-bar{
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-        padding: 15px;
-    }
-
-    .checkout-left{
-        justify-content: left;
-    }
-
-    .checkout-right{
-        width: 100%;
-
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .total-section h3{
-        font-size: 18px;
-    }
-
-    .checkout-btn{
-        padding: 12px 18px;
-        font-size: 13px;
-    }
-}
-</style>
 <body>
-    <div class="dashboard-header">
-            <div class="logo">
+
+    <div class="blur blur1"></div>
+    <div class="blur blur2"></div>
+
+    <header class="dashboard-header">
+        <div class="logo">
             <a href="menu.php" class="back-icon">
                 <i class="fa-solid fa-angle-left"></i>
-            </a>    
-            SagalaLada</div>
-            <div class="menu-right">
-            <a href="dashboard.php" class="dashboard-link">Beranda</a>
+            </a>
+            <span>Keranjang</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="cart-card">
+            <div class="title-area">
+                <h2>Pesanan Anda</h2>
+                <p>Cek kembali menu sebelum checkout 🍽️</p>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Foto</th>
+                            <th>Menu</th>
+                            <th>Harga</th>
+                            <th>Jumlah</th>
+                            <th>Subtotal</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    <?php
+                    $no = 1;
+                    $total_belanja = 0;
+
+                    if (!empty($_SESSION['keranjang'])) {
+                        foreach ($_SESSION['keranjang'] as $id_menu => $jumlah) {
+                            // Query mengambil data menu berdasarkan ID
+                            $query = mysqli_query($conn, "SELECT * FROM menu WHERE id_menu='$id_menu'");
+                            $data = mysqli_fetch_assoc($query);
+
+                            $subtotal = $data['harga'] * $jumlah;
+                            $total_belanja += $subtotal;
+                    ?>
+                        <tr>
+                            <td><?= $no++; ?></td>
+                            <td>
+                                <img src="../admind/crud/menu/upload/<?= $data['gambar']; ?>" alt="Foto Menu" class="img-cart">
+                            </td>
+                            <td class="menu-name"><b><?= $data['nama_menu']; ?></b></td>
+                            <td>Rp <?= number_format($data['harga'], 0, ',', '.'); ?></td>
+                            <td>
+                                <div class="qty-box">
+                                    <a href="update_keranjang.php?id=<?= $id_menu; ?>&aksi=kurang" class="qty-btn">-</a>
+                                    <span class="qty-number"><?= $jumlah; ?></span>
+                                    <a href="update_keranjang.php?id=<?= $id_menu; ?>&aksi=tambah" class="qty-btn">+</a>
+                                </div>
+                            </td>
+                            <td>Rp <?= number_format($subtotal, 0, ',', '.'); ?></td>
+                            <td>
+                                <a href="update_keranjang.php?id=<?= $id_menu; ?>&aksi=hapus" class="delete-btn" onclick="return confirm('Hapus menu ini?')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php 
+                        } 
+                    } else {
+                        // Colspan 7 untuk menutupi seluruh kolom tabel jika kosong
+                        echo "<tr><td colspan='7'><div class='empty-cart'><i class='fa-solid fa-cart-shopping'></i><p>Keranjang masih kosong</p></div></td></tr>";
+                    }
+                    ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" class="total-text">Total Bayar</td>
+                            <td colspan="2" class="total-price">Rp <?= number_format($total_belanja, 0, ',', '.'); ?></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="button-area">
+                <a href="menu.php" class="btn secondary-btn"><i class="fa-solid fa-plus"></i> Tambah Menu</a>
+                <?php if(!empty($_SESSION['keranjang'])): ?>
+                    <a href="checkout.php" class="btn primary-btn">Checkout <i class="fa-solid fa-arrow-right"></i></a>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
-    <div class="keranjang">
-        <p>Keranjang Pesanan</p>
-    </div>
-    <div class="checkout-bar">
-    <div class="checkout-left">
-        <input type="checkbox" class="check-all">
-        <label>Pilih Semua</label>
-    </div>
-    <div class="checkout-right">
-        <div class="total-section">
-            <p>Total</p>
-            <h3>Rp 75.000</h3>
-        </div>
-        <a href="transaksi.php" class="checkout-btn">
-            Check Out
-        </a>
-    </div>
-</div>
 </body>
 </html>
