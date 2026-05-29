@@ -23,6 +23,11 @@
 session_start();
 include "koneksi.php";
 
+// SIMPAN NOMOR MEJA DARI QR
+if(isset($_GET['meja'])){
+    $_SESSION['no_meja'] = $_GET['meja'];
+}
+
 $search = isset($_GET['search']) 
     ? mysqli_real_escape_string($conn, $_GET['search']) 
     : '';
@@ -68,7 +73,7 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
 
 <header class="dashboard-header">
     <div class="logo">
-        <a href="dashboard.php" class="back-icon">
+        <a href="../index.html" class="back-icon">
             <i class="fa-solid fa-angle-left"></i>
         </a>
         SagalaLada
@@ -77,7 +82,7 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
     <div class="menu-right">
         <a href="../index.html" class="dashboard-link">Beranda</a>
 
-        <a href="keranjang.php" class="keranjang-link">
+        <a href="keranjang.php" class="keranjang-link cart-icon">
             <i class="fa-solid fa-cart-shopping"></i>
         </a>
     </div>
@@ -147,7 +152,7 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
     </form>
 
     <!-- MENU -->
-    <div class="container">
+
 
         <?php 
         if(count($menu_berdasarkan_kategori) > 0) {
@@ -259,7 +264,7 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
         }
         ?>
 
-    </div>
+
 
 </div>
 
@@ -298,6 +303,71 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
         }
 
     }, 3000);
+
+    const buttons = document.querySelectorAll('.btn-add');
+const cartIcon = document.querySelector('.cart-icon');
+
+buttons.forEach(button => {
+
+    button.addEventListener('click', function(e){
+
+        e.preventDefault();
+
+        const card = this.closest('.card-menu');
+
+        const img = card.querySelector('img');
+
+        const imgRect = img.getBoundingClientRect();
+        const cartRect = cartIcon.getBoundingClientRect();
+
+        // clone gambar
+        const flyingImg = img.cloneNode(true);
+
+        flyingImg.classList.add('flying-image');
+
+        // posisi awal
+        flyingImg.style.left = imgRect.left + 'px';
+        flyingImg.style.top = imgRect.top + 'px';
+
+        document.body.appendChild(flyingImg);
+
+        // trigger animasi
+        setTimeout(() => {
+
+            flyingImg.style.transform = `
+                translate(
+                    ${cartRect.left - imgRect.left}px,
+                    ${cartRect.top - imgRect.top}px
+                )
+                scale(0.2)
+            `;
+
+            flyingImg.style.opacity = '0.3';
+
+        }, 10);
+
+        // bounce cart
+        setTimeout(() => {
+
+            cartIcon.classList.add('cart-bounce');
+
+        }, 700);
+
+        // hapus animasi
+        setTimeout(() => {
+
+            flyingImg.remove();
+
+            cartIcon.classList.remove('cart-bounce');
+
+            // lanjut ke PHP tambah keranjang
+            window.location.href = button.href;
+
+        }, 1000);
+
+    });
+
+});
 </script>
 
 </body>
