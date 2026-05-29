@@ -1,144 +1,47 @@
+<?php
+session_start();
+include 'koneksi.php';
 
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beranda Pembeli</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<style>
-       :root {
-    --primary-red: #e42121;
-    --dark-red: #b71c1c;
-    --black: #212121;
-    --dark-gray: #383838;
-    --light-gray: #f5f5f5;
-    --text-light: #ffffff;
-    --white: #ffffff;
-    --text-dark: #212121;
-    --shadow: 0 2px 10px rgba(0,0,0,0.2);
+if (empty($_SESSION['keranjang'])) {
+    echo "<script>alert('Keranjang kosong!'); window.location='menu.php';</script>";
+    exit;
 }
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins';
+// Cek apakah ada session meja (dari scan barcode)
+// Jika tidak ada, kita set NULL (untuk pesan dari rumah)
+$id_meja = isset($_SESSION['id_meja']) ? $_SESSION['id_meja'] : "NULL";
+
+$id_pelanggan = isset($_SESSION['pelanggan']['id_pelanggan']) ? $_SESSION['pelanggan']['id_pelanggan'] : "NULL";
+$tanggal = date("Y-m-d H:i:s");
+$total_bayar = 0;
+
+// Hitung total bayar
+foreach ($_SESSION['keranjang'] as $id_menu => $item) {
+    $ambil = mysqli_query($conn, "SELECT harga FROM menu WHERE id_menu='$id_menu'");
+    $m = mysqli_fetch_assoc($ambil);
+    $total_bayar += ($m['harga'] * $item['jumlah']);
 }
 
-body{
-    background: var(--light-gray);
-}
+// INSERT ke tabel pesanan
+// Perhatikan: $id_meja dan $id_pelanggan tidak pakai tanda petik jika nilainya NULL
+$query_pesanan = "INSERT INTO pesanan (tanggal, id_meja, total_harga, status_pesanan, id_pelanggan) 
+                  VALUES ('$tanggal', $id_meja, '$total_bayar', 'menunggu', $id_pelanggan)";
 
-/* ========================= */
-/* HEADER */
-/* ========================= */
+if (mysqli_query($conn, $query_pesanan)) {
+    $id_pesanan_baru = mysqli_insert_id($conn);
 
-.dashboard-header{
-    background: var(--primary-red);
-    color: var(--white);
-    padding: 1.2rem 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: var(--shadow);
-}
+    foreach ($_SESSION['keranjang'] as $id_menu => $item) {
+        $qty = $item['jumlah'];
+        $pedas = $item['pedas'];
+        $catatan = mysqli_real_escape_string($conn, $item['catatan']);
 
-.logo{
-    font-size: 1.5rem;
-    font-weight: bold;
-    letter-spacing: 2px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.back-icon{
-    font-size: 25px;
-    color: white;
-    text-decoration: none;
-}
-
-/* ========================= */
-/* MENU KANAN */
-/* ========================= */
-
-.menu-right{
-    display: flex;
-    align-items: center;
-}
-
-.dashboard-kosong{
-    width: 140px;
-    height: 45px;
-}
-
-/* ========================= */
-/* RESPONSIVE TABLET */
-/* ========================= */
-
-@media (max-width: 768px){
-
-    .dashboard-header{
-        padding: 1rem;
+        mysqli_query($conn, "INSERT INTO detail_pesanan (id_pesanan, id_menu, jumlah, pedas, catatan) 
+                             VALUES ('$id_pesanan_baru', '$id_menu', '$qty', '$pedas', '$catatan')");
     }
 
-    .logo{
-        font-size: 1.2rem;
-        gap: 8px;
-    }
-
-    .back-icon{
-        font-size: 22px;
-    }
-
-    .dashboard-kosong{
-        display: none;
-    }
+    unset($_SESSION['keranjang']);
+    echo "<script>alert('Pesanan Berhasil! Silahkan tunggu konfirmasi.'); window.location='histori.php';</script>";
+} else {
+    echo "Gagal Simpan: " . mysqli_error($conn);
 }
-
-/* ========================= */
-/* RESPONSIVE HP */
-/* ========================= */
-
-@media (max-width: 480px){
-
-    .dashboard-header{
-        padding: 1.05rem;
-    }
-
-    .logo{
-        font-size: 1rem;
-        letter-spacing: 1px;
-    }
-
-    .back-icon{
-        font-size: 18px;
-    }
-
-    .dashboard-kosong{
-        width: 70px;
-        height: 40px;
-    }
-}
-
-</style>
-<body>
-<div class="dashboard-header">
-<div class="logo">
-        <a href="keranjang.php" class="back-icon">
-            <i class="fa-solid fa-angle-left"></i>
-        </a>
-        SagalaLada
-        </div>
-            <div class="menu-right">
-                <div class="dashboard-kosong"></div>
-            </div>
-        </div>
-        
-</body>
-</html>
+?>
