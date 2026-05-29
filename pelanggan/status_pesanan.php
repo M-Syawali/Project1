@@ -164,13 +164,12 @@ p{
 <script>
 
 const statusCard = document.getElementById("statusCard");
-
 let currentStatus = ""; 
 
 function renderStatus(status){
-    status = status.toLowerCase().trim();
+    status = status ? status.toLowerCase().trim() : "";
 
-    if (status === currentStatus) return; 
+    if (status === currentStatus && status !== "") return; 
     currentStatus = status;
 
     const noPesanan = "<?= isset($data['nomor_pesanan']) ? $data['nomor_pesanan'] : '-'; ?>";
@@ -206,29 +205,31 @@ function renderStatus(status){
             </p>
         `;
 
-        // FITUR HITUNG MUNDUR 3 DETIK
         let waktuSisa = 3;
         const elemenCountdown = document.getElementById("countdown");
 
         const hitungMundur = setInterval(() => {
             waktuSisa--;
-            if (elemenCountdown) {
-                elemenCountdown.textContent = waktuSisa;
-            }
+            if (elemenCountdown) elemenCountdown.textContent = waktuSisa;
 
-            // Jika waktu habis, hentikan hitungan mundur dan pindah halaman
             if (waktuSisa <= 0) {
                 clearInterval(hitungMundur);
                 window.location.href = "menu.php";
             }
-        }, 1000); // Berjalan setiap 1 detik
+        }, 1000); 
+    }
+    else {
+        statusCard.innerHTML = `
+            <div class="order-id">No Pesanan: ${noPesanan}</div>
+            <div class="loader"></div>
+            <h2>Memuat Status...</h2>
+            <p>Sedang menghubungkan ke server, mohon tunggu.</p>
+            <p style="font-size: 10px; color: #ccc; margin-top: 10px;">Status terdeteksi: "${status}"</p>
+        `;
     }
 }
 
-/* LOAD PERTAMA */
 renderStatus("<?= $status; ?>");
-
-/* CEK STATUS REALTIME */
 const cekInterval = setInterval(() => {
     if (currentStatus === "selesai") {
         clearInterval(cekInterval);
@@ -238,7 +239,9 @@ const cekInterval = setInterval(() => {
     fetch("cek_status.php?id=<?= $id_pesanan; ?>")
     .then(response => response.text())
     .then(status => {
-        renderStatus(status);
+        if(status.trim() !== "") {
+            renderStatus(status);
+        }
     })
     .catch(err => console.log("Gagal memuat status:", err));
 }, 3000);
