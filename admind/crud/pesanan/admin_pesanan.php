@@ -35,13 +35,29 @@ include "koneksi.php";
         .btn-proses { background: #ffc107; color: black !important; }
         .btn-selesai { background: #28a745; }
         .btn-bayar { background: #007bff; }
+
+        .btn-dashboard{
+        display:inline-block;
+        padding:10px 18px;
+        background:#dc3545;
+        color:white;
+        text-decoration:none;
+        border-radius:5px;
+        font-weight:bold;
+        margin-bottom:15px;
+        transition:0.3s;
+        }
+
+        .btn-dashboard:hover{
+        background:#b02a37;
+        }
     </style>
 </head>
 <body>
 
 <h2>Manajemen Pesanan (Aktif)</h2>
 <p style="color: #666;"><small><i>*Pesanan dengan status "dibatalkan" tidak akan muncul di tabel ini.</i></small></p>
-
+<a href="../../main_page/dashboard.html" class="btn-dashboard">← Kembali ke Dashboard</a>
 <table>
     <thead>
         <tr>

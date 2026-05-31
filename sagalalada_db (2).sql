@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 31, 2026 at 10:59 AM
+-- Generation Time: May 31, 2026 at 06:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -62,14 +62,11 @@ CREATE TABLE `detail_pesanan` (
 --
 
 INSERT INTO `detail_pesanan` (`id_detail_pesanan`, `id_pesanan`, `id_menu`, `jumlah`, `pedas`, `catatan`, `subtotal`) VALUES
-(1, 1, 11, 1, NULL, NULL, 12000),
-(2, 4, 16, 1, 'Level 2', 'gapake bawang', 50000),
-(3, 5, 16, 1, 'Level 4', 'bawang banyak', 50000),
-(4, 6, 1, 1, 'Level 2', 'pake bawang', 15000),
-(5, 7, 16, 1, 'Level 1', 'pake bawang', 50000),
-(6, 8, 16, 1, 'Level 2', 'mammamam', 50000),
-(7, 9, 16, 1, 'Level 4', 'pake bawang', 50000),
-(8, 10, 16, 1, 'Level 2', 'ahayyy', 50000);
+(12, 14, 18, 1, 'Original', '', 15000),
+(13, 14, 17, 1, 'Original', '', 12000),
+(14, 14, 19, 1, 'Original', '', 10000),
+(15, 15, 18, 3, 'Original', '', 45000),
+(16, 15, 17, 4, 'Original', '', 48000);
 
 -- --------------------------------------------------------
 
@@ -138,12 +135,9 @@ CREATE TABLE `menu` (
 --
 
 INSERT INTO `menu` (`id_menu`, `nama_menu`, `harga`, `stok`, `gambar`, `id_kategori_menu`, `id_admin`, `deskripsi_menu`) VALUES
-(1, 'ayam goreng', 15000, NULL, '1779655566_ayam-goreng-lengkuas.jpg', 18, NULL, ''),
-(11, 'mie goreng', 12000, NULL, '1779737246_mie-pedas-udang-geprek.jpg', 18, 1, ''),
-(13, 'Syawal Goreng', 1000, NULL, '1779738738_WIN_20260224_09_01_35_Pro.jpg', 18, 1, ''),
-(14, 'ayam goreng', 12000, NULL, '1779757215_mie-pedas-udang-geprek.jpg', 18, 1, 'ayam enak enak enakaddsddad  dad ada da da dad a d a d a d a dadadadadadadsa'),
-(15, 'es teler', 10000, NULL, '1779841278_es.jpg', 19, 1, 'minuman segar'),
-(16, 'paket happy', 50000, NULL, '1779841313_img556-1749970206.jpg', 21, 1, 'paket isi ayam bebek minum');
+(17, 'ayam goreng', 12000, NULL, '1780228743_img556-1749970206.jpg', 18, 1, 'ddsdddss'),
+(18, 'mie', 15000, NULL, '1780243741_mie-pedas-udang-geprek.jpg', 21, 1, 'wddwdw'),
+(19, 'es teler', 10000, NULL, '1780243761_es.jpg', 19, 1, 'ddd');
 
 -- --------------------------------------------------------
 
@@ -168,7 +162,11 @@ INSERT INTO `pelanggan` (`id_pelanggan`, `nama_pelanggan`) VALUES
 (5, 'lala'),
 (6, 'pok'),
 (7, 'anton'),
-(8, 'asepp');
+(8, 'asepp'),
+(9, 'roger'),
+(10, 'tatang'),
+(11, 'lula'),
+(12, 'ani');
 
 -- --------------------------------------------------------
 
@@ -205,16 +203,8 @@ CREATE TABLE `pesanan` (
 --
 
 INSERT INTO `pesanan` (`id_pesanan`, `tanggal`, `id_meja`, `id_admin`, `total_harga`, `status_pesanan`, `id_pelanggan`) VALUES
-(1, '2026-05-31 14:59:36', NULL, NULL, 12000, 'dibayar', 1),
-(2, '2026-05-31 15:15:27', NULL, NULL, 50000, 'dibatalkan', 2),
-(3, '2026-05-31 15:16:37', NULL, NULL, 50000, 'dibatalkan', 2),
-(4, '2026-05-31 15:20:59', NULL, NULL, 50000, 'dibatalkan', 2),
-(5, '2026-05-31 15:24:05', NULL, NULL, 50000, 'dibayar', 3),
-(6, '2026-05-31 15:24:52', NULL, NULL, 15000, 'dibayar', 4),
-(7, '2026-05-31 15:26:55', NULL, NULL, 50000, 'dibatalkan', 5),
-(8, '2026-05-31 15:28:55', NULL, NULL, 50000, 'dibayar', 6),
-(9, '2026-05-31 15:36:16', NULL, NULL, 50000, 'dibayar', 7),
-(10, '2026-05-31 15:54:21', NULL, NULL, 50000, 'dibatalkan', 8);
+(14, '2026-05-31 23:09:56', NULL, NULL, 37000, 'dibayar', 2),
+(15, '2026-05-31 23:30:00', NULL, NULL, 93000, 'dibayar', 12);
 
 --
 -- Indexes for dumped tables
@@ -301,7 +291,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `detail_pesanan`
 --
 ALTER TABLE `detail_pesanan`
-  MODIFY `id_detail_pesanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_detail_pesanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `kategori_menu`
@@ -325,13 +315,13 @@ ALTER TABLE `meja`
 -- AUTO_INCREMENT for table `menu`
 --
 ALTER TABLE `menu`
-  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `pelanggan`
 --
 ALTER TABLE `pelanggan`
-  MODIFY `id_pelanggan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_pelanggan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `pembayaran`
@@ -343,7 +333,7 @@ ALTER TABLE `pembayaran`
 -- AUTO_INCREMENT for table `pesanan`
 --
 ALTER TABLE `pesanan`
-  MODIFY `id_pesanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_pesanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Constraints for dumped tables
@@ -354,7 +344,7 @@ ALTER TABLE `pesanan`
 --
 ALTER TABLE `detail_pesanan`
   ADD CONSTRAINT `detail_pesanan_ibfk_1` FOREIGN KEY (`id_pesanan`) REFERENCES `pesanan` (`id_pesanan`),
-  ADD CONSTRAINT `detail_pesanan_ibfk_2` FOREIGN KEY (`id_menu`) REFERENCES `menu` (`id_menu`);
+  ADD CONSTRAINT `detail_pesanan_ibfk_2` FOREIGN KEY (`id_menu`) REFERENCES `menu` (`id_menu`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `laporan`

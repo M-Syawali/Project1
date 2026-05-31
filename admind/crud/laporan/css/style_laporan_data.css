@@ -1,0 +1,72 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    min-height:100vh;
+    padding:40px;
+    background:#8b1e2d;
+}
+
+h2{
+    text-align:center;
+    color:white;
+    margin-bottom:25px;
+    font-size:30px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th{
+    background:#5c0f16;
+    color:white;
+    padding:12px;
+}
+
+td{
+    padding:12px;
+    text-align:center;
+    border:1px solid #ddd;
+}
+
+tr:nth-child(even){
+    background:#f5f5f5;
+}
+
+a{
+    display:inline-block;
+    margin-top:20px;
+    padding:12px 20px;
+    background:#5c0f16;
+    color:white;
+    text-decoration:none;
+    border-radius:5px;
+}
+
+a:hover{
+    background:#b33646;
+}
+
+.btn-kembali{
+    display:inline-block;
+    margin-bottom:20px;
+    padding:10px 20px;
+    background:#5c0f16;
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.btn-kembali:hover{
+    background:#b33646;
+    transform:translateY(-2px);
+}

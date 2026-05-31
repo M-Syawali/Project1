@@ -12,32 +12,7 @@ include "koneksi.php";
 
     <link rel="stylesheet" href="css/style_keranjang.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .badge-pedas {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-top: 5px;
-            background: #ffcdd2; 
-            color: #c62828;
-        }
-        .catatan-text {
-            display: block;
-            font-size: 0.85rem;
-            color: #666;
-            font-style: italic;
-            margin-top: 4px;
-        }
-        /* Style tambahan untuk menandakan loading/tersimpan */
-        .status-save {
-            font-size: 10px;
-            color: #4caf50;
-            display: none;
-            margin-top: 5px;
-        }
-    </style>
+
 </head>
 
 <body>
@@ -125,7 +100,6 @@ include "koneksi.php";
                                                     style="width: 100%; padding: 5px; border-radius: 4px; border: 1px solid #ddd; font-size: 13px;"
                                                 ><?= htmlspecialchars($catatan) ?></textarea>
                                             </div>
-                                            <span class="status-save"><i class="fa-solid fa-check"></i> Tersimpan</span>
                                         </form>
                                     </div>
                                 </div>
