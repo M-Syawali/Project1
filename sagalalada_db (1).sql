@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 28, 2026 at 09:12 PM
+-- Generation Time: May 31, 2026 at 10:59 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -52,8 +52,24 @@ CREATE TABLE `detail_pesanan` (
   `id_pesanan` int(11) DEFAULT NULL,
   `id_menu` int(11) DEFAULT NULL,
   `jumlah` int(11) DEFAULT NULL,
+  `pedas` varchar(50) DEFAULT NULL,
+  `catatan` text DEFAULT NULL,
   `subtotal` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `detail_pesanan`
+--
+
+INSERT INTO `detail_pesanan` (`id_detail_pesanan`, `id_pesanan`, `id_menu`, `jumlah`, `pedas`, `catatan`, `subtotal`) VALUES
+(1, 1, 11, 1, NULL, NULL, 12000),
+(2, 4, 16, 1, 'Level 2', 'gapake bawang', 50000),
+(3, 5, 16, 1, 'Level 4', 'bawang banyak', 50000),
+(4, 6, 1, 1, 'Level 2', 'pake bawang', 15000),
+(5, 7, 16, 1, 'Level 1', 'pake bawang', 50000),
+(6, 8, 16, 1, 'Level 2', 'mammamam', 50000),
+(7, 9, 16, 1, 'Level 4', 'pake bawang', 50000),
+(8, 10, 16, 1, 'Level 2', 'ahayyy', 50000);
 
 -- --------------------------------------------------------
 
@@ -140,6 +156,20 @@ CREATE TABLE `pelanggan` (
   `nama_pelanggan` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `pelanggan`
+--
+
+INSERT INTO `pelanggan` (`id_pelanggan`, `nama_pelanggan`) VALUES
+(1, 'ghisya'),
+(2, 'nanag'),
+(3, 'pot'),
+(4, 'nopall'),
+(5, 'lala'),
+(6, 'pok'),
+(7, 'anton'),
+(8, 'asepp');
+
 -- --------------------------------------------------------
 
 --
@@ -166,9 +196,25 @@ CREATE TABLE `pesanan` (
   `id_meja` int(11) DEFAULT NULL,
   `id_admin` int(11) DEFAULT NULL,
   `total_harga` int(11) DEFAULT NULL,
-  `status_pesanan` enum('diproses','selesai','dibayar') DEFAULT NULL,
+  `status_pesanan` enum('pending','diproses','selesai','dibayar','dibatalkan') DEFAULT NULL,
   `id_pelanggan` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `pesanan`
+--
+
+INSERT INTO `pesanan` (`id_pesanan`, `tanggal`, `id_meja`, `id_admin`, `total_harga`, `status_pesanan`, `id_pelanggan`) VALUES
+(1, '2026-05-31 14:59:36', NULL, NULL, 12000, 'dibayar', 1),
+(2, '2026-05-31 15:15:27', NULL, NULL, 50000, 'dibatalkan', 2),
+(3, '2026-05-31 15:16:37', NULL, NULL, 50000, 'dibatalkan', 2),
+(4, '2026-05-31 15:20:59', NULL, NULL, 50000, 'dibatalkan', 2),
+(5, '2026-05-31 15:24:05', NULL, NULL, 50000, 'dibayar', 3),
+(6, '2026-05-31 15:24:52', NULL, NULL, 15000, 'dibayar', 4),
+(7, '2026-05-31 15:26:55', NULL, NULL, 50000, 'dibatalkan', 5),
+(8, '2026-05-31 15:28:55', NULL, NULL, 50000, 'dibayar', 6),
+(9, '2026-05-31 15:36:16', NULL, NULL, 50000, 'dibayar', 7),
+(10, '2026-05-31 15:54:21', NULL, NULL, 50000, 'dibatalkan', 8);
 
 --
 -- Indexes for dumped tables
@@ -255,7 +301,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `detail_pesanan`
 --
 ALTER TABLE `detail_pesanan`
-  MODIFY `id_detail_pesanan` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_detail_pesanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `kategori_menu`
@@ -285,7 +331,7 @@ ALTER TABLE `menu`
 -- AUTO_INCREMENT for table `pelanggan`
 --
 ALTER TABLE `pelanggan`
-  MODIFY `id_pelanggan` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pelanggan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `pembayaran`
@@ -297,7 +343,7 @@ ALTER TABLE `pembayaran`
 -- AUTO_INCREMENT for table `pesanan`
 --
 ALTER TABLE `pesanan`
-  MODIFY `id_pesanan` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pesanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables

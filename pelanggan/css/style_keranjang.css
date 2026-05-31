@@ -418,3 +418,19 @@ tfoot{
         width: 100%;
     }
 }
+.detail-form{
+    margin-top:8px;
+}
+
+.form-control{
+    width:100%;
+    padding:8px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    margin-top:4px;
+}
+
+.form-control:focus{
+    outline:none;
+    border-color:#8b1e2d;
+}
