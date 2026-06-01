@@ -80,6 +80,9 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
     </div>
 
     <div class="menu-right">
+        <a href="rekomendasi.php" class="dashboard-link">
+            Bingung Pilih? Pilihkan Untuk Saya
+        </a>
         <a href="../index.html" class="dashboard-link">Beranda</a>
 
         <a href="keranjang.php" class="keranjang-link cart-icon">

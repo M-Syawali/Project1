@@ -2,26 +2,36 @@
 session_start();
 include "koneksi.php";
 
-if (isset($_GET['id'])) {
-    $id_menu = $_GET['id'];
-
+// Fungsi helper untuk menambahkan satu menu ke session
+function tambahKeSession($id_menu) {
     if (!isset($_SESSION['keranjang'])) {
         $_SESSION['keranjang'] = [];
     }
 
-    // Jika menu sudah ada di keranjang, tambah jumlahnya saja
     if (isset($_SESSION['keranjang'][$id_menu])) {
         $_SESSION['keranjang'][$id_menu]['jumlah'] += 1;
     } else {
-        // Jika belum ada, buat array baru dengan nilai default
         $_SESSION['keranjang'][$id_menu] = [
             'jumlah' => 1,
-            'pedas' => 'Original', // Nilai default
-            'catatan' => ''        // Nilai default
+            'pedas' => 'Original',
+            'catatan' => ''
         ];
     }
+}
 
+// 1. Logika jika tombol Paket diklik (menerima id_m dan id_min)
+if (isset($_GET['id_m']) && isset($_GET['id_min'])) {
+    tambahKeSession($_GET['id_m']);
+    tambahKeSession($_GET['id_min']);
+    
+    echo "<script>alert('Paket berhasil ditambahkan ke keranjang!'); window.location='keranjang.php';</script>";
+
+// 2. Logika jika tombol Satuan diklik (menerima id)
+} elseif (isset($_GET['id'])) {
+    tambahKeSession($_GET['id']);
+    
     echo "<script>alert('Menu berhasil ditambahkan ke keranjang!'); window.location='menu.php';</script>";
+
 } else {
     header("location:menu.php");
     exit();
