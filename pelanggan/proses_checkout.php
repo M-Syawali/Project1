@@ -11,6 +11,7 @@ if (empty($_SESSION['keranjang'])) {
 // 2. SET TIMEZONE & AMBIL DATA DARI FORM
 date_default_timezone_set('Asia/Jakarta');
 $nama_pelanggan = mysqli_real_escape_string($conn, $_POST['nama']);
+$nomor_pesanan = mysqli_real_escape_string($conn, $_POST['nomor_pesanan']);
 $tanggal_sekarang = date("Y-m-d H:i:s");
 $total_harga_final = 0;
 
@@ -45,8 +46,8 @@ foreach ($_SESSION['keranjang'] as $id_menu => $item) {
    C. SIMPAN KE TABEL PESANAN
    --------------------------------------------------------- */
 // status_pesanan diisi 'diproses' sesuai ENUM di database kamu
-$insert_pesanan = mysqli_query($conn, "INSERT INTO pesanan (tanggal, total_harga, status_pesanan, id_pelanggan) 
-                                       VALUES ('$tanggal_sekarang', '$total_harga_final', 'diproses', '$id_pelanggan')");
+$insert_pesanan = mysqli_query($conn, "INSERT INTO pesanan (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan) 
+                                       VALUES ('$nomor_pesanan','$tanggal_sekarang', '$total_harga_final', 'diproses', '$id_pelanggan')");
 
 if (!$insert_pesanan) {
     die("Gagal menyimpan pesanan: " . mysqli_error($conn));

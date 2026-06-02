@@ -27,7 +27,7 @@
             Tampilkan Laporan
         </button>
 
-        <a href="../../main_page/dashboard.html" class="btn-kembali">
+        <a href="../../main_page/dashboard.php" class="btn-kembali">
             ← Kembali ke Dashboard
         </a>
     </form>

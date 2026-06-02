@@ -121,7 +121,7 @@ if (!$data) {
 ?>
 <h2>Data Kategori</h2>
 <a href="tambah_kategori.php" class="btn">+ Tambah Kategori</a>
-<a href="../index_admin.php" class="btn">kembali ke Menu</a>
+<a href="../menu/index_admin.php" class="btn">kembali ke Menu</a>
 <table border="1" cellpadding="10">
     <tr>
         <th>No</th>

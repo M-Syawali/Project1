@@ -1,9 +1,12 @@
 <?php
-include 'menu/koneksi.php';
+// PERBAIKAN: Keluar dari folder main_page, masuk ke crud/pesanan tempat koneksi.php berada
+include "koneksi.php";
+
 global $conn;
 global $query;
 
 // Mengambil data menu sekalian di-join dengan kategori_menu agar tampil nama kategorinya
+// PERBAIKAN: Menyesuaikan nama kolom deskripsi jika ada perbedaan (disesuaikan dengan syntax query Anda)
 $query = "SELECT menu.*, kategori_menu.nama_kategori_menu
           FROM menu
           LEFT JOIN kategori_menu 
@@ -16,7 +19,7 @@ $result = mysqli_query($conn, $query);
 <head>
     <meta charset="UTF-8">
     <title>Kelola Menu - SagalaLada</title>
-
+     
     <style>
     :root {
         --primary: #1e293b;
@@ -116,18 +119,18 @@ $result = mysqli_query($conn, $query);
     </style>
 </head>
 <body>
-
+ 
 <div class="container">
     <div class="header">
         <h2>Menu SagalaLada</h2>
         <div class="top-buttons">
-            <a href="../main_page/dashboard.html" class="btn btn-danger">Dashboard</a>
-            <a href="kategori/index_kategori.php" class="btn btn-danger">Kategori</a>
+            <a href="../../main_page/dashboard.php" class="btn btn-danger">Dashboard</a>
+            <a href="../kategori/index_kategori.php" class="btn btn-danger">Kategori</a>
         </div>
     </div>
 
     <div style="margin-bottom: 20px;">
-        <a href="menu/tambah.php" class="btn btn-success">+ Tambah Menu</a>
+        <a href="tambah.php" class="btn btn-success">+ Tambah Menu</a>
     </div>
 
     <div class="card">
@@ -138,7 +141,8 @@ $result = mysqli_query($conn, $query);
                     <th>Gambar</th>
                     <th>Nama Menu</th>
                     <th>Kategori</th>
-                    <th>Deskripsi</th> <th>Harga</th>
+                    <th>Deskripsi</th> 
+                    <th>Harga</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -151,7 +155,7 @@ $result = mysqli_query($conn, $query);
                     <td><?= $no++; ?></td>
                     <td>
                         <?php if (!empty($row['gambar'])) { ?>
-                            <img src="menu/upload/<?= $row['gambar']; ?>" class="menu-img">
+                            <img src="upload/<?= $row['gambar']; ?>" class="menu-img">
                         <?php } else { ?>
                             <span>-</span>
                         <?php } ?>
@@ -167,8 +171,8 @@ $result = mysqli_query($conn, $query);
 
                     <td>Rp <?= number_format($row['harga'], 0, ',', '.'); ?></td>
                     <td class="aksi">
-                        <a href="menu/edit.php?id=<?= $row['id_menu']; ?>" class="btn btn-primary">Edit</a>
-                        <a href="menu/hapus.php?id=<?= $row['id_menu']; ?>" 
+                        <a href="edit.php?id=<?= $row['id_menu']; ?>" class="btn btn-primary">Edit</a>
+                        <a href="hapus.php?id=<?= $row['id_menu']; ?>" 
                            class="btn btn-danger"
                            onclick="return confirm('Yakin ingin menghapus menu ini?')">
                            Hapus

@@ -107,7 +107,7 @@ if (isset($_POST['submit'])) {
             
             <div class="form-actions">
                 <button type="submit" name="submit" class="btn btn-success">Simpan Menu</button>
-                <a href="../index_admin.php" class="btn btn-primary">Kembali</a>
+                <a href="index_admin.php" class="btn btn-primary">Kembali</a>
             </div>
         </form>
     </div>

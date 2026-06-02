@@ -253,7 +253,7 @@ img {
 
             <div class="form-actions" style="margin-top: 20px;">
                 <button type="submit" name="update" class="btn btn-success">Perbarui Menu</button>
-                <a href="../index_admin.php" class="btn btn-primary" style="background-color: #7f8c8d; text-decoration: none; padding: 8px 15px; border-radius: 4px; display: inline-block;">Kembali</a>
+                <a href="index_admin.php" class="btn btn-primary" style="background-color: #7f8c8d; text-decoration: none; padding: 8px 15px; border-radius: 4px; display: inline-block;">Kembali</a>
             </div>
 
         </form>
