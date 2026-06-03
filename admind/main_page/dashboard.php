@@ -20,61 +20,13 @@
 
   
     <!-- CSS -->
+    <link rel="stylesheet" href="../asset/style_sidebar.css">
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <?php $halaman = "dashboard"; ?>
     <!-- SIDEBAR -->
-    <aside class="sidebar" id="sidebar">
-        <div class="logo">
-            <i data-feather="coffee"></i>
-            <span>SagalaLada</span>
-        </div>
-    
-        <ul class="menu">
-            <li class="active">
-            <a href="dashboard.php">
-                <i data-feather="home"></i>
-                <span>Dashboard</span>
-            </a>
-            </li>
-    
-            <li>
-            <a href="../crud/menu/index_admin.php">
-                <i data-feather="package"></i>
-                <span>Menu</span>
-            </a>
-            </li>
-    
-            <li>
-            <a href="#">
-                <i data-feather="grid"></i>
-                <span>Kategori Menu</span>
-            </a>
-            </li>
-    
-            <li>
-            <a href="../crud/pesanan/admin_pesanan.php">
-                <i data-feather="shopping-bag"></i>
-                <span>Pesanan</span>
-            </a>
-            </li>
-    
-            <li>
-            <a href="../crud/laporan/index.php">
-                <i data-feather="bar-chart-2"></i>
-                <span>Laporan</span>
-            </a>
-            </li>
-    
-            <li>
-            <a href="#">
-                <i data-feather="settings"></i>
-                <span>Pengaturan</span>
-            </a>
-            </li>
-        </ul>
-</aside>
-  
+    <?php include "../components/sidebar.php"; ?>
 
     <!-- MAIN CONTENT -->
     <!-- NAVBAR -->
@@ -82,7 +34,7 @@
       <header class="navbar">
         <div class="navbar-left">
           <button class="menu-toggle" id="menu-toggle">
-            <i data-feather="menu"></i>
+        
           </button>
 
           <h2>Dashboard Admin</h2>

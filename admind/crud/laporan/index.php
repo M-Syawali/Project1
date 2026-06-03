@@ -2,9 +2,14 @@
 <html>
 <head>
     <title>Laporan Pesanan</title>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="../../asset/style_sidebar.css">
     <link rel="stylesheet" href="css/style_laporan.css">
 </head>
 <body>
+<?php $halaman = "laporan"; ?>
+<?php include "../../components/sidebar.php"; ?>
+<div class="main-content">
     <div class="container">
     <h2>📅 Pilih Tanggal Laporan</h2>
     <p class="subtitle">
@@ -31,6 +36,10 @@
             ← Kembali ke Dashboard
         </a>
     </form>
+    </div>
 </div>
+<script>
+feather.replace();
+</script>
 </body>
 </html>

@@ -19,7 +19,8 @@ $result = mysqli_query($conn, $query);
 <head>
     <meta charset="UTF-8">
     <title>Kelola Menu - SagalaLada</title>
-     
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="../../asset/style_sidebar.css">
     <style>
     :root {
         --primary: #1e293b;
@@ -34,12 +35,15 @@ $result = mysqli_query($conn, $query);
         font-family: 'Segoe UI', sans-serif;
         background: linear-gradient(135deg,#5c0f16,#8b1e2d,#b33646);
         margin: 0;
-        padding: 20px;
         color: var(--text);
     }
 
+    .main-content {
+        margin-left: 260px;
+        padding: 20px;
+    }
     .container {
-        max-width: 1200px; /* Diperlebar sedikit agar muat deskripsi */
+        max-width: 1400px;
         margin: auto;
     }
 
@@ -119,8 +123,10 @@ $result = mysqli_query($conn, $query);
     </style>
 </head>
 <body>
- 
-<div class="container">
+<?php $halaman = "menu"; ?>
+<?php include "../../components/sidebar.php"; ?>
+<div class="main-content">
+    <div class="container">
     <div class="header">
         <h2>Menu SagalaLada</h2>
         <div class="top-buttons">
@@ -185,5 +191,9 @@ $result = mysqli_query($conn, $query);
     </div>
 </div>
 
+</div>
+<script>
+feather.replace();
+</script>
 </body>
 </html>

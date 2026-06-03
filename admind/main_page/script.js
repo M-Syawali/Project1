@@ -8,9 +8,6 @@ feather.replace();
 // ELEMENT
 // =====================================
 
-const sidebar = document.getElementById("sidebar");
-const hamburger = document.getElementById("menu-toggle");
-const mainContent = document.getElementById("main-content");
 const profileBtn = document.getElementById("profile-btn");
 const profileMenu = document.getElementById("profile-menu");
 
@@ -18,26 +15,6 @@ const profileMenu = document.getElementById("profile-menu");
 // SIDEBAR TOGGLE
 // =====================================
 
-hamburger.addEventListener("click", () => {
-  sidebar.classList.add("active");
-  mainContent.classList.add("shrink");
-});
-
-sidebar.addEventListener("transitionend", (e) => {
-  if (e.propertyName === "transform") {
-    window.dispatchEvent(new Event("resize"));
-  }
-});
-
-document.addEventListener("click", (e) => {
-  const isClickInside =
-    sidebar.contains(e.target) || hamburger.contains(e.target);
-
-  if (!isClickInside) {
-    sidebar.classList.remove("active");
-    mainContent.classList.remove("shrink");
-  }
-});
 // Main conten
 
 // =====================================

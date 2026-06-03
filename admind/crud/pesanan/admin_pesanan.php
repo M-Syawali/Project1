@@ -7,31 +7,183 @@ include "koneksi.php";
     <meta charset="UTF-8">
     <title>Panel Admin - Pesanan Aktif</title>
     <script src="https://unpkg.com/feather-icons"></script>
-      
-      
+    
+    <link rel="stylesheet" href="../../asset/style_sidebar.css">
     <style>
-       
+
         body {
             font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg,#5c0f16,#8b1e2d,#b33646);
+            background:#f5f6fa;
             min-height: 100vh;
+            margin: 0;
+        }
+
+        .main-content{
+            margin-left: 260px;
             padding: 40px;
         }
 
-        h2 {
-            font-size: 48px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #fff;
-            text-shadow: 0 4px 10px rgba(0,0,0,.25);
+        .page-header{
+            background: linear-gradient(135deg,#7d0a0a,#8b1e2d);
+            padding:30px;
+            border-radius:20px;
+            margin-bottom:25px;
+            color:white;
+            box-shadow:0 10px 25px rgba(0,0,0,.12);
         }
 
-        p {
-            color: rgba(255,255,255,.9);
-            margin-bottom: 25px;
-            font-style: italic;
+        .page-header h1{
+            margin:0;
+            font-size:38px;
+            font-weight:700;
         }
 
+        .header-desc{
+            margin-top:8px;
+            color:rgba(255,255,255,.85);
+            font-size:15px;
+        }
+
+        .summary-grid{
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:20px;
+            margin-bottom:25px;
+        }
+
+        .summary-card{
+            background:white;
+            padding:24px;
+            border-radius:18px;
+            box-shadow:0 5px 15px rgba(0,0,0,.06);
+            border-left:5px solid #8b1e2d;
+        }
+
+        .summary-card span{
+            color:#64748b;
+            font-size:14px;
+        }
+
+        .summary-card h3{
+            margin-top:8px;
+            margin-bottom:0;
+            font-size:32px;
+            color:#7d0a0a;
+        }
+
+        @media(max-width:1200px){
+
+        .summary-grid{
+            grid-template-columns:repeat(2,1fr);
+        }
+        }
+
+        @media(max-width:768px){
+
+        .main-content{
+            margin-left:0px;
+            padding:20px;
+        }
+
+        .summary-grid{
+            grid-template-columns:1fr;
+        }
+
+        .page-header h1{
+            font-size:28px;
+        }
+        }
+
+        .filter-bar{
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+            gap:15px;
+            margin-bottom:20px;
+        }
+
+        .filter-right{
+            display:flex;
+            justify-content:flex-end;
+        }
+        .filter-bar input{
+            padding:12px 15px;
+            border:1px solid #e5e7eb;
+            border-radius:12px;
+            font-size:14px;
+            outline:none;
+            min-width:220px;
+        }
+
+        .filter-bar select{
+            padding:12px 15px;
+            border:1px solid #e5e7eb;
+            border-radius:12px;
+            font-size:14px;
+            outline:none;
+            min-width:200px;
+        }
+
+        .filter-bar input:focus,
+        .filter-bar select:focus{
+            border-color:#8b1e2d;
+            box-shadow:0 0 0 3px rgba(139,30,45,.1);
+        }
+
+        .btn-search,
+        .btn-reset{
+            padding:12px 18px;
+            font-size:14px;
+            font-weight:600;
+            border-radius:10px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            height:42px; /* ini kunci biar sama */
+            box-sizing:border-box;
+        }
+
+        .btn-search{
+            background:#8b1e2d;
+            color:white;
+            border:none;
+            cursor:pointer;
+        }
+
+        .btn-reset{
+            background:#6b7280;
+            color:white;
+            text-decoration:none;
+        }
+
+        .btn-search:hover{
+            background:#6f0f1a;
+        }
+
+        .btn-reset:hover{
+            background:#4b5563;
+        }
+
+
+        .table-footer{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:15px 20px;
+            background:#fff;
+            border-top:1px solid #eee;
+            font-size:14px;
+            color:#6b7280;
+        }
+
+        .table-wrapper{
+            background:white;
+            padding:0;
+            border-radius:20px;
+            overflow:hidden;
+            box-shadow:0 8px 25px rgba(0,0,0,.08);
+            border-top:5px solid #8b1e2d;
+        }
 
         table {
             border-collapse: collapse;
@@ -41,13 +193,21 @@ include "koneksi.php";
         }
 
         th, td {
-            border: 1px solid #ddd;
             padding: 12px;
             text-align: left;
+            border-right: 1px solid #ddd;
         }
         td {
             padding:14px 16px;
-            border-bottom:1px solid #eee;
+            border-bottom:1px solid #e5e7eb;
+        }
+
+        tbody tr{
+            transition:.2s;
+        }
+
+        tbody tr:hover{
+            background:#fff7f7;
         }
         th {
             background: rgba(139,30,45,.92);
@@ -57,9 +217,6 @@ include "koneksi.php";
             font-size: 16px;
             font-weight: 600;
             border-right: 1px solid rgba(255,255,255,.15);
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
         }
 
         .pelanggan-box {
@@ -131,11 +288,23 @@ include "koneksi.php";
         .pending {
             background: #fff3cd;
             color: #856404;
+        } 
+
+        .btn-batal:hover{
+            background:#b91c1c;
+        }
+
+        .btn-selesai:hover{
+            background:#15803d;
+        }
+
+        .btn-bayar:hover{
+            background:#2563eb;
         }
         .item-menu {
             padding: 6px 0;
             border-bottom: 1px dashed rgba(0,0,0,0.25);
-            margin-bottom: 6px;
+            
         }
         .item-menu:last-child {
             border-bottom: none;
@@ -190,17 +359,17 @@ include "koneksi.php";
             font-size: 12px;
         }
         .btn-status {
-            padding: 10px 15px;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 13px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin: 2px;
-            color: white;
-            font-weight: 600;
-            transition: 0.2s;
+            padding:10px 15px;
+            text-decoration:none;
+            border-radius:10px;
+            font-size:13px;
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            margin:2px;
+            color:white;
+            font-weight:600;
+            transition:.2s;
         }
         .btn-status svg{
             width: 16px;
@@ -212,20 +381,6 @@ include "koneksi.php";
         .btn-selesai { background: #28a745; }
         .btn-bayar { background: #007bff; }
 
-        .btn-dashboard {
-            display: inline-block;
-            padding: 14px 24px;
-            background: rgba(255,255,255,.1);
-            border: 1px solid rgba(255,255,255,.2);
-            color: white;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 600;
-            margin-bottom: 30px;
-            transition: .3s;
-            backdrop-filter: blur(10px);
-        }
-        .btn-dashboard:hover { background:rgba(255,255,255,.2);  }
 
         ul{
         list-style:none;
@@ -235,116 +390,198 @@ include "koneksi.php";
     </style>
 </head>
 <body>
+<?php $halaman = "pesanan"; ?>
+<?php include "../../components/sidebar.php"; ?>
 
-<h2>Manajemen Pesanan (Aktif)</h2>
-<p class="info-text">
-    *Pesanan dengan status "dibatalkan" tidak akan muncul di tabel ini.
-</p>
-<a href="../../main_page/dashboard.php" class="btn-dashboard">← Kembali ke Dashboard</a>
-<table>
-    <thead>
-        <tr>
-            <th>Pelanggan</th>
-            <th>Detail Item</th>
-            <th>Total Bayar</th>
-            <th>Status</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="main-content">
+    <div class="page-header">
+        <h1>Manajemen Pesanan</h1>
+        <p class="header-desc">
+            Pantau dan kelola seluruh pesanan pelanggan SagalaLada.
+        </p>
+    </div>
 
-        <?php
-        // Query menggunakan TRIM dan LOWER agar pencocokan kata 'dibatalkan' lebih akurat
-        // Query yang mengecualikan status 'dibatalkan' DAN 'dibayar'
-        $sql = "SELECT p.*, pl.nama_pelanggan 
+    <div class="summary-grid">
+        <div class="summary-card">
+            <span>Pesanan Baru</span>
+            <h3>5</h3>
+        </div>
+        <div class="summary-card">
+            <span>Diproses</span>
+            <h3>5</h3>
+        </div>
+        <div class="summary-card">
+            <span>Selesai</span>
+            <h3>5</h3>
+        </div>
+        <div class="summary-card">
+            <span>Total pesanan</span>
+            <h3>5</h3>
+        </div>
+    </div>
+
+    <form method="GET" class="filter-bar">
+
+    <!-- LEFT SIDE -->
+    <div class="filter-left">
+        <input 
+            type="text" 
+            name="search" 
+            placeholder="Cari nomor pesanan / nama pelanggan..."
+            value="<?php echo $_GET['search'] ?? ''; ?>"
+        >
+
+        <button type="submit" class="btn-search">Cari</button>
+
+        <a href="admin_pesanan.php" class="btn-reset">Reset</a>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="filter-right">
+        <select name="status">
+            <option value="">Semua Status</option>
+            <option value="diproses" <?php if(($_GET['status'] ?? '')=='diproses') echo 'selected'; ?>>
+                Diproses
+            </option>
+            <option value="selesai" <?php if(($_GET['status'] ?? '')=='selesai') echo 'selected'; ?>>
+                Selesai
+            </option>
+        </select>
+    </div>
+
+    </form>
+
+    <div class="table-wrapper">
+        <table>       
+            <thead>
+            <tr>
+                <th>Pelanggan</th>
+                <th>Detail Item</th>
+                <th>Total Bayar</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <?php
+            // Query menggunakan TRIM dan LOWER agar pencocokan kata 'dibatalkan' lebih akurat
+            // Query yang mengecualikan status 'dibatalkan' DAN 'dibayar'
+            $sql = "SELECT p.*, pl.nama_pelanggan 
                 FROM pesanan p
                 JOIN pelanggan pl ON p.id_pelanggan = pl.id_pelanggan 
                 WHERE LOWER(TRIM(p.status_pesanan)) != 'dibatalkan' 
-                AND LOWER(TRIM(p.status_pesanan)) != 'dibayar' 
-                ORDER BY p.id_pesanan DESC";
-        
-        $query = mysqli_query($conn, $sql);
-        
-        if (mysqli_num_rows($query) > 0) {
-            while ($row = mysqli_fetch_assoc($query)) {
-                $id_p = $row['id_pesanan'];
-                $status = strtolower(trim($row['status_pesanan'])); // Normalisasi status
-        ?>
-        <tr>
-            <td>
-                <div class="pelanggan-box">
-                    <div class="pelanggan-icon">
-                        <i data-feather="user"></i>
+                AND LOWER(TRIM(p.status_pesanan)) != 'dibayar'";
+
+                $search = $_GET['search'] ?? '';
+                $status = $_GET['status'] ?? '';
+
+                if (!empty($status)) {
+                    $sql .= " AND LOWER(TRIM(p.status_pesanan)) = '" . mysqli_real_escape_string($conn, $status) . "'";
+                }
+
+                if (!empty($search)) {
+                    $search = mysqli_real_escape_string($conn, $search);
+                    $sql .= " AND (
+                        p.nomor_pesanan LIKE '%$search%' 
+                        OR pl.nama_pelanggan LIKE '%$search%'
+                    )";
+                }
+
+                $sql .= " ORDER BY p.id_pesanan DESC";
+
+                $query = mysqli_query($conn, $sql);
+            
+            if (mysqli_num_rows($query) > 0) {
+                while ($row = mysqli_fetch_assoc($query)) {
+                    $id_p = $row['id_pesanan'];
+                    $status = strtolower(trim($row['status_pesanan'])); // Normalisasi status
+            ?>
+
+            <tr>
+                <td>
+                    <div class="pelanggan-box">
+                        <div class="pelanggan-icon">
+                            <i data-feather="user"></i>
+                        </div>
+                        <div>
+                            <span class="nomor-pesanan"><?php echo $row['nomor_pesanan']; ?></span>
+                            <div class="nama-pelanggan"><?php echo htmlspecialchars($row['nama_pelanggan']); ?><br></div>
+                            <small><?php echo $row['tanggal']; ?></small>
+                        </div>
                     </div>
-                    <div>
-                        <span class="nomor-pesanan"><?php echo $row['nomor_pesanan']; ?></span>
-                        <div class="nama-pelanggan"><?php echo htmlspecialchars($row['nama_pelanggan']); ?><br></div>
-                        <small><?php echo $row['tanggal']; ?></small>
-                    </div>
+                </td>
+                <td>
+            <?php
+            $q_detail = mysqli_query($conn, "SELECT dp.*, m.nama_menu
+                                            FROM detail_pesanan dp
+                                            JOIN menu m ON dp.id_menu = m.id_menu
+                                            WHERE dp.id_pesanan = '$id_p'");
+
+            while ($det = mysqli_fetch_assoc($q_detail)) {
+            ?>
+                <div class="item-menu">
+
+                    <div class="nama-menu">
+                        <?php echo $det['nama_menu']; ?>
+                        <span class="qty">x<?php echo $det['jumlah']; ?></span>
+                    </div>     
+
+                    <?php if (!empty($det['pedas'])) { ?>
+                        <div class="detail-menu">
+                            <span class="menu-pedas">🌶<?php echo $det['pedas']; ?></span>
+                        </div>
+                    <?php } ?>
+
+                    <?php if (!empty($det['catatan'])) { ?>
+                        <div class="catatan-menu">
+                            <i data-feather="clipboard"></i>
+                            <span class="text-muted"><?php echo htmlspecialchars($det['catatan']); ?></span>
+                        </div>
+                    <?php } ?>
+
                 </div>
+            <?php } ?>
             </td>
-            <td>
-        <?php
-        $q_detail = mysqli_query($conn, "SELECT dp.*, m.nama_menu
-                                        FROM detail_pesanan dp
-                                        JOIN menu m ON dp.id_menu = m.id_menu
-                                        WHERE dp.id_pesanan = '$id_p'");
+                <td><span class="total-bayar"> Rp <?php echo number_format($row['total_harga'], 0, ',', '.'); ?></span>
+                </td>
+                <td><span class="status-badge <?php echo $status; ?>"><?php echo $status; ?></span></td>
+                <td>
+                    <?php if ($status == 'diproses'): ?>
+                        <a class="btn-status btn-selesai" href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=selesai"><i data-feather="check"></i>Set Selesai</a>
+                    <?php elseif ($status == 'selesai'): ?>
+                        <a class="btn-status btn-bayar" href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibayar"><i data-feather="check-circle"></i>Konfirmasi Bayar</a>
+                    <?php elseif ($status == 'dibayar'): ?>
+                        <span style="color: green; font-weight: bold;">✅ Transaksi Lunas</span>
+                    <?php else: ?>
+                        <a class="btn-status btn-proses" href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=diproses">Mulai Proses</a>
+                    <?php endif; ?>
 
-        while ($det = mysqli_fetch_assoc($q_detail)) {
-        ?>
-            <div class="item-menu">
+                    <?php if ($status != 'dibayar'): ?>
+                        <a class="btn-status btn-batal" href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibatalkan" 
+                        onclick="return confirm('Apakah Anda yakin ingin membatalkan pesanan #<?php echo $id_p; ?>? Pesanan akan dihapus dari daftar aktif.')"> <i data-feather="x"></i>
+                        Batalkan
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <?php 
+                } 
+            } else {
+                echo "<tr><td colspan='5' style='text-align:center;'>Tidak ada pesanan aktif saat ini.</td></tr>";
+            }
+            ?>
+        </tbody>
+    
+    </table>
+    </div>
+    <div class="table-footer">
+    <div>Menampilkan 1 - 4 dari 4 pesanan</div>
+    <div>Halaman 1</div>
+    </div>
+    </div>
+</div>
 
-                <div class="nama-menu">
-                    <?php echo $det['nama_menu']; ?>
-                    <span class="qty">x<?php echo $det['jumlah']; ?></span>
-                </div>     
-
-                <?php if (!empty($det['pedas'])) { ?>
-                    <div class="detail-menu">
-                        <span class="menu-pedas">🌶<?php echo $det['pedas']; ?></span>
-                    </div>
-                <?php } ?>
-
-                <?php if (!empty($det['catatan'])) { ?>
-                    <div class="catatan-menu">
-                        <i data-feather="clipboard"></i>
-                        <span class="text-muted"><?php echo htmlspecialchars($det['catatan']); ?></span>
-                    </div>
-                <?php } ?>
-
-            </div>
-        <?php } ?>
-        </td>
-            <td><span class="total-bayar"> Rp <?php echo number_format($row['total_harga'], 0, ',', '.'); ?></span>
-            </td>
-            <td><span class="status-badge <?php echo $status; ?>"><?php echo $status; ?></span></td>
-            <td>
-                <?php if ($status == 'diproses'): ?>
-                    <a class="btn-status btn-selesai" href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=selesai"><i data-feather="check"></i>Set Selesai</a>
-                <?php elseif ($status == 'selesai'): ?>
-                    <a class="btn-status btn-bayar" href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibayar"><i data-feather="check-circle"></i>Konfirmasi Bayar</a>
-                <?php elseif ($status == 'dibayar'): ?>
-                    <span style="color: green; font-weight: bold;">✅ Transaksi Lunas</span>
-                <?php else: ?>
-                    <a class="btn-status btn-proses" href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=diproses">Mulai Proses</a>
-                <?php endif; ?>
-
-                <?php if ($status != 'dibayar'): ?>
-                    <a class="btn-status btn-batal" href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibatalkan" 
-                    onclick="return confirm('Apakah Anda yakin ingin membatalkan pesanan #<?php echo $id_p; ?>? Pesanan akan dihapus dari daftar aktif.')"> <i data-feather="x"></i>
-                    Batalkan
-                    </a>
-                <?php endif; ?>
-            </td>
-        </tr>
-        <?php 
-            } 
-        } else {
-            echo "<tr><td colspan='5' style='text-align:center;'>Tidak ada pesanan aktif saat ini.</td></tr>";
-        }
-        ?>
-    </tbody>
-</table>
 <script>
 feather.replace();
 </script>
