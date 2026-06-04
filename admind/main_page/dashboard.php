@@ -1,3 +1,56 @@
+<?php
+include "koneksi.php";
+
+// Query pesanan
+
+$qPesananHariIni = mysqli_query(
+  $conn, 
+  "SELECT COUNT(*) AS total 
+  FROM pesanan
+  WHERE DATE(tanggal) = CURDATE()
+  ");
+
+  $pesananHariIni = mysqli_fetch_assoc($qPesananHariIni)['total'];
+
+  
+// Query Pendapatan hari ini 
+$qPendapatanHariIni = mysqli_query(
+  $conn,
+  "SELECT COALESCE(SUM(total_harga),0) AS total
+  FROM pesanan
+  WHERE DATE(tanggal) = CURDATE()
+  AND status_pesanan IN ('dibayar')"
+);
+
+if (!$qPendapatanHariIni) {
+    die(mysqli_error($conn));
+}
+
+$pendapatanHariIni = mysqli_fetch_assoc($qPendapatanHariIni)['total'];
+
+// Query pendapatan total
+$qPendapatanTotal = mysqli_query(
+  $conn,
+  "SELECT COALESCE(SUM(total_harga),0) AS total 
+  FROM pesanan 
+  WHERE status_pesanan IN ('dibayar')"
+);
+
+$pendapatanTotal = mysqli_fetch_assoc($qPendapatanTotal)['total'];
+
+$qPesananTerbaru = mysqli_query(
+  $conn,
+  "SELECT p.*, pl.nama_pelanggan
+  FROM pesanan p
+  JOIN pelanggan pl ON p.id_pelanggan = pl.id_pelanggan
+  WHERE LOWER(TRIM(p.status_pesanan))
+  IN ('diproses','selesai')
+  ORDER BY p.id_pesanan DESC
+  LIMIT 3"
+);
+?>
+
+
 
 <!doctype html>
 <html lang="id">
@@ -33,10 +86,6 @@
     <main class="main-content" id="main-content">
       <header class="navbar">
         <div class="navbar-left">
-          <button class="menu-toggle" id="menu-toggle">
-        
-          </button>
-
           <h2>Dashboard Admin</h2>
         </div>
 
@@ -95,7 +144,7 @@
 
           <div>
             <h4>Pesanan Hari Ini</h4>
-            <h2 class="counter" data-target="48">0</h2>
+            <h2><?= $pesananHariIni ?></h2>
           </div>
         </div>
 
@@ -106,7 +155,7 @@
 
           <div>
             <h4>Pendapatan Hari Ini</h4>
-            <h2>Rp 2,3 Jt</h2>
+            <h2>Rp <?= number_format($pendapatanHariIni,0,',','.')?></h2>
           </div>
         </div>
 
@@ -117,7 +166,7 @@
 
           <div>
             <h4>Pendapatan Keseluruhan</h4>
-            <h2>Rp 38 Jt</h2>
+            <h2>Rp <?= number_format($pendapatanTotal,0,',','.') ?></h2>
           </div>
         </div>
       </section>
@@ -129,62 +178,105 @@
         <canvas id="salesChart"></canvas>
       </section>
 
+      <h2 class="table-title">Pesanan Terbaru</h2>
       <!-- TABEL -->
       <section class="table-box">
-        <div class="section-title">Pesanan Terbaru</div>
 
         <table>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Menu</th>
-              <th>Jumlah</th>
-              <th>Total</th>
-              <th>Status</th>
+                <th>Pelanggan</th>
+                <th>Detail Item</th>
+                <th>Total Bayar</th>
+                <th>Status</th>
             </tr>
           </thead>
+  <tbody>
+    <?php
+    if(mysqli_num_rows($qPesananTerbaru) > 0){
 
-          <tbody>
-            <tr>
-              <td>#001</td>
-              <td>Nasi Goreng Spesial</td>
-              <td>2</td>
-              <td>Rp 50.000</td>
-              <td><span class="status selesai">Selesai</span></td>
-            </tr>
+        while($row = mysqli_fetch_assoc($qPesananTerbaru)){
 
-            <tr>
-              <td>#002</td>
-              <td>Mie Ayam Bakso</td>
-              <td>1</td>
-              <td>Rp 25.000</td>
-              <td><span class="status proses">Diproses</span></td>
-            </tr>
+            $status = strtolower(trim($row['status_pesanan']));
+    ?>
+    <tr>
+        <td>
+    <div class="pelanggan-box">
 
-            <tr>
-              <td>#003</td>
-              <td>Es Teh Manis</td>
-              <td>4</td>
-              <td>Rp 20.000</td>
-              <td><span class="status kirim">Dikirim</span></td>
-            </tr>
+        <div class="pelanggan-icon">
+            <i data-feather="user"></i>
+        </div>
 
-            <tr>
-              <td>#004</td>
-              <td>Sate Ayam</td>
-              <td>3</td>
-              <td>Rp 75.000</td>
-              <td><span class="status selesai">Selesai</span></td>
-            </tr>
+        <div>
+            <span class="nomor-pesanan">
+                <?= $row['nomor_pesanan'] ?>
+            </span>
 
-            <tr>
-              <td>#005</td>
-              <td>Ayam Geprek</td>
-              <td>2</td>
-              <td>Rp 40.000</td>
-              <td><span class="status proses">Diproses</span></td>
-            </tr>
-          </tbody>
+            <div class="nama-pelanggan">
+                <?= htmlspecialchars($row['nama_pelanggan']) ?>
+            </div>
+            <small>
+                <?= $row['tanggal'] ?>
+            </small>
+        </div>
+
+    </div>
+</td>
+
+        <td>
+            <?php
+            $idPesanan = $row['id_pesanan'];
+
+            $qDetail = mysqli_query(
+                $conn,
+                "SELECT m.nama_menu, dp.jumlah
+                FROM detail_pesanan dp
+                JOIN menu m ON dp.id_menu = m.id_menu
+                WHERE dp.id_pesanan = '$idPesanan'"
+            );
+
+            while($detail = mysqli_fetch_assoc($qDetail)){
+            ?>
+                <div class="item-menu">
+
+                    <div class="nama-menu">
+                        <?= $detail['nama_menu'] ?>
+
+                        <span class="qty">
+                            x<?= $detail['jumlah'] ?>
+                        </span>
+                    </div>
+
+                </div>
+            <?php
+            }
+            ?>
+        </td>
+
+        <td>
+          <span class="total-bayar">
+              Rp <?= number_format($row['total_harga'],0,',','.') ?>
+          </span>
+      </td>
+
+        <td>
+            <span class="status-badge <?= $status ?>">
+                <?= ucfirst($status) ?>
+            </span>
+        </td>
+    </tr>
+
+    <?php
+        }
+    }else{
+    ?>
+    <tr>
+        <td colspan="4" style="text-align:center">
+            Belum ada pesanan.
+        </td>
+    </tr>
+    <?php } ?>
+  </tbody>
         </table>
       </section>
     </main>
