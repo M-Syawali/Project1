@@ -19,8 +19,8 @@
             </a>
             </li>
     
-            <li>
-            <a href="#">
+            <li class="<?= ($halaman == 'kategori') ? 'active' : '' ?>">
+            <a href="/Project1/admind/crud/kategori/index_kategori.php">
                 <i data-feather="grid"></i>
                 <span>Kategori Menu</span>
             </a>
@@ -41,9 +41,9 @@
             </li>
     
             <li>
-            <a href="#">
+            <a href="">
                 <i data-feather="settings"></i>
-                <span>Pengaturan</span>
+                <span>Log Out</span>
             </a>
             </li>
         </ul>

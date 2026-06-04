@@ -130,8 +130,6 @@ $result = mysqli_query($conn, $query);
     <div class="header">
         <h2>Menu SagalaLada</h2>
         <div class="top-buttons">
-            <a href="../../main_page/dashboard.php" class="btn btn-danger">Dashboard</a>
-            <a href="../kategori/index_kategori.php" class="btn btn-danger">Kategori</a>
         </div>
     </div>
 

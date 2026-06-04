@@ -4,7 +4,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -106,9 +106,9 @@ font-weight: 500;
 .btn {
     width: 100%;
     height: 48px;
-    background: #e42121;
+    background: #8b1e2d;;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(211, 29, 29, 0.45);
+    box-shadow: 0 0 10px rgba(139, 30, 45, 0.45);
     border: none;
     cursor: pointer;
     font-size: 16px;
@@ -149,7 +149,7 @@ font-weight: 500;
     left: -250%;
     width: 300%;
     height: 100%;
-    background: #e42121; 
+    background: #8b1e2d;; 
     border-radius: 150px;
     z-index: 2;
     transition: 1.8s ease-in-out;
@@ -228,7 +228,7 @@ font-weight: 500;
         top: -270%;
         width: 100%;
         height: 300%;
-        background: #e42121 !important;
+        background: #8b1e2d !important;
         border-radius: 20vw;
         z-index: 2;
         transition: 1.8s ease-in-out;
