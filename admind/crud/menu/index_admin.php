@@ -33,7 +33,7 @@ $result = mysqli_query($conn, $query);
 
     body {
         font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg,#5c0f16,#8b1e2d,#b33646);
+        background:#f5f6fa;
         margin: 0;
         color: var(--text);
     }
@@ -47,26 +47,161 @@ $result = mysqli_query($conn, $query);
         margin: auto;
     }
 
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
+    .page-header{
+    background:linear-gradient(135deg,#7d0a0a,#a31621);
+    padding:30px;
+    border-radius:20px;
+    margin-bottom:25px;
+    color:white;
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
     }
 
-    h2 {
-        margin: 0;
-        color: white;
+    .page-header h1{
+        margin:0;
+        font-size:38px;
+        font-weight:700;
     }
 
-    .card {
-        background: white;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-        overflow-x: auto;
+    .page-header p{
+        margin-top:8px;
+        opacity:.9;
     }
 
+    .summary-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    margin-bottom:25px;
+    }
+
+    .summary-card{
+        position:relative;
+        overflow:hidden;
+        background:white;
+        padding:24px;
+        border-radius:18px;
+        border-left:5px solid #8b1e2d;
+        box-shadow:0 5px 15px rgba(0,0,0,.06);
+    }
+
+
+    .summary-card span{
+        color:#64748b;
+    }
+
+    .summary-card h3{
+        margin-top:10px;
+        font-size:32px;
+        color:#7d0a0a;
+    }
+
+    .toolbar{
+        padding: 18px 20px;
+        border-radius:18px;
+        box-shadow:0 5px 15px rgba(0,0,0,.06);
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:20px;
+        margin-bottom:25px;
+    }
+
+    .toolbar-left{
+        display:flex;
+        align-items:center;
+        gap:12px;
+        flex-wrap:wrap;
+    }
+
+    .toolbar-right{
+        display:flex;
+        justify-content:flex-end;
+    }
+
+    .toolbar input,
+    .toolbar select{
+        height:48px;
+        padding:0 15px;
+        border:1px solid #e5e7eb;
+        border-radius:12px;
+        font-size:14px;
+        outline:none;
+    }
+
+    .toolbar input:focus,
+    .toolbar select:focus{
+        border-color:#8b1e2d;
+        box-shadow:0 0 0 3px rgba(139,30,45,.1);
+    }
+
+    .toolbar input{
+        width:280px;
+    }
+
+    .btn-cari{
+        height:48px;
+        padding:0 18px;
+        border:none;
+        border-radius:12px;
+        background:#8b1e2d;
+        color:white;
+        font-weight:600;
+        cursor:pointer;
+    }
+
+    .btn-tambah{
+        height:48px;
+        padding:0 20px;
+        display:flex;
+        align-items:center;
+        text-decoration:none;
+        background:#8b1e2d;
+        color:white;
+        border-radius:12px;
+        font-weight:600;
+        transition:.25s;
+        box-shadow:0 8px 18px rgba(139,30,45,.25);
+    }
+
+    .btn-tambah:hover{
+        transform:translateY(-2px);
+    }
+
+    .table-wrapper{
+        background:white;
+        border-radius:20px;
+        overflow:hidden;
+        box-shadow:0 8px 25px rgba(0,0,0,.08);
+        border-top:5px solid #8b1e2d;
+    }
+
+    .col-no{
+    width:60px;
+    }
+
+    .col-gambar{
+        width:120px;
+    }
+
+    .col-menu{
+        width:250px;
+    }
+
+    .col-kategori{
+        width:150px;
+    }
+
+    .col-deskripsi{
+        width:auto;
+    }
+
+    .col-harga{
+        width:140px;
+    }
+
+    .col-aksi{
+        width:150px;
+    }
     .btn {
         padding: 8px 14px;
         border-radius: 8px;
@@ -77,30 +212,64 @@ $result = mysqli_query($conn, $query);
         display: inline-block;
     }
 
-    .btn-primary { background: var(--accent); color: white; }
-    .btn-success { background: var(--success); color: white; }
-    .btn-danger { background: var(--danger); color: white; }
 
-    .top-buttons { display: flex; gap: 10px; }
+    .btn-success { background: var(--success); color: white; }
+    
+
+    .btn-edit{
+    background:#fff7ed;
+    color:#ea580c;
+    border:none;
+    padding:8px 14px;
+    border-radius:10px;
+    }
+
+    .btn-hapus{
+        background:#fef2f2;
+        color:#dc2626;
+        border:none;
+        padding:8px 14px;
+        border-radius:10px;
+    }
+    
 
     table {
         width: 100%;
         border-collapse: collapse;
     }
 
-    th {
-        background: var(--primary);
-        color: white;
-        padding: 12px;
-        font-size: 14px;
-        text-align: left;
+    tbody tr{
+        transition:.2s;
+    }
+
+    tbody tr:hover{
+        background:#fff7f7;
+    }
+
+    th{
+        text-align:center;
+        font-size:15px;
+        letter-spacing:.3px;
+        background:#8b1e2d;
+        color:white;
+        padding:20px;
+        font-weight:600;
     }
 
     td {
-        padding: 12px;
+        padding: 18px 16px;
         font-size: 14px;
         border-bottom: 1px solid #e5e7eb;
-        vertical-align: top;
+        vertical-align: middle;
+    }
+
+    td:nth-child(1),
+    td:nth-child(2),
+    td:nth-child(4),
+    td:nth-child(6),
+    td:nth-child(7){
+    text-align:center;
+    vertical-align:middle;
     }
 
     /* Styling khusus untuk teks deskripsi */
@@ -127,27 +296,95 @@ $result = mysqli_query($conn, $query);
 <?php include "../../components/sidebar.php"; ?>
 <div class="main-content">
     <div class="container">
-    <div class="header">
-        <h2>Menu SagalaLada</h2>
-        <div class="top-buttons">
+    <div class="page-header">
+    <div>
+        <h1>Manajemen Menu</h1>
+        <p>
+            Kelola seluruh menu restoran SagalaLada
+        </p>
+    </div>
+</div>
+    <?php
+
+        $totalMenu =
+        mysqli_num_rows(mysqli_query($conn,"SELECT * FROM menu"));
+
+        $totalMakanan =
+        mysqli_num_rows(mysqli_query($conn,"
+        SELECT *
+        FROM menu
+        WHERE id_kategori_menu='1'
+        "));
+
+        $totalMinuman =
+        mysqli_num_rows(mysqli_query($conn,"
+        SELECT *
+        FROM menu
+        WHERE id_kategori_menu='2'
+        "));
+
+        $totalPaket =
+        mysqli_num_rows(mysqli_query($conn,"
+        SELECT *
+        FROM menu
+        WHERE id_kategori_menu='3'
+        "));
+
+        ?>
+    
+    <div class="summary-grid">
+
+        <div class="summary-card">
+            <span>Total Menu</span>
+            <h3><?= $totalMenu ?></h3>
         </div>
+
+        <div class="summary-card">
+            <span>Menu Makanan</span>
+            <h3><?= $totalMakanan ?></h3>
+        </div>
+
+        <div class="summary-card">
+            <span>Menu Minuman</span>
+            <h3><?= $totalMinuman ?></h3>
+        </div>
+
+        <div class="summary-card">
+            <span>Menu Paket</span>
+            <h3><?= $totalPaket ?></h3>
+        </div>
+
     </div>
 
-    <div style="margin-bottom: 20px;">
-        <a href="tambah.php" class="btn btn-success">+ Tambah Menu</a>
+    <div class="toolbar">
+    <div class="toolbar-left">
+        <input type="text" placeholder="Cari menu...">
+        <select>
+            <option>Semua Kategori</option>
+        </select>
+        <button type="submit" class="btn-cari">
+            Cari
+        </button>
     </div>
 
-    <div class="card">
+    <div class="toolbar-right">
+        <a href="tambah.php" class="btn-tambah">
+            + Tambah Menu
+        </a>
+    </div>
+</div>
+
+    <div class="table-wrapper">
         <table>
             <thead>
                 <tr>
-                    <th>No</th>
-                    <th>Gambar</th>
-                    <th>Nama Menu</th>
-                    <th>Kategori</th>
-                    <th>Deskripsi</th> 
-                    <th>Harga</th>
-                    <th>Aksi</th>
+                    <th class="col-no">No</th>
+                    <th class="col-gambar">Gambar</th>
+                    <th class="col-menu">Nama Menu</th>
+                    <th class="col-kategori">Kategori</th>
+                    <th>Deskripsi</th>
+                    <th class="col-harga">Harga</th>
+                    <th class="col-aksi">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -175,9 +412,9 @@ $result = mysqli_query($conn, $query);
 
                     <td>Rp <?= number_format($row['harga'], 0, ',', '.'); ?></td>
                     <td class="aksi">
-                        <a href="edit.php?id=<?= $row['id_menu']; ?>" class="btn btn-primary">Edit</a>
+                        <a href="edit.php?id=<?= $row['id_menu']; ?>" class="btn btn-edit">Edit</a>
                         <a href="hapus.php?id=<?= $row['id_menu']; ?>" 
-                           class="btn btn-danger"
+                           class="btn btn-hapus"
                            onclick="return confirm('Yakin ingin menghapus menu ini?')">
                            Hapus
                         </a>
