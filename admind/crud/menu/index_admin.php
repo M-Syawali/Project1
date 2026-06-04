@@ -305,32 +305,28 @@ $result = mysqli_query($conn, $query);
     </div>
 </div>
     <?php
+    // --- LETAKKAN KODE BARU DI SINI ---
+        function hitungKategori($conn, $nama_kategori) {
+            $query = "SELECT COUNT(*) as total 
+                    FROM menu 
+                    JOIN kategori_menu ON menu.id_kategori_menu = kategori_menu.id_kategori_menu 
+                    WHERE kategori_menu.nama_kategori_menu = '$nama_kategori'";
+            $hasil = mysqli_query($conn, $query);
+            $data = mysqli_fetch_assoc($hasil);
+            return $data['total'];
+        }
 
-        $totalMenu =
-        mysqli_num_rows(mysqli_query($conn,"SELECT * FROM menu"));
+        $totalMenu = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM menu"));
+        $totalMakanan = hitungKategori($conn, 'Makanan'); 
+        $totalMinuman = hitungKategori($conn, 'Minuman');
+        $totalPaket   = hitungKategori($conn, 'Paket');
+        // ----------------------------------
 
-        $totalMakanan =
-        mysqli_num_rows(mysqli_query($conn,"
-        SELECT *
-        FROM menu
-        WHERE id_kategori_menu='1'
-        "));
+        // TAMBAHKAN INI:
+        $query_kategori = "SELECT * FROM kategori_menu";
+        $result_kategori = mysqli_query($conn, $query_kategori);
 
-        $totalMinuman =
-        mysqli_num_rows(mysqli_query($conn,"
-        SELECT *
-        FROM menu
-        WHERE id_kategori_menu='2'
-        "));
-
-        $totalPaket =
-        mysqli_num_rows(mysqli_query($conn,"
-        SELECT *
-        FROM menu
-        WHERE id_kategori_menu='3'
-        "));
-
-        ?>
+    ?>
     
     <div class="summary-grid">
 
@@ -359,8 +355,15 @@ $result = mysqli_query($conn, $query);
     <div class="toolbar">
     <div class="toolbar-left">
         <input type="text" placeholder="Cari menu...">
-        <select>
-            <option>Semua Kategori</option>
+        <select name="kategori">
+            <option value="">Semua Kategori</option>
+            <?php 
+            // TAMBAHKAN LOOPING INI:
+            while($k = mysqli_fetch_assoc($result_kategori)) { ?>
+                <option value="<?= $k['id_kategori_menu']; ?>">
+                    <?= $k['nama_kategori_menu']; ?>
+                </option>
+            <?php } ?>
         </select>
         <button type="submit" class="btn-cari">
             Cari
@@ -389,6 +392,13 @@ $result = mysqli_query($conn, $query);
             </thead>
             <tbody>
             <?php 
+            // 1. Jalankan query-nya terlebih dahulu DI ATAS perulangan
+            $query = "SELECT menu.*, kategori_menu.nama_kategori_menu 
+                    FROM menu 
+                    LEFT JOIN kategori_menu ON menu.id_kategori_menu = kategori_menu.id_kategori_menu";
+            $result = mysqli_query($conn, $query); 
+
+            // 2. Baru lakukan perulangan
             $no = 1;
             while($row = mysqli_fetch_assoc($result)) { 
             ?>
@@ -402,6 +412,7 @@ $result = mysqli_query($conn, $query);
                         <?php } ?>
                     </td>
                     <td><b><?= htmlspecialchars($row['nama_menu']); ?></b></td>
+                    
                     <td><?= htmlspecialchars($row['nama_kategori_menu'] ?? 'Tanpa Kategori'); ?></td>
                     
                     <td>
@@ -409,19 +420,15 @@ $result = mysqli_query($conn, $query);
                             <?= nl2br(htmlspecialchars($row['deskripsi_menu'] ?? '-')); ?>
                         </div>
                     </td>
-
                     <td>Rp <?= number_format($row['harga'], 0, ',', '.'); ?></td>
                     <td class="aksi">
                         <a href="edit.php?id=<?= $row['id_menu']; ?>" class="btn btn-edit">Edit</a>
-                        <a href="hapus.php?id=<?= $row['id_menu']; ?>" 
-                           class="btn btn-hapus"
-                           onclick="return confirm('Yakin ingin menghapus menu ini?')">
-                           Hapus
-                        </a>
+                        <a href="hapus.php?id=<?= $row['id_menu']; ?>" class="btn btn-hapus" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
                     </td>
                 </tr>
             <?php } ?>
-            </tbody>
+
+</tbody>
         </table>
     </div>
 </div>

@@ -35,7 +35,7 @@ if (isset($_POST['submit'])) {
                VALUES ('$nama_menu', '$id_kategori', '$harga', '$nama_gambar', '$id_admin', '$deskripsi')";
     
     if (mysqli_query($conn, $insert)) {
-        header("Location: ../index_admin.php");
+        header("Location: index_admin.php");
         exit();
     } else {
         echo "Gagal menambahkan data: " . mysqli_error($conn);

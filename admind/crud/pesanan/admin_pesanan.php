@@ -390,35 +390,62 @@ include "koneksi.php";
     </style>
 </head>
 <body>
-<?php $halaman = "pesanan"; ?>
-<?php include "../../components/sidebar.php"; ?>
+<body>
+<?php 
+// 1. PASTIKAN KODE INI BERADA DI ATAS SEBELUM HTML
+$halaman = "pesanan"; 
+include "../../components/sidebar.php"; 
+
+$today = date('Y-m-d');
+
+// Fungsi diperbarui: Menambahkan tipe 'lunas' untuk total pesanan
+function getCount($conn, $status, $type = 'status') {
+    global $today;
+    $sql = "SELECT COUNT(*) as total FROM pesanan WHERE DATE(tanggal) = '$today'";
+    
+    if ($type == 'status') {
+        $sql .= " AND LOWER(TRIM(status_pesanan)) = '$status'";
+    } elseif ($type == 'lunas') {
+        // Hanya hitung yang sudah 'dibayar'
+        $sql .= " AND LOWER(TRIM(status_pesanan)) = 'dibayar'";
+    }
+    
+    $res = mysqli_query($conn, $sql);
+    $data = mysqli_fetch_assoc($res);
+    return $data['total'] ?? 0;
+}
+
+$count_batal   = getCount($conn, 'dibatalkan', 'status');
+$count_proses  = getCount($conn, 'diproses', 'status');
+$count_selesai = getCount($conn, 'selesai', 'status');
+$count_total   = getCount($conn, '', 'lunas'); // Hanya menghitung 'dibayar'
+?>
 
 <div class="main-content">
     <div class="page-header">
         <h1>Manajemen Pesanan</h1>
-        <p class="header-desc">
-            Pantau dan kelola seluruh pesanan pelanggan SagalaLada.
-        </p>
     </div>
 
     <div class="summary-grid">
         <div class="summary-card">
-            <span>Pesanan Baru</span>
-            <h3>5</h3>
+            <span>Dibatalkan</span>
+            <h3><?php echo $count_batal; ?></h3>
         </div>
         <div class="summary-card">
             <span>Diproses</span>
-            <h3>5</h3>
+            <h3><?php echo $count_proses; ?></h3>
         </div>
         <div class="summary-card">
             <span>Selesai</span>
-            <h3>5</h3>
+            <h3><?php echo $count_selesai; ?></h3>
         </div>
         <div class="summary-card">
-            <span>Total pesanan</span>
-            <h3>5</h3>
+            <span>Total Terbayar</span>
+            <h3><?php echo $count_total; ?></h3>
         </div>
     </div>
+    
+    ...
 
     <form method="GET" class="filter-bar">
 
@@ -448,7 +475,6 @@ include "koneksi.php";
             </option>
         </select>
     </div>
-
     </form>
 
     <div class="table-wrapper">

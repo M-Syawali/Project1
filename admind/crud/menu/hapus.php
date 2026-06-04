@@ -17,12 +17,12 @@ if (isset($_GET['id'])) {
     $delete = "DELETE FROM menu WHERE id_menu = '$id'";
     
     if (mysqli_query($conn, $delete)) {
-        header("Location:../index_admin.php");
+        header("Location:index_admin.php");
     } else {
         echo "Gagal menghapus data: " . mysqli_error($conn);
     }
 
 } else {
-    header("Location:../index_admin.php");
+    header("Location:index_admin.php");
 }
 ?>
