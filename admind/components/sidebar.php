@@ -41,10 +41,10 @@
             </li>
     
             <li>
-            <a href="">
-                <i data-feather="settings"></i>
-                <span>Log Out</span>
-            </a>
+            <a href="/project1/login/logout.php">
+    <i data-feather="log-out"></i>
+    <span>Log Out</span>
+</a>
             </li>
         </ul>
 </aside>

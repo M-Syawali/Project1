@@ -68,7 +68,7 @@
 
               <a href="../../index.html">
                 <i data-feather="log-out"></i>
-                Logout
+                Halaman Awal
               </a>
             </div>
           </div>
