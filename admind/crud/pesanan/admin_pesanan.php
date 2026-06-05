@@ -194,6 +194,10 @@ include "koneksi.php";
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
+        table tbody tr:hover {
+            background: transparent !important;
+        }
+
         th, td {
             padding: 12px;
             text-align: left;
@@ -204,13 +208,6 @@ include "koneksi.php";
             border-bottom:1px solid #e5e7eb;
         }
 
-        tbody tr{
-            transition:.2s;
-        }
-
-        tbody tr:hover{
-            background:#fff7f7;
-        }
         th {
             background: rgba(139,30,45,.92);
             backdrop-filter: blur(10px);
@@ -401,7 +398,6 @@ include "koneksi.php";
     </style>
 </head>
 <body>
-<body>
 <?php 
 // 1. PASTIKAN KODE INI BERADA DI ATAS SEBELUM HTML
 $halaman = "pesanan"; 
@@ -429,6 +425,7 @@ function getCount($conn, $status, $type = 'status') {
 $count_batal   = getCount($conn, 'dibatalkan', 'status');
 $count_proses  = getCount($conn, 'diproses', 'status');
 $count_selesai = getCount($conn, 'selesai', 'status');
+$count_bayar = getCount($conn, 'dibayar', 'status');
 $count_total   = getCount($conn, '', 'lunas'); // Hanya menghitung 'dibayar'
 ?>
 
@@ -438,23 +435,26 @@ $count_total   = getCount($conn, '', 'lunas'); // Hanya menghitung 'dibayar'
     </div>
 
     <div class="summary-grid">
-        <div class="summary-card">
-            <span>Dibatalkan</span>
-            <h3><?php echo $count_batal; ?></h3>
-        </div>
-        <div class="summary-card">
-            <span>Diproses</span>
-            <h3><?php echo $count_proses; ?></h3>
-        </div>
-        <div class="summary-card">
-            <span>Selesai</span>
-            <h3><?php echo $count_selesai; ?></h3>
-        </div>
-        <div class="summary-card">
-            <span>Total Terbayar</span>
-            <h3><?php echo $count_total; ?></h3>
-        </div>
+    <div class="summary-card">
+        <span>Sudah Bayar</span>
+        <h3><?php echo $count_bayar; ?></h3>
     </div>
+
+    <div class="summary-card">
+        <span>Diproses</span>
+        <h3><?php echo $count_proses; ?></h3>
+    </div>
+
+    <div class="summary-card">
+        <span>Selesai</span>
+        <h3><?php echo $count_selesai; ?></h3>
+    </div>
+
+    <div class="summary-card">
+        <span>Dibatalkan</span>
+        <h3><?php echo $count_batal; ?></h3>
+    </div>
+</div>
     
 
     <form method="GET" class="filter-bar">
@@ -503,12 +503,11 @@ $count_total   = getCount($conn, '', 'lunas'); // Hanya menghitung 'dibayar'
 
             <?php
             // Query menggunakan TRIM dan LOWER agar pencocokan kata 'dibatalkan' lebih akurat
-            // Query yang mengecualikan status 'dibatalkan' DAN 'dibayar'
             $sql = "SELECT p.*, pl.nama_pelanggan 
                 FROM pesanan p
                 JOIN pelanggan pl ON p.id_pelanggan = pl.id_pelanggan 
-                WHERE LOWER(TRIM(p.status_pesanan)) != 'dibatalkan' 
-                AND LOWER(TRIM(p.status_pesanan)) != 'dibayar'";
+                WHERE LOWER(TRIM(p.status_pesanan)) != 'dibatalkan'
+                AND LOWER(TRIM(p.status_pesanan)) != 'selesai'";
 
                 $search = $_GET['search'] ?? '';
                 $status = $_GET['status'] ?? '';
@@ -591,23 +590,36 @@ $count_total   = getCount($conn, '', 'lunas'); // Hanya menghitung 'dibayar'
             </td>
                 <td><span class="total-bayar"> Rp <?php echo number_format($row['total_harga'], 0, ',', '.'); ?></span>
                 </td>
-                <td><span class="status-badge <?php echo $status; ?>"><?php echo $status; ?></span></td>
+                <td><span class="status-badge <?php echo $status; ?>">
+                    <?php
+                    if ($status == 'dibayar') {
+                        echo 'menunggu pembayaran';
+                    } else {
+                        echo $status;
+                    }
+                    ?>
+                </span></td>
                 <td>
-                    <?php if ($status == 'diproses'): ?>
-                        <a class="btn-status btn-selesai" href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=selesai"><i data-feather="check"></i>Set Selesai</a>
-                    <?php elseif ($status == 'selesai'): ?>
-                        <a class="btn-status btn-bayar" href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibayar"><i data-feather="check-circle"></i>Konfirmasi Bayar</a>
-                    <?php elseif ($status == 'dibayar'): ?>
-                        <span style="color: green; font-weight: bold;">✅ Transaksi Lunas</span>
-                    <?php else: ?>
-                        <a class="btn-status btn-proses" href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=diproses">Mulai Proses</a>
-                    <?php endif; ?>
+                    <?php if ($status == 'dibayar'): ?>
 
-                    <?php if ($status != 'dibayar'): ?>
-                        <a class="btn-status btn-batal" href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibatalkan" 
-                        onclick="return confirm('Apakah Anda yakin ingin membatalkan pesanan #<?php echo $id_p; ?>? Pesanan akan dihapus dari daftar aktif.')"> <i data-feather="x"></i>
-                        Batalkan
+                        <a class="btn-status btn-proses"
+                        href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=diproses">
+                            <i data-feather="check-circle"></i> Konfirmasi Pembayaran
                         </a>
+
+                    <?php elseif ($status == 'diproses'): ?>
+
+                        <a class="btn-status btn-selesai"
+                        href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=selesai">
+                            <i data-feather="check"></i> Set Selesai
+                        </a>
+
+                    <?php elseif ($status == 'selesai'): ?>
+
+                        <span style="color: green; font-weight: bold;">
+                            ✔ Pesanan Selesai
+                        </span>
+
                     <?php endif; ?>
                 </td>
             </tr>
