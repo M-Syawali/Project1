@@ -1,128 +1,189 @@
+
+<link rel="stylesheet" href="../../asset/style_sidebar.css">
+<link rel="stylesheet" href="../../main_page/style.css">
+
+<script src="https://unpkg.com/feather-icons"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-    /* Reset dasar */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+:root {
+    --primary: #1e293b;
+    --accent: #f97316;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --bg: #f1f5f9;
+    --text: #0f172a;
 }
 
-/* Body */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f6f9;
-    padding: 20px;
+/* Reset */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-/* Judul */
-h2 {
-    margin-bottom: 15px;
-    color: #2c3e50;
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:#f5f6fa;
+    color:var(--text);
+    margin:0;
 }
 
-/* Tombol tambah */
-a {
-    text-decoration: none;
-}
-.btn{
-    display:inline-block;
-    padding:10px 15px;
-    border:2px solid green;
-    color:green;
-    text-decoration:none;
-    border-radius:5px;
-    margin-bottom:15px;
-}
-
-.btn:hover{
-    background:green;
+/* Header */
+.page-header{
+    background:linear-gradient(135deg,#7d0a0a,#a31621);
+    padding:30px;
+    border-radius:20px;
+    margin-bottom:25px;
     color:white;
-}
-a[href="tambah_kategori.php"] {
-    display: inline-block;
-    margin-bottom: 15px;
-    padding: 10px 15px;
-    background-color: #2ecc71;
-    color: white;
-    border-radius: 6px;
-    font-weight: bold;
-    transition: 0.3s;
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
 }
 
-a[href="tambah_kategori.php"]:hover {
-    background-color: #27ae60;
+.page-header h1{
+    margin:0;
+    font-size:38px;
+    font-weight:700;
+}
+
+.page-header p{
+    margin-top:8px;
+    opacity:.9;
+}
+
+/* Toolbar */
+.toolbar{
+    background:white;
+    padding:18px 20px;
+    border-radius:18px;
+    box-shadow:0 5px 15px rgba(0,0,0,.06);
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:10px;
+    margin-bottom:25px;
+}
+
+/* Tombol */
+a{
+    text-decoration:none;
+}
+.btn-tambah{
+    height:48px;
+    padding:0 20px;
+    display:flex;
+    align-items:center;
+    background:#8b1e2d;
+    color:white;
+    border-radius:12px;
+    font-weight:600;
+    transition:.25s;
+    box-shadow:0 8px 18px rgba(139,30,45,.25);
+}
+
+.btn-tambah:hover{
+    transform:translateY(-2px);
+}
+
+.btn-kembali{
+    height:48px;
+    padding:0 20px;
+    display:flex;
+    align-items:center;
+    background:#64748b;
+    color:white;
+    border-radius:12px;
+    font-weight:600;
+}
+
+/* Table Wrapper */
+.table-wrapper{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    border-top:5px solid #8b1e2d;
 }
 
 /* Table */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+table{
+    width:100%;
+    border-collapse:collapse;
 }
 
-/* Header tabel */
-table th {
-    background-color: #34495e;
-    color: white;
-    padding: 12px;
-    text-align: center;
+th{
+    text-align:center;
+    font-size:15px;
+    letter-spacing:.3px;
+    background:#8b1e2d;
+    color:white;
+    padding:20px;
+    font-weight:600;
 }
 
-/* Isi tabel */
-table td {
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
+td{
+    padding:18px 16px;
+    font-size:14px;
+    border-bottom:1px solid #e5e7eb;
+    vertical-align:middle;
+    text-align:center;
 }
 
-/* Hover row */
-table tr:hover {
-    background-color: #f2f2f2;
+tbody tr{
+    transition:.2s;
+}
+
+tbody tr:hover{
+    background:#fff7f7;
 }
 
 /* Tombol aksi */
-td a {
-    padding: 6px 10px;
-    border-radius: 5px;
-    font-size: 13px;
-    margin: 0 3px;
-    color: white;
+.btn-edit{
+    background:#fff7ed;
+    color:#ea580c;
+    padding:8px 14px;
+    border-radius:10px;
+    font-weight:600;
+    display:inline-block;
 }
 
-/* Edit */
-td a:first-child {
-    background-color: #3498db;
+.btn-hapus{
+    background:#fef2f2;
+    color:#dc2626;
+    padding:8px 14px;
+    border-radius:10px;
+    font-weight:600;
+    display:inline-block;
 }
 
-td a:first-child:hover {
-    background-color: #2980b9;
-}
-
-/* Hapus */
-td a:last-child {
-    background-color: #e74c3c;
-}
-
-td a:last-child:hover {
-    background-color: #c0392b;
+.aksi{
+    white-space:nowrap;
 }
 </style>
 
 <?php
 include '../menu/koneksi.php';
-
+$halaman = "kategori";
 $data = mysqli_query($conn, "SELECT * FROM kategori_menu");
 
 if (!$data) {
     die("Query error: " . mysqli_error($conn));
 }
 ?>
-<h2>Data Kategori</h2>
-<a href="tambah_kategori.php" class="btn">+ Tambah Kategori</a>
-<a href="index_kategori.php" class="btn">kembali ke Menu</a>
-<table border="1" cellpadding="10">
+<?php include "../../components/sidebar.php"; ?>
+<div class="main-content">
+<div class="page-header">
+    <h1>Manajemen Kategori</h1>
+    <p>Kelola seluruh kategori menu restoran SagalaLada</p>
+</div>
+
+<div class="toolbar">
+    <a href="tambah_kategori.php" class="btn-tambah">
+        + Tambah Kategori
+    </a>
+</div>
+
+<div class="table-wrapper">
+<table>
     <tr>
         <th>No</th>
         <th>Nama Kategori</th>
@@ -130,14 +191,30 @@ if (!$data) {
     </tr>
 
     <?php $no = 1; ?>
-    <?php while($row = mysqli_fetch_assoc($data)) : ?>
+
+    <?php while ($row = mysqli_fetch_assoc($data)) : ?>
     <tr>
         <td><?= $no++; ?></td>
-        <td><?= htmlspecialchars($row['nama_kategori_menu']); ?></td>
+
         <td>
-            <a href="edit_kategori.php?id=<?= $row['id_kategori_menu']; ?>">Edit</a>
-            <a href="hapus_kategori.php?id=<?= $row['id_kategori_menu']; ?>" onclick="return confirm('Yakin hapus?')">Hapus</a>
+            <?= htmlspecialchars($row['nama_kategori_menu']); ?>
+        </td>
+
+        <td class="aksi">
+    <a href="edit_kategori.php?id=<?= $row['id_kategori_menu']; ?>" class="btn-edit">
+        Edit
+    </a>
+
+    <a href="hapus_kategori.php?id=<?= $row['id_kategori_menu']; ?>"
+       class="btn-hapus"
+       onclick="return confirm('Yakin hapus?')">
+        Hapus
+    </a>
         </td>
     </tr>
     <?php endwhile; ?>
 </table>
+</div>
+<script>
+feather.replace();
+</script>

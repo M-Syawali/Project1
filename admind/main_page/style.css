@@ -37,7 +37,7 @@ body {
 
   z-index: 3000;
 
-  background: #fff;
+  background: linear-gradient(135deg, #7d0a0a, #8b1e2d);
 
   border-radius: 18px;
 
@@ -55,31 +55,16 @@ body {
 .navbar-left {
   display: flex;
   align-items: center;
-  gap: 15px;
 }
 
 .navbar-left h2 {
   font-size: 22px;
+  color: white;
 }
 
 /* =========================
    HAMBURGER
 ========================= */
-
-.menu-toggle {
-  all: unset;
-  width: 45px;
-  height: 45px;
-
-  cursor: pointer;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-
-  transition: 0.3s;
-}
 
 /* =========================
    PROFILE
@@ -92,17 +77,19 @@ body {
 #profile-btn {
   border: none;
   background: none;
-
+  color: white;
   cursor: pointer;
-
   display: flex;
   align-items: center;
   gap: 8px;
-
   font-size: 15px;
   font-weight: 500;
 }
 
+#profile-btn svg {
+  color: white;
+  stroke: white;
+}
 .profile-menu {
   position: absolute;
 
@@ -277,8 +264,7 @@ body {
    CONTENT BOX
 ========================= */
 
-.chart-box,
-.table-box {
+.chart-box {
   margin-top: 25px;
 
   background: #fff;
@@ -292,15 +278,39 @@ body {
   opacity: 0;
 }
 
-.chart-box {
-  height: 320px;
+.table-box {
+  margin-top: 25px;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border-top: 5px solid #8b1e2d;
+  opacity: 0;
 }
 
-.section-title {
-  font-size: 18px;
+.table-title {
+  margin-top: 30px;
+  margin-bottom: 0.5px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  background: white;
+  color: #4b5563;
+
+  padding: 12px 20px;
+
+  border-radius: 12px;
+
+  font-size: 16px;
   font-weight: 600;
 
-  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(139, 30, 45, 0.25);
+}
+
+.chart-box {
+  height: 320px;
 }
 
 /* =========================
@@ -309,22 +319,28 @@ body {
 
 table {
   width: 100%;
-
   border-collapse: collapse;
+  background: white;
 }
 
 th {
-  background: #7d0a0a;
+  background: rgba(139, 30, 45, 0.92);
   color: white;
+  padding: 22px;
+  font-size: 16px;
+  font-weight: 600;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  text-align: left;
 }
 
-th,
 td {
-  padding: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  border-right: 1px solid #ddd;
+}
 
-  text-align: left;
-
-  border-bottom: 1px solid #eee;
+td small {
+  color: #777;
 }
 
 tbody tr {
@@ -332,39 +348,96 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background: #fff3f3;
-
-  transform: scale(1.01);
-
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  background: #fff7f7;
 }
 
-/* =========================
-   STATUS
-========================= */
+.pelanggan-box {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
 
-.status {
-  padding: 6px 12px;
+.pelanggan-icon {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: #fdf2f2;
+  color: #8b1e2d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
 
+.pelanggan-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: #8b1e2d;
+}
+
+.nomor-pesanan {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  color: #8b1e2d;
+}
+
+.nama-pelanggan {
+  font-size: 16px;
+  color: #111;
+}
+
+.item-menu {
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.25);
+}
+
+.item-menu:last-child {
+  border-bottom: none;
+}
+
+.nama-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #7a1a26;
+}
+
+.qty {
+  background: #fdf2f2;
+  color: #8b1e2d;
+  padding: 2px 8px;
   border-radius: 20px;
-
   font-size: 12px;
   font-weight: 600;
 }
 
-.selesai {
-  background: #dff7e2;
-  color: #15803d;
+.total-bayar {
+  font-size: 18px;
+  font-weight: 600;
+  color: #7a1a26;
+}
+/* =========================
+   STATUS
+========================= */
+.status-badge {
+  padding: 10px 15px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
-.proses {
-  background: #fff4d8;
-  color: #b45309;
-}
-
-.kirim {
-  background: #ddebff;
+.status-badge.diproses {
+  background: #dbeafe;
   color: #1d4ed8;
+}
+
+.status-badge.selesai {
+  background: #dcfce7;
+  color: #15803d;
 }
 
 /* =========================

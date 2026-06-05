@@ -19,14 +19,20 @@ function tambahKeSession($id_menu) {
     }
 }
 
-// 1. Logika jika tombol Paket diklik (menerima id_m dan id_min)
+// --- TAMBAHAN: Logika Menangkap Nomor Meja ---
+if (isset($_GET['meja'])) {
+    $_SESSION['no_meja'] = $_GET['meja'];
+}
+// ----------------------------------------------
+
+// 1. Logika jika tombol Paket diklik
 if (isset($_GET['id_m']) && isset($_GET['id_min'])) {
     tambahKeSession($_GET['id_m']);
     tambahKeSession($_GET['id_min']);
     
     echo "<script>alert('Paket berhasil ditambahkan ke keranjang!'); window.location='keranjang.php';</script>";
 
-// 2. Logika jika tombol Satuan diklik (menerima id)
+// 2. Logika jika tombol Satuan diklik
 } elseif (isset($_GET['id'])) {
     tambahKeSession($_GET['id']);
     

@@ -4,9 +4,12 @@ include "koneksi.php";
 
 $total_bayar = 0;
 $nomor_pesanan = "SGL-" . date("Ymd") . "-" . rand(100,999);
+
+$no_meja = isset($_SESSION['no_meja']) ? $_SESSION['no_meja'] : null;
 ?>
+
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id">  
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -178,23 +181,35 @@ $nomor_pesanan = "SGL-" . date("Ymd") . "-" . rand(100,999);
         </div>
 
         <!-- DATA PEMESAN -->
-        <div class="address-box">
+            <div class="address-box">
 
-            <div class="title">
-                <i class="fa-solid fa-user"></i>
-                <span>Detail Pemesan</span>
+                <div class="title">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Detail Pemesan</span>
+                </div>
+
+                <?php if ($no_meja): ?>
+                <div class="input-group">
+                    <label>Nomor Meja</label>
+                    <input 
+                        type="text" 
+                        value="Meja <?= htmlspecialchars($no_meja); ?>" 
+                        readonly 
+                        style="background-color: #f8f9fa; border: 1px solid #ddd; cursor: not-allowed; color: #555;">
+                    <input type="hidden" name="no_meja" value="<?= htmlspecialchars($no_meja); ?>">
+                </div>
+                <?php endif; ?>
+
+                <div class="input-group">
+                    <label>Nama Lengkap</label>
+                    <input 
+                        type="text" 
+                        name="nama" 
+                        required 
+                        placeholder="Masukkan nama Anda">
+                </div>
+
             </div>
-
-            <div class="input-group">
-                <label>Nama Lengkap</label>
-                <input
-                    type="text"
-                    name="nama"
-                    required
-                    placeholder="Masukkan nama Anda">
-            </div>
-
-        </div>
 
     </div>
 

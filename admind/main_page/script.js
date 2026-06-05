@@ -224,3 +224,15 @@ window.addEventListener("load", () => {
 // =====================================
 // TABLE HOVER EFFECT
 // =====================================
+
+//
+
+window.addEventListener("load", () => {
+  const tableTitle = document.querySelector(".table-title");
+
+  if (tableTitle) {
+    setTimeout(() => {
+      tableTitle.classList.add("show");
+    }, 850);
+  }
+});

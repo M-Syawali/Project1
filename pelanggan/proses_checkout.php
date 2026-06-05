@@ -2,91 +2,128 @@
 session_start();
 include "koneksi.php";
 
-// 1. CEK APAKAH KERANJANG KOSONG
 if (empty($_SESSION['keranjang'])) {
-    echo "<script>alert('Keranjang belanja Anda kosong!'); window.location='keranjang.php';</script>";
+    echo "<script>alert('Keranjang kosong!'); window.location='keranjang.php';</script>";
     exit;
 }
 
-// 2. SET TIMEZONE & AMBIL DATA DARI FORM
 date_default_timezone_set('Asia/Jakarta');
+
+/* =========================
+   VALIDASI INPUT
+========================= */
+if (!isset($_POST['nama']) || !isset($_POST['nomor_pesanan'])) {
+    die("Data tidak lengkap");
+}
+
 $nama_pelanggan = mysqli_real_escape_string($conn, $_POST['nama']);
 $nomor_pesanan = mysqli_real_escape_string($conn, $_POST['nomor_pesanan']);
-$tanggal_sekarang = date("Y-m-d H:i:s");
-$total_harga_final = 0;
 
-/* ---------------------------------------------------------
-   A. PROSES DATA PELANGGAN
-   --------------------------------------------------------- */
-// Cek apakah pelanggan sudah ada di database atau belum
-$cek_pelanggan = mysqli_query($conn, "SELECT id_pelanggan FROM pelanggan WHERE nama_pelanggan = '$nama_pelanggan'");
+$tanggal = date("Y-m-d H:i:s");
+$total = 0;
 
-if (mysqli_num_rows($cek_pelanggan) > 0) {
-    $data_plg = mysqli_fetch_assoc($cek_pelanggan);
-    $id_pelanggan = $data_plg['id_pelanggan'];
-} else {
-    // Jika pelanggan baru, simpan ke tabel pelanggan
-    mysqli_query($conn, "INSERT INTO pelanggan (nama_pelanggan) VALUES ('$nama_pelanggan')");
-    $id_pelanggan = mysqli_insert_id($conn);
-}
+/* =========================
+   AMBIL MEJA
+========================= */
+$no_meja = $_SESSION['no_meja'] ?? null;
 
-/* ---------------------------------------------------------
-   B. HITUNG TOTAL HARGA (LOOP PERTAMA)
-   --------------------------------------------------------- */
-foreach ($_SESSION['keranjang'] as $id_menu => $item) {
-    $qty = $item['jumlah'];
-    $q_menu = mysqli_query($conn, "SELECT harga FROM menu WHERE id_menu = '$id_menu'");
-    $d_menu = mysqli_fetch_assoc($q_menu);
-    
-    $subtotal = $d_menu['harga'] * $qty;
-    $total_harga_final += $subtotal;
-}
+/* =========================
+   TRANSAKSI START
+========================= */
+mysqli_begin_transaction($conn);
 
-/* ---------------------------------------------------------
-   C. SIMPAN KE TABEL PESANAN
-   --------------------------------------------------------- */
-// status_pesanan diisi 'diproses' sesuai ENUM di database kamu
-$insert_pesanan = mysqli_query($conn, "INSERT INTO pesanan (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan) 
-                                       VALUES ('$nomor_pesanan','$tanggal_sekarang', '$total_harga_final', 'diproses', '$id_pelanggan')");
+try {
 
-if (!$insert_pesanan) {
-    die("Gagal menyimpan pesanan: " . mysqli_error($conn));
-}
+    /* =========================
+       CEK / INSERT PELANGGAN
+    ========================= */
+    $cek = mysqli_query($conn, "SELECT id_pelanggan FROM pelanggan WHERE nama_pelanggan='$nama_pelanggan'");
 
-$id_pesanan_baru = mysqli_insert_id($conn);
-
-/* ---------------------------------------------------------
-   D. SIMPAN KE TABEL DETAIL_PESANAN (LOOP KEDUA)
-   --------------------------------------------------------- */
-foreach ($_SESSION['keranjang'] as $id_menu => $item) {
-    $qty = $item['jumlah'];
-    $pedas = mysqli_real_escape_string($conn, $item['pedas']);
-    $catatan = mysqli_real_escape_string($conn, $item['catatan']);
-    
-    // Ambil harga lagi untuk menghitung subtotal tiap baris
-    $q_menu = mysqli_query($conn, "SELECT harga FROM menu WHERE id_menu = '$id_menu'");
-    $d_menu = mysqli_fetch_assoc($q_menu);
-    $subtotal_item = $d_menu['harga'] * $qty;
-
-    // Simpan ke detail_pesanan (Pastikan kolom pedas, catatan, subtotal sudah kamu buat di SQL)
-    $insert_detail = mysqli_query($conn, "INSERT INTO detail_pesanan (id_pesanan, id_menu, jumlah, subtotal, pedas, catatan) 
-                                          VALUES ('$id_pesanan_baru', '$id_menu', '$qty', '$subtotal_item', '$pedas', '$catatan')");
-    
-    if (!$insert_detail) {
-        die("Gagal menyimpan detail pesanan: " . mysqli_error($conn));
+    if (mysqli_num_rows($cek) > 0) {
+        $id_pelanggan = mysqli_fetch_assoc($cek)['id_pelanggan'];
+    } else {
+        mysqli_query($conn, "INSERT INTO pelanggan (nama_pelanggan) VALUES ('$nama_pelanggan')");
+        $id_pelanggan = mysqli_insert_id($conn);
     }
+
+    /* =========================
+       HITUNG TOTAL
+    ========================= */
+    foreach ($_SESSION['keranjang'] as $id_menu => $item) {
+
+        $q = mysqli_query($conn, "SELECT harga FROM menu WHERE id_menu='$id_menu'");
+        $d = mysqli_fetch_assoc($q);
+
+        $total += $d['harga'] * $item['jumlah'];
+    }
+
+    /* =========================
+       INSERT PESANAN
+    ========================= */
+    if ($no_meja) {
+
+        $sql = "INSERT INTO pesanan 
+        (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan, id_meja)
+        VALUES 
+        ('$nomor_pesanan', '$tanggal', '$total', 'diproses', '$id_pelanggan', '$no_meja')";
+
+    } else {
+
+        $sql = "INSERT INTO pesanan 
+        (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan)
+        VALUES 
+        ('$nomor_pesanan', '$tanggal', '$total', 'diproses', '$id_pelanggan')";
+    }
+
+    mysqli_query($conn, $sql);
+
+    $id_pesanan = mysqli_insert_id($conn);
+
+    if (!$id_pesanan) {
+        throw new Exception("Gagal membuat pesanan");
+    }
+
+    /* =========================
+       INSERT DETAIL PESANAN
+    ========================= */
+    foreach ($_SESSION['keranjang'] as $id_menu => $item) {
+
+        $qty = $item['jumlah'];
+        $pedas = mysqli_real_escape_string($conn, $item['pedas']);
+        $catatan = mysqli_real_escape_string($conn, $item['catatan']);
+
+        $q = mysqli_query($conn, "SELECT harga FROM menu WHERE id_menu='$id_menu'");
+        $d = mysqli_fetch_assoc($q);
+
+        $subtotal = $d['harga'] * $qty;
+
+        mysqli_query($conn, "
+            INSERT INTO detail_pesanan
+            (id_pesanan, id_menu, jumlah, subtotal, pedas, catatan)
+            VALUES
+            ('$id_pesanan', '$id_menu', '$qty', '$subtotal', '$pedas', '$catatan')
+        ");
+    }
+
+    /* =========================
+       COMMIT
+    ========================= */
+    mysqli_commit($conn);
+
+    /* =========================
+       CLEAR KERANJANG
+    ========================= */
+    unset($_SESSION['keranjang']);
+
+    echo "<script>
+        alert('Pesanan berhasil dikirim!');
+        window.location='status_pesanan.php?id=$id_pesanan';
+    </script>";
+
+} catch (Exception $e) {
+
+    mysqli_rollback($conn);
+
+    die("Gagal checkout: " . $e->getMessage());
 }
-
-/* ---------------------------------------------------------
-   E. SELESAI
-   --------------------------------------------------------- */
-// Kosongkan keranjang
-unset($_SESSION['keranjang']);
-
-echo "
-<script>
-    alert('Pesanan Anda berhasil dikirim! Admin akan segera memproses.');
-    window.location='status_pesanan.php?id=$id_pesanan_baru'; 
-</script>
-";
 ?>

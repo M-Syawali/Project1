@@ -21,6 +21,8 @@ $result = mysqli_query($conn, $query);
     <title>Kelola Menu - SagalaLada</title>
     <script src="https://unpkg.com/feather-icons"></script>
     <link rel="stylesheet" href="../../asset/style_sidebar.css">
+    <link rel="stylesheet" href="../../main_page/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
     :root {
         --primary: #1e293b;
@@ -353,21 +355,17 @@ $result = mysqli_query($conn, $query);
     </div>
 
     <div class="toolbar">
-    <div class="toolbar-left">
-        <input type="text" placeholder="Cari menu...">
-        <select name="kategori">
+     <div class="toolbar-left">
+        <input type="text" id="searchInput" placeholder="Cari menu...">
+
+        <select id="kategoriSelect" name="kategori">
             <option value="">Semua Kategori</option>
-            <?php 
-            // TAMBAHKAN LOOPING INI:
-            while($k = mysqli_fetch_assoc($result_kategori)) { ?>
+            <?php while($k = mysqli_fetch_assoc($result_kategori)) { ?>
                 <option value="<?= $k['id_kategori_menu']; ?>">
                     <?= $k['nama_kategori_menu']; ?>
                 </option>
             <?php } ?>
         </select>
-        <button type="submit" class="btn-cari">
-            Cari
-        </button>
     </div>
 
     <div class="toolbar-right">
@@ -436,6 +434,40 @@ $result = mysqli_query($conn, $query);
 </div>
 <script>
 feather.replace();
+</script>
+
+<script>
+document.getElementById("searchInput").addEventListener("input", cariMenu);
+document.getElementById("kategoriSelect").addEventListener("change", cariMenu);
+
+function cariMenu() {
+    let keyword = document.getElementById("searchInput").value.toLowerCase();
+    let kategori = document.getElementById("kategoriSelect").value;
+
+    let rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach(row => {
+        let namaMenu = row.cells[2].innerText.toLowerCase(); // kolom Nama Menu
+        let namaKategori = row.cells[3].innerText; // kolom Kategori
+
+        let cocokNama = namaMenu.includes(keyword);
+
+        let cocokKategori = true;
+        if (kategori !== "") {
+            let selectText = document.querySelector(
+                '#kategoriSelect option[value="' + kategori + '"]'
+            ).textContent.trim();
+
+            cocokKategori = namaKategori.trim() === selectText;
+        }
+
+        if (cocokNama && cocokKategori) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+}
 </script>
 </body>
 </html>
