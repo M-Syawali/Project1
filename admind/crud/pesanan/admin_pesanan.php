@@ -387,6 +387,15 @@ include "koneksi.php";
         padding:0;
         margin:0;
         }
+
+        .badge-meja{
+    background:#ffe5e5;
+    color:#8b1e2d;
+    padding:6px 12px;
+    border-radius:1px;
+    font-weight:600;
+    font-size:18px;
+}
     </style>
 </head>
 <body>
@@ -445,7 +454,6 @@ $count_total   = getCount($conn, '', 'lunas'); // Hanya menghitung 'dibayar'
         </div>
     </div>
     
-    ...
 
     <form method="GET" class="filter-bar">
 
@@ -481,6 +489,7 @@ $count_total   = getCount($conn, '', 'lunas'); // Hanya menghitung 'dibayar'
         <table>       
             <thead>
             <tr>
+                <th>Meja</th>
                 <th>Pelanggan</th>
                 <th>Detail Item</th>
                 <th>Total Bayar</th>
@@ -525,6 +534,15 @@ $count_total   = getCount($conn, '', 'lunas'); // Hanya menghitung 'dibayar'
             ?>
 
             <tr>
+                <td>
+                    <?php 
+                        if (!empty($row['id_meja'])) {
+                            echo "<span class='badge-meja'>Meja:".$row['id_meja']."</span>";
+                        } else {
+                            echo "-";
+                        }
+                    ?>
+                </td>
                 <td>
                     <div class="pelanggan-box">
                         <div class="pelanggan-icon">
