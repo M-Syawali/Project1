@@ -166,8 +166,8 @@ $qPesananTerbaru = mysqli_query(
 
           <div>
             <h4>Pendapatan Keseluruhan</h4>
-            <h2>Rp <?= number_format($pendapatanTotal,0,',','.') ?></h2>
-          </div>
+            <h2>Rp <?= number_format($pendapatanTotal, 0, ',', '.') ?></h2>
+        </div>
         </div>
       </section>
 

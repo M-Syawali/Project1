@@ -62,66 +62,127 @@ const idPesanan = "<?= $id_pesanan; ?>";
 
 function renderStatus(status) {
     status = status ? status.toLowerCase().trim() : "";
-    if (status === currentStatus) return; 
+
+    if (status === currentStatus) return;
     currentStatus = status;
 
-    const displayID = "#SGL-" + idPesanan; 
+    const displayID = "#SGL-" + idPesanan;
 
-    // KONDISI 1: DIPROSES
-    if (status === "diproses") {
+    // PENDING
+    if (status === "pending") {
+
         statusCard.innerHTML = `
             <div class="order-id">PESANAN ${displayID}</div>
-            <div class="loader"></div>
-            <h2>Pesanan Diproses</h2>
-            <p>Sabar ya, koki kami sedang meracik bumbu rahasia untuk pesananmu.</p>
+
+            <div class="check-icon bg-gold">
+                <i class="fa-solid fa-money-bill-wave"></i>
+            </div>
+
+            <h2>Menunggu Pembayaran</h2>
+
+            <p>
+                Pesanan berhasil dibuat.
+                Silakan lakukan pembayaran ke kasir agar pesanan dapat diproses.
+            </p>
         `;
-    } 
-    // KONDISI 2: SELESAI
-    else if (status === "selesai") {
+    }
+
+    // DIBAYAR
+    else if (status === "dibayar") {
+
         statusCard.innerHTML = `
             <div class="order-id">PESANAN ${displayID}</div>
+
+            <div class="check-icon bg-maroon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <h2>Pembayaran Berhasil</h2>
+
+            <p>
+                Terima kasih.
+                Pembayaran telah dikonfirmasi dan pesanan akan segera diproses oleh dapur.
+            </p>
+        `;
+    }
+
+    // DIPROSES
+    else if (status === "diproses") {
+
+        statusCard.innerHTML = `
+            <div class="order-id">PESANAN ${displayID}</div>
+
+            <div class="loader"></div>
+
+            <h2>Pesanan Sedang Diproses</h2>
+
+            <p>
+                Koki kami sedang menyiapkan pesanan Anda.
+                Mohon tunggu sebentar.
+            </p>
+        `;
+    }
+
+    // SELESAI
+    else if (status === "selesai") {
+
+        statusCard.innerHTML = `
+            <div class="order-id">PESANAN ${displayID}</div>
+
             <div class="check-icon bg-gold">
                 <i class="fa-solid fa-utensils"></i>
             </div>
-            <h2>Pesanan Selesai</h2>
-            <p>Pesananmu sudah siap di meja! Selamat menikmati hidangan kami. 🍜</p>
-        `;
-    }
-    // KONDISI 3: DIBAYAR
-    else if (status === "dibayar") {
-        statusCard.innerHTML = `
-            <div class="order-id">TRANSAKSI ${displayID}</div>
-            <div class="check-icon bg-maroon">
-                <i class="fa-solid fa-house-user"></i>
-            </div>
-            <h2>Selamat Datang Kembali!</h2>
-            <p>Terima kasih sudah berkunjung ke SagalaLada. Kami tunggu kedatanganmu berikutnya!</p>
+
+            <h2>Pesanan Siap!</h2>
+
+            <p>
+                Pesanan Anda sudah selesai dibuat dan siap disajikan.
+                Selamat menikmati 😊
+            </p>
+
             <a href="../index.html" class="btn-dashboard">
-                <i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard
+                <i class="fa-solid fa-house"></i>
+                Kembali ke Beranda
             </a>
         `;
-    } 
-    // KONDISI TERBARU: DIBATALKAN
+    }
+
+    // DIBATALKAN
     else if (status === "dibatalkan") {
+
         statusCard.innerHTML = `
             <div class="order-id">PESANAN ${displayID}</div>
-            <div class="check-icon" style="background: #ef4444;">
+
+            <div class="check-icon" style="background:#ef4444;">
                 <i class="fa-solid fa-xmark"></i>
             </div>
+
             <h2>Pesanan Dibatalkan</h2>
-            <p>Mohon maaf, pesananmu tidak dapat kami proses saat ini. Silakan hubungi kasir atau buat pesanan baru.</p>
-            <a href="menu.php" class="btn-dashboard" style="background: #444;">
-                <i class="fa-solid fa-rotate-left"></i> Pesan Lagi
+
+            <p>
+                Pesanan ini telah dibatalkan.
+                Jika terjadi kesalahan silakan hubungi kasir.
+            </p>
+
+            <a href="menu.php" class="btn-dashboard" style="background:#444;">
+                <i class="fa-solid fa-rotate-left"></i>
+                Pesan Lagi
             </a>
         `;
     }
-    // KONDISI LAIN: LOADING / ERROR
+
     else {
+
         statusCard.innerHTML = `
             <div class="order-id">MENYINKRONKAN...</div>
+
             <div class="loader"></div>
+
             <h2>Memperbarui Status</h2>
-            <p>Tunggu sebentar, kami sedang mengambil data terbaru.</p>
+
+            <p>
+                Mohon tunggu sebentar...
+            </p>
         `;
     }
 }
@@ -132,7 +193,10 @@ renderStatus("<?= $status; ?>");
 // Cek status secara Real-time setiap 3 detik
 const autoCheck = setInterval(() => {
     // Berhenti cek jika status sudah 'dibayar' (biar hemat resource)
-    if (currentStatus === "dibayar") {
+    if (
+    currentStatus === "selesai" ||
+    currentStatus === "dibatalkan"
+    ) {
         clearInterval(autoCheck);
         return;
     }

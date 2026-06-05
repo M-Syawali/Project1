@@ -62,17 +62,17 @@ try {
     ========================= */
     if ($no_meja) {
 
-        $sql = "INSERT INTO pesanan 
-        (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan, id_meja)
-        VALUES 
-        ('$nomor_pesanan', '$tanggal', '$total', 'diproses', '$id_pelanggan', '$no_meja')";
+    $sql = "INSERT INTO pesanan 
+    (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan, id_meja)
+    VALUES 
+    ('$nomor_pesanan', '$tanggal', '$total', 'pending', '$id_pelanggan', '$no_meja')";
 
     } else {
 
         $sql = "INSERT INTO pesanan 
         (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan)
         VALUES 
-        ('$nomor_pesanan', '$tanggal', '$total', 'diproses', '$id_pelanggan')";
+        ('$nomor_pesanan', '$tanggal', '$total', 'pending', '$id_pelanggan')";
     }
 
     mysqli_query($conn, $sql);

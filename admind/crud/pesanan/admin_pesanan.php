@@ -194,10 +194,6 @@ include "koneksi.php";
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        table tbody tr:hover {
-            background: transparent !important;
-        }
-
         th, td {
             padding: 12px;
             text-align: left;
@@ -208,6 +204,13 @@ include "koneksi.php";
             border-bottom:1px solid #e5e7eb;
         }
 
+        tbody tr{
+            transition:.2s;
+        }
+
+        tbody tr:hover{
+            background:#fff7f7;
+        }
         th {
             background: rgba(139,30,45,.92);
             backdrop-filter: blur(10px);
@@ -398,6 +401,7 @@ include "koneksi.php";
     </style>
 </head>
 <body>
+<body>
 <?php 
 // 1. PASTIKAN KODE INI BERADA DI ATAS SEBELUM HTML
 $halaman = "pesanan"; 
@@ -422,40 +426,48 @@ function getCount($conn, $status, $type = 'status') {
     return $data['total'] ?? 0;
 }
 
-$count_batal   = getCount($conn, 'dibatalkan', 'status');
-$count_proses  = getCount($conn, 'diproses', 'status');
-$count_selesai = getCount($conn, 'selesai', 'status');
-$count_bayar = getCount($conn, 'dibayar', 'status');
-$count_total   = getCount($conn, '', 'lunas'); // Hanya menghitung 'dibayar'
-?>
+$count_pending   = getCount($conn, 'pending');
+$count_dibayar   = getCount($conn, 'dibayar');
+$count_proses    = getCount($conn, 'diproses');
+$count_selesai   = getCount($conn, 'selesai');
+$count_batal     = getCount($conn, 'dibatalkan');
 
+?>
 <div class="main-content">
     <div class="page-header">
         <h1>Manajemen Pesanan</h1>
     </div>
 
-    <div class="summary-grid">
-    <div class="summary-card">
-        <span>Sudah Bayar</span>
-        <h3><?php echo $count_bayar; ?></h3>
+     <div class="summary-grid">
+
+        <div class="summary-card">
+            <span>Menunggu Bayar</span>
+            <h3><?= $count_pending; ?></h3>
+        </div>
+
+        <div class="summary-card">
+            <span>Sudah Dibayar</span>
+            <h3><?= $count_dibayar; ?></h3>
+        </div>
+
+        <div class="summary-card">
+            <span>Diproses</span>
+            <h3><?= $count_proses; ?></h3>
+        </div>
+
+        <div class="summary-card">
+            <span>Selesai</span>
+            <h3><?= $count_selesai; ?></h3>
+        </div>
+
+        <div class="summary-card">
+            <span>Dibatalkan</span>
+            <h3><?= $count_batal; ?></h3>
+        </div>
+
     </div>
 
-    <div class="summary-card">
-        <span>Diproses</span>
-        <h3><?php echo $count_proses; ?></h3>
-    </div>
-
-    <div class="summary-card">
-        <span>Selesai</span>
-        <h3><?php echo $count_selesai; ?></h3>
-    </div>
-
-    <div class="summary-card">
-        <span>Dibatalkan</span>
-        <h3><?php echo $count_batal; ?></h3>
-    </div>
-</div>
-    
+        
 
     <form method="GET" class="filter-bar">
 
@@ -503,12 +515,13 @@ $count_total   = getCount($conn, '', 'lunas'); // Hanya menghitung 'dibayar'
 
             <?php
             // Query menggunakan TRIM dan LOWER agar pencocokan kata 'dibatalkan' lebih akurat
-            $sql = "SELECT p.*, pl.nama_pelanggan 
-                FROM pesanan p
-                JOIN pelanggan pl ON p.id_pelanggan = pl.id_pelanggan 
-                WHERE LOWER(TRIM(p.status_pesanan)) != 'dibatalkan'
-                AND LOWER(TRIM(p.status_pesanan)) != 'selesai'";
-
+            // Query yang mengecualikan status 'dibatalkan' DAN 'dibayar'
+            // Ganti query utama bagian $sql untuk menampilkan pesanan yang sudah dibayar atau diproses
+            $sql = "SELECT p.*, pl.nama_pelanggan
+            FROM pesanan p
+            JOIN pelanggan pl ON p.id_pelanggan = pl.id_pelanggan
+            WHERE LOWER(TRIM(p.status_pesanan))
+            IN ('pending', 'dibayar', 'diproses')";
                 $search = $_GET['search'] ?? '';
                 $status = $_GET['status'] ?? '';
 
@@ -590,37 +603,50 @@ $count_total   = getCount($conn, '', 'lunas'); // Hanya menghitung 'dibayar'
             </td>
                 <td><span class="total-bayar"> Rp <?php echo number_format($row['total_harga'], 0, ',', '.'); ?></span>
                 </td>
-                <td><span class="status-badge <?php echo $status; ?>">
-                    <?php
-                    if ($status == 'dibayar') {
-                        echo 'menunggu pembayaran';
-                    } else {
-                        echo $status;
-                    }
-                    ?>
-                </span></td>
+                <td><span class="status-badge <?php echo $status; ?>"><?php echo $status; ?></span></td>
                 <td>
-                    <?php if ($status == 'dibayar'): ?>
+
+                    <?php if ($status == 'pending'): ?>
+
+                        <a class="btn-status btn-bayar"
+                        href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibayar">
+                            💳 Konfirmasi Bayar
+                        </a>
+
+                        <a class="btn-status btn-batal"
+                        href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibatalkan"
+                        onclick="return confirm('Yakin ingin membatalkan pesanan ini?')">
+                            ❌ Batalkan
+                        </a>
+
+                    <?php elseif ($status == 'dibayar'): ?>
 
                         <a class="btn-status btn-proses"
                         href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=diproses">
-                            <i data-feather="check-circle"></i> Konfirmasi Pembayaran
+                            🍳 Mulai Proses
+                        </a>
+
+                        <a class="btn-status btn-batal"
+                        href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibatalkan"
+                        onclick="return confirm('Yakin ingin membatalkan pesanan ini?')">
+                            ❌ Batalkan
                         </a>
 
                     <?php elseif ($status == 'diproses'): ?>
 
                         <a class="btn-status btn-selesai"
                         href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=selesai">
-                            <i data-feather="check"></i> Set Selesai
+                            ✅ Set Selesai
                         </a>
 
-                    <?php elseif ($status == 'selesai'): ?>
-
-                        <span style="color: green; font-weight: bold;">
-                            ✔ Pesanan Selesai
-                        </span>
+                        <a class="btn-status btn-batal"
+                        href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibatalkan"
+                        onclick="return confirm('Yakin ingin membatalkan pesanan ini?')">
+                            ❌ Batalkan
+                        </a>
 
                     <?php endif; ?>
+
                 </td>
             </tr>
             <?php 

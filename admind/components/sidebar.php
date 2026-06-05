@@ -34,7 +34,7 @@
             </li>
     
             <li class="<?= ($halaman == 'laporan') ? 'active' : '' ?>">
-            <a href="../laporan/index.php">
+            <a href="../crud/laporan/index.php">
                 <i data-feather="bar-chart-2"></i>
                 <span>Laporan</span>
             </a>

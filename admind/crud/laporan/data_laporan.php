@@ -8,7 +8,7 @@ include '../menu/koneksi.php';
 $tgl_awal = $_GET['tgl_awal'];
 $tgl_akhir = $_GET['tgl_akhir'];
 
-// Query dengan JOIN agar data dari 4 tabel tergabung
+// Hanya menampilkan pesanan dengan status Dibayar
 $query = "SELECT 
             p.id_pesanan, 
             p.tanggal, 
@@ -25,6 +25,7 @@ $query = "SELECT
           LEFT JOIN detail_pesanan dp ON p.id_pesanan = dp.id_pesanan
           LEFT JOIN menu m ON dp.id_menu = m.id_menu
           WHERE DATE(p.tanggal) BETWEEN '$tgl_awal' AND '$tgl_akhir'
+          AND p.status_pesanan = 'Dibayar'
           GROUP BY p.id_pesanan
           ORDER BY p.id_pesanan ASC";
 
@@ -33,7 +34,7 @@ $result = mysqli_query($conn, $query);
 
 <a class="btn-kembali" href="index.php">← Kembali</a>
 
-<h2>Laporan Pesanan (<?php echo "$tgl_awal s/d $tgl_akhir"; ?>)</h2>
+<h2>Laporan Pesanan Dibayar (<?php echo "$tgl_awal s/d $tgl_akhir"; ?>)</h2>
 
 <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%;">
     <thead>
@@ -51,54 +52,105 @@ $result = mysqli_query($conn, $query);
     </thead>
     <tbody>
     <?php 
-    $total_keseluruhan = 0; // Inisialisasi variabel total
-    while($row = mysqli_fetch_assoc($result)) : 
+    $total_keseluruhan = 0;
+
+    while($row = mysqli_fetch_assoc($result)) :
+
         $menus = explode('||', $row['daftar_menu']);
         $jumlahs = explode('||', $row['daftar_jumlah']);
         $pedass = explode('||', $row['daftar_pedas']);
         $catatans = explode('||', $row['daftar_catatan']);
         $subtotals = explode('||', $row['daftar_subtotal']);
+
         $count = count($menus);
 
-        // Tambahkan setiap subtotal ke variabel total_keseluruhan
         foreach ($subtotals as $sub) {
             $total_keseluruhan += (float)$sub;
         }
     ?>
+
         <tr>
-            <td rowspan="<?= $count ?>" style="text-align: center; vertical-align: middle;"><?= $row['id_pesanan']; ?></td>
-            <td rowspan="<?= $count ?>" style="text-align: center; vertical-align: middle;"><?= $row['tanggal']; ?></td>
-            <td rowspan="<?= $count ?>" style="text-align: center; vertical-align: middle;"><?= $row['nama_pelanggan']; ?></td>
-            
-            <td style="text-align: center;"><?= $menus[0]; ?></td>
-            <td style="text-align: center;"><?= $jumlahs[0]; ?></td>
-            <td style="text-align: center;"><?= $pedass[0]; ?></td>
-            <td style="text-align: center;"><?= $catatans[0]; ?></td>
-            <td style="text-align: right;">Rp <?= number_format((float)$subtotals[0], 0, ',', '.'); ?></td>
-            
-            <td rowspan="<?= $count ?>" style="text-align: center; vertical-align: middle;"><?= $row['status_pesanan']; ?></td>
+            <td rowspan="<?= $count ?>" style="text-align:center; vertical-align:middle;">
+                <?= $row['id_pesanan']; ?>
+            </td>
+
+            <td rowspan="<?= $count ?>" style="text-align:center; vertical-align:middle;">
+                <?= $row['tanggal']; ?>
+            </td>
+
+            <td rowspan="<?= $count ?>" style="text-align:center; vertical-align:middle;">
+                <?= $row['nama_pelanggan']; ?>
+            </td>
+
+            <td style="text-align:center;">
+                <?= $menus[0]; ?>
+            </td>
+
+            <td style="text-align:center;">
+                <?= $jumlahs[0]; ?>
+            </td>
+
+            <td style="text-align:center;">
+                <?= $pedass[0]; ?>
+            </td>
+
+            <td style="text-align:center;">
+                <?= $catatans[0]; ?>
+            </td>
+
+            <td style="text-align:right;">
+                Rp <?= number_format((float)$subtotals[0], 0, ',', '.'); ?>
+            </td>
+
+            <td rowspan="<?= $count ?>" style="text-align:center; vertical-align:middle;">
+                <?= $row['status_pesanan']; ?>
+            </td>
         </tr>
-        
+
         <?php for($i = 1; $i < $count; $i++) : ?>
         <tr>
-            <td style="text-align: center;"><?= $menus[$i]; ?></td>
-            <td style="text-align: center;"><?= $jumlahs[$i]; ?></td>
-            <td style="text-align: center;"><?= $pedass[$i]; ?></td>
-            <td style="text-align: center;"><?= $catatans[$i]; ?></td>
-            <td style="text-align: right;">Rp <?= number_format((float)$subtotals[$i], 0, ',', '.'); ?></td>
+            <td style="text-align:center;">
+                <?= $menus[$i]; ?>
+            </td>
+
+            <td style="text-align:center;">
+                <?= $jumlahs[$i]; ?>
+            </td>
+
+            <td style="text-align:center;">
+                <?= $pedass[$i]; ?>
+            </td>
+
+            <td style="text-align:center;">
+                <?= $catatans[$i]; ?>
+            </td>
+
+            <td style="text-align:right;">
+                Rp <?= number_format((float)$subtotals[$i], 0, ',', '.'); ?>
+            </td>
         </tr>
         <?php endfor; ?>
+
     <?php endwhile; ?>
     </tbody>
-    
+
     <tfoot>
-        <tr style="background-color: #f2f2f2; font-weight: bold;">
-            <td colspan="7" style="text-align: right;">Total Keseluruhan</td>
-            <td style="text-align: right;">Rp <?= number_format($total_keseluruhan, 0, ',', '.'); ?></td>
+        <tr style="background-color:#f2f2f2; font-weight:bold;">
+            <td colspan="7" style="text-align:right;">
+                Total Keseluruhan
+            </td>
+
+            <td style="text-align:right;">
+                Rp <?= number_format($total_keseluruhan, 0, ',', '.'); ?>
+            </td>
+
             <td></td>
         </tr>
     </tfoot>
 </table>
 
 <br>
-<a href="cetak_laporan.php?tgl_awal=<?= $tgl_awal ?>&tgl_akhir=<?= $tgl_akhir ?>" target="_blank">Cetak Laporan</a>
+
+<a href="cetak_laporan.php?tgl_awal=<?= $tgl_awal ?>&tgl_akhir=<?= $tgl_akhir ?>" target="_blank">
+    Cetak Laporan
+</a>
