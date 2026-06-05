@@ -68,7 +68,7 @@ if (isset($_POST['update'])) {
 
     // Eksekusi query ke database
     if (mysqli_query($conn, $update)) {
-        header("Location:../index_admin.php");
+        header("Location:index_admin.php");
         exit();
     } else {
         echo "Gagal memperbarui data: " . mysqli_error($conn);

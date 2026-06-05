@@ -56,7 +56,12 @@ include "koneksi.php";
 
                     if(!empty($_SESSION['keranjang'])){
                         foreach($_SESSION['keranjang'] as $id_menu => $item){
-                            $query = mysqli_query($conn, "SELECT * FROM menu WHERE id_menu='$id_menu'");
+                            $query = mysqli_query($conn, "SELECT menu.*, kategori_menu.nama_kategori_menu
+                            FROM menu
+                            LEFT JOIN kategori_menu
+                                ON menu.id_kategori_menu = kategori_menu.id_kategori_menu
+                            WHERE menu.id_menu='$id_menu'
+                            ");
                             $data = mysqli_fetch_assoc($query);
 
                             $qty_fix = (int)$item['jumlah'];
@@ -78,6 +83,8 @@ include "koneksi.php";
                                         <form class="auto-save-form" style="margin-top: 10px;">
                                             <input type="hidden" name="id_menu" value="<?= $id_menu ?>">
 
+                                            <?php $kategori = strtolower(trim($data['nama_kategori_menu'])); 
+                                            if($kategori != 'minuman'):?>
                                             <div style="margin-top:8px;">
                                                 <label style="font-size: 12px;"><b>Tingkat Pedas:</b></label>
                                                 <select name="pedas" class="form-control auto-input" style="width: 100%; padding: 5px; border-radius: 4px; border: 1px solid #ddd;">
@@ -85,10 +92,13 @@ include "koneksi.php";
                                                     $levels = ['Original', 'Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5'];
                                                     foreach($levels as $lv): 
                                                     ?>
-                                                        <option value="<?= $lv ?>" <?= ($pedas == $lv) ? "selected" : "" ?>><?= $lv ?></option>
+                                                        <option value="<?= $lv ?>" <?= ($pedas == $lv) ? "selected" : "" ?>>
+                                                            <?= $lv ?>
+                                                        </option>
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
+                                            <?php endif; ?>
 
                                             <div style="margin-top:8px;">
                                                 <label style="font-size: 12px;"><b>Catatan:</b></label>
@@ -96,7 +106,7 @@ include "koneksi.php";
                                                     name="catatan"
                                                     rows="2"
                                                     class="form-control auto-input"
-                                                    placeholder="Contoh: jangan pakai bawang"
+                                                    placeholder=""
                                                     style="width: 100%; padding: 5px; border-radius: 4px; border: 1px solid #ddd; font-size: 13px;"
                                                 ><?= htmlspecialchars($catatan) ?></textarea>
                                             </div>
@@ -142,7 +152,7 @@ include "koneksi.php";
                     <tfoot>
                         <tr>
                             <td colspan="4" style="text-align:right; font-weight:bold; padding: 20px;">TOTAL PEMBAYARAN</td>
-                            <td colspan="2" class="total-price" style="color:#e65100; font-size:1.3rem; font-weight:bold;">
+                            <td colspan="2" class="total-price" style="color:#ffff; font-size:1.3rem; font-weight:bold;">
                                 Rp <?= number_format($total_belanja,0,',','.'); ?>
                             </td>
                         </tr>
