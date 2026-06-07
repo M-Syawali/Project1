@@ -1,11 +1,19 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Manajemen Kategori</title>
 
 <link rel="stylesheet" href="../../asset/style_sidebar.css">
-<link rel="stylesheet" href="../../main_page/style.css">
 
 <script src="https://unpkg.com/feather-icons"></script>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
+
 :root {
     --primary: #1e293b;
     --accent: #f97316;
@@ -23,59 +31,129 @@
 }
 
 body{
-    font-family:'Segoe UI',sans-serif;
-    background:#f5f6fa;
+    font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f8f5f2;
     color:var(--text);
     margin:0;
 }
 
+.main-content{
+    margin-left:260px;
+    padding:25px;
+}
+
 /* Header */
-.page-header{
-    background:linear-gradient(135deg,#7d0a0a,#a31621);
-    padding:30px;
-    border-radius:20px;
+    .page-header{
+        background:linear-gradient(135deg,#7d0a0a,#a31621);
+        padding:20px 25px;
+        border-radius:18px;
+        margin-bottom:25px;
+        color:white;
+        box-shadow:0 10px 25px rgba(0,0,0,.12);
+        }
+
+    .page-header h1{
+        margin:0;
+        font-size:24px;
+        font-weight:600;
+    }
+
+    .page-header p{
+        margin-top:6px;
+        opacity:.9;
+        font-size: 14px;
+        color:rgba(255,255,255,.85);
+    }
+
+/* Summary Card */
+.summary-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
     margin-bottom:25px;
-    color:white;
-    box-shadow:0 10px 25px rgba(0,0,0,.12);
 }
 
-.page-header h1{
-    margin:0;
-    font-size:38px;
-    font-weight:700;
+.summary-card{
+    min-height: 110px;
+
+    padding:24px;
+
+    display:flex;
+    align-items:center;
+    gap:16px;
+
+    background:#fff;
+    border-radius:20px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
 }
 
-.page-header p{
-    margin-top:8px;
-    opacity:.9;
+.summary-icon{
+            width:64px;
+            height:64px;
+
+            border-radius:18px;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            flex-shrink:0;
+
+            background:#fdf1f1;
+        }
+
+        .summary-icon svg{
+            width:28px;
+            height:28px;
+}
+
+        .summary-card span{
+            font-size:13px;
+            font-weight:600;
+            color:#64748b;
+        }
+
+        .summary-card h3{
+            margin-top:4px;
+
+            font-size:28px;
+            line-height:1.1;
+
+            font-weight:700;
+            color:#7d0a0a;
+        }
+
+
+.summary-card small{
+    font-size:13px;
+    color:#94a3b8;
 }
 
 /* Toolbar */
 .toolbar{
-    background:white;
-    padding:18px 20px;
-    border-radius:18px;
-    box-shadow:0 5px 15px rgba(0,0,0,.06);
     display:flex;
-    justify-content:flex-end;
     align-items:center;
-    gap:10px;
-    margin-bottom:25px;
+    margin-bottom:12px;
+    padding: 10px 0;
 }
 
-/* Tombol */
-a{
-    text-decoration:none;
-}
 .btn-tambah{
+    display: inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    widht:auto;
     height:48px;
     padding:0 20px;
-    display:flex;
-    align-items:center;
+
     background:#8b1e2d;
     color:white;
+
     border-radius:12px;
+    font-size:14px;
     font-weight:600;
+
     transition:.25s;
     box-shadow:0 8px 18px rgba(139,30,45,.25);
 }
@@ -83,6 +161,12 @@ a{
 .btn-tambah:hover{
     transform:translateY(-2px);
 }
+/* Tombol */
+a{
+    text-decoration:none;
+}
+
+
 
 .btn-kembali{
     height:48px;
@@ -101,13 +185,14 @@ a{
     border-radius:20px;
     overflow:hidden;
     box-shadow:0 8px 25px rgba(0,0,0,.08);
-    border-top:5px solid #8b1e2d;
+
 }
 
 /* Table */
 table{
     width:100%;
     border-collapse:collapse;
+    
 }
 
 th{
@@ -126,6 +211,7 @@ td{
     border-bottom:1px solid #e5e7eb;
     vertical-align:middle;
     text-align:center;
+    border-right: 1px solid #ddd;
 }
 
 tbody tr{
@@ -154,67 +240,146 @@ tbody tr:hover{
     font-weight:600;
     display:inline-block;
 }
-
 .aksi{
-    white-space:nowrap;
+    display:flex;
+    justify-content:center;
+    gap:8px;
 }
+
 </style>
+
+</head>
+<body>
 
 <?php
 include '../menu/koneksi.php';
+
 $halaman = "kategori";
+
 $data = mysqli_query($conn, "SELECT * FROM kategori_menu");
 
 if (!$data) {
     die("Query error: " . mysqli_error($conn));
 }
 ?>
+
 <?php include "../../components/sidebar.php"; ?>
+
 <div class="main-content">
-<div class="page-header">
-    <h1>Manajemen Kategori</h1>
-    <p>Kelola seluruh kategori menu restoran SagalaLada</p>
-</div>
 
-<div class="toolbar">
+    <!-- HEADER -->
+    <div class="page-header">
+        <h1>Manajemen Kategori</h1>
+        <p>Kelola seluruh kategori menu restoran SagalaLada</p>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="summary-grid">
+
+        <div class="summary-card">
+            <div class="summary-icon">
+                <i data-feather="tag"></i>
+            </div>
+
+            <div>
+                <span>Total Kategori</span>
+                <h3>7</h3>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">
+                <i data-feather="grid"></i>
+            </div>
+
+            <div>
+                <span>Total Menu</span>
+                <h3>125</h3>
+            </div>
+        </div>
+
+            <div class="summary-card">
+        <div class="summary-icon">
+            <i data-feather="trending-up"></i>
+        </div>
+
+        <div>
+            <span>Kategori Terbanyak</span>
+            <h3>Makanan</h3>
+            <small>48 menu</small>
+        </div>
+</div>
+        
+    </div>
+
+    <!-- TOOLBAR -->
+     <div class="toolbar">
+
     <a href="tambah_kategori.php" class="btn-tambah">
-        + Tambah Kategori
+        <i data-feather="plus"></i>
+        Tambah Kategori
     </a>
+
+</div>
+    <!-- TABEL -->
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th width="80">No</th>
+                    <th>Nama Kategori</th>
+                    <th width="220">Aksi</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            <?php $no = 1; ?>
+
+            <?php while ($row = mysqli_fetch_assoc($data)) : ?>
+
+                <tr>
+
+                    <td><?= $no++; ?></td>
+
+                    <td>
+                        <?= htmlspecialchars($row['nama_kategori_menu']); ?>
+                    </td>
+
+                    <td class="aksi">
+
+                        <a
+                            href="edit_kategori.php?id=<?= $row['id_kategori_menu']; ?>"
+                            class="btn-edit">
+                            Edit
+                        </a>
+
+                        <a
+                            href="hapus_kategori.php?id=<?= $row['id_kategori_menu']; ?>"
+                            class="btn-hapus"
+                            onclick="return confirm('Yakin hapus?')">
+                            Hapus
+                        </a>
+
+                    </td>
+
+                </tr>
+
+            <?php endwhile; ?>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
 </div>
 
-<div class="table-wrapper">
-<table>
-    <tr>
-        <th>No</th>
-        <th>Nama Kategori</th>
-        <th>Aksi</th>
-    </tr>
-
-    <?php $no = 1; ?>
-
-    <?php while ($row = mysqli_fetch_assoc($data)) : ?>
-    <tr>
-        <td><?= $no++; ?></td>
-
-        <td>
-            <?= htmlspecialchars($row['nama_kategori_menu']); ?>
-        </td>
-
-        <td class="aksi">
-    <a href="edit_kategori.php?id=<?= $row['id_kategori_menu']; ?>" class="btn-edit">
-        Edit
-    </a>
-
-    <a href="hapus_kategori.php?id=<?= $row['id_kategori_menu']; ?>"
-       class="btn-hapus"
-       onclick="return confirm('Yakin hapus?')">
-        Hapus
-    </a>
-        </td>
-    </tr>
-    <?php endwhile; ?>
-</table>
-</div>
 <script>
 feather.replace();
 </script>
+
+</body>
+</html>

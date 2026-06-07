@@ -21,7 +21,6 @@ $result = mysqli_query($conn, $query);
     <title>Kelola Menu - SagalaLada</title>
     <script src="https://unpkg.com/feather-icons"></script>
     <link rel="stylesheet" href="../../asset/style_sidebar.css">
-    <link rel="stylesheet" href="../../main_page/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
     :root {
@@ -34,39 +33,37 @@ $result = mysqli_query($conn, $query);
     }
 
     body {
-        font-family: 'Segoe UI', sans-serif;
-        background:#f5f6fa;
+        font-family: "Poppins", sans-serif;
+        background: #f8f5f2;
         margin: 0;
         color: var(--text);
     }
 
     .main-content {
         margin-left: 260px;
-        padding: 20px;
-    }
-    .container {
-        max-width: 1400px;
-        margin: auto;
+        padding: 25px;
     }
 
     .page-header{
-    background:linear-gradient(135deg,#7d0a0a,#a31621);
-    padding:30px;
-    border-radius:20px;
-    margin-bottom:25px;
-    color:white;
-    box-shadow:0 10px 25px rgba(0,0,0,.12);
-    }
+        background:linear-gradient(135deg,#7d0a0a,#a31621);
+        padding:20px 25px;
+        border-radius:18px;
+        margin-bottom:25px;
+        color:white;
+        box-shadow:0 10px 25px rgba(0,0,0,.12);
+        }
 
     .page-header h1{
         margin:0;
-        font-size:38px;
-        font-weight:700;
+        font-size:24px;
+        font-weight:600;
     }
 
     .page-header p{
-        margin-top:8px;
+        margin-top:6px;
         opacity:.9;
+        font-size: 14px;
+        color:rgba(255,255,255,.85);
     }
 
     .summary-grid{
@@ -77,67 +74,99 @@ $result = mysqli_query($conn, $query);
     }
 
     .summary-card{
-        position:relative;
-        overflow:hidden;
-        background:white;
-        padding:24px;
-        border-radius:18px;
-        border-left:5px solid #8b1e2d;
-        box-shadow:0 5px 15px rgba(0,0,0,.06);
+    min-height: 110px;
+
+    padding:20px;
+
+    display:flex;
+    align-items:center;
+    gap:16px;
+
+    background:#fff;
+    border-radius:18px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
     }
 
+    .summary-icon{
+            width:56px;
+            height:56px;
 
-    .summary-card span{
-        color:#64748b;
+            border-radius:16px;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            flex-shrink:0;
+
+            background:#fdf1f1;
+        }
+
+        .summary-icon svg{
+            width:24px;
+            height:24px;
     }
 
-    .summary-card h3{
-        margin-top:10px;
-        font-size:32px;
-        color:#7d0a0a;
-    }
+        .summary-card span{
+            font-size:13px;
+            font-weight:600;
+            color:#64748b;
+        }
+
+        .summary-card h3{
+            margin-top:4px;
+
+            font-size:28px;
+            line-height:1.1;
+
+            font-weight:700;
+            color:#7d0a0a;
+        }
 
     .toolbar{
-        padding: 18px 20px;
-        border-radius:18px;
-        box-shadow:0 5px 15px rgba(0,0,0,.06);
+        padding:10px 0;
+        margin-bottom: 10px;
+    }
+
+
+
+
+    .toolbar-body{
         display:flex;
         justify-content:space-between;
         align-items:center;
         gap:20px;
-        margin-bottom:25px;
     }
 
     .toolbar-left{
         display:flex;
-        align-items:center;
         gap:12px;
         flex-wrap:wrap;
     }
 
     .toolbar-right{
         display:flex;
-        justify-content:flex-end;
     }
 
     .toolbar input,
     .toolbar select{
         height:48px;
         padding:0 15px;
-        border:1px solid #e5e7eb;
+        border:1px solid #d1d5db;
         border-radius:12px;
         font-size:14px;
-        outline:none;
-    }
-
-    .toolbar input:focus,
-    .toolbar select:focus{
-        border-color:#8b1e2d;
-        box-shadow:0 0 0 3px rgba(139,30,45,.1);
     }
 
     .toolbar input{
         width:280px;
+    }
+
+    .toolbar input:focus,
+    .toolbar select:focus{
+        outline:none;
+        border-color:#8b1e2d;
+        box-shadow:0 0 0 4px rgba(139,30,45,.12);
     }
 
     .btn-cari{
@@ -175,6 +204,7 @@ $result = mysqli_query($conn, $query);
         overflow:hidden;
         box-shadow:0 8px 25px rgba(0,0,0,.08);
         border-top:5px solid #8b1e2d;
+        margin-bottom: 0;
     }
 
     .col-no{
@@ -291,21 +321,67 @@ $result = mysqli_query($conn, $query);
     }
 
     .aksi { white-space: nowrap; }
+
+    .table-footer{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:15px 20px;
+            font-size:14px;
+            color:#6b7280;
+        }
+
+        .pagination{
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+
+        .page-btn,
+        .page-number{
+            width:38px;
+            height:38px;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            border-radius:10px;
+            text-decoration:none;
+
+            border:1px solid #e5e7eb;
+            background:white;
+            color:#64748b;
+
+            transition:.2s;
+        }
+
+        .page-btn:hover,
+        .page-number:hover{
+            background:#f8fafc;
+        }
+
+        .page-number.active{
+            background:#8b1e2d;
+            color:white;
+            border-color:#8b1e2d;
+        }
+
+        .page-btn svg{
+            width:18px;
+            height:18px;
+        }
     </style>
 </head>
 <body>
 <?php $halaman = "menu"; ?>
 <?php include "../../components/sidebar.php"; ?>
 <div class="main-content">
-    <div class="container">
     <div class="page-header">
-    <div>
         <h1>Manajemen Menu</h1>
-        <p>
-            Kelola seluruh menu restoran SagalaLada
-        </p>
+        <p>Kelola daftar menu restoran, kategori, harga, dan informasi produk yang tersedia.</p>
     </div>
-</div>
+
     <?php
     // --- LETAKKAN KODE BARU DI SINI ---
         function hitungKategori($conn, $nama_kategori) {
@@ -333,46 +409,82 @@ $result = mysqli_query($conn, $query);
     <div class="summary-grid">
 
         <div class="summary-card">
-            <span>Total Menu</span>
-            <h3><?= $totalMenu ?></h3>
+            <div class="summary-icon">
+                <i data-feather="grid"></i>
+            </div>
+            <div>
+                <span>Total Menu</span>
+                <h3><?= $totalMenu ?></h3>
+            </div>
         </div>
 
         <div class="summary-card">
-            <span>Menu Makanan</span>
-            <h3><?= $totalMakanan ?></h3>
+            <div class="summary-icon">
+                <i data-feather="archive"></i>
+            </div>
+            <div>
+                <span>Menu Makanan</span>
+                <h3><?= $totalMakanan ?></h3>
+            </div>
         </div>
 
         <div class="summary-card">
-            <span>Menu Minuman</span>
-            <h3><?= $totalMinuman ?></h3>
+            <div class="summary-icon">
+                <i data-feather="coffee"></i>
+            </div>
+            <div>
+                <span>Menu Minuman</span>
+                <h3><?= $totalMinuman ?></h3>
+            </div>
         </div>
 
         <div class="summary-card">
-            <span>Menu Paket</span>
-            <h3><?= $totalPaket ?></h3>
+            <div class="summary-icon">
+                <i data-feather="shopping-bag"></i>
+            </div>
+            <div>
+                <span>Menu Paket</span>
+                <h3><?= $totalPaket ?></h3>
+            </div>
         </div>
 
     </div>
 
-    <div class="toolbar">
-     <div class="toolbar-left">
-        <input type="text" id="searchInput" placeholder="Cari menu...">
+   <div class="toolbar">
 
-        <select id="kategoriSelect" name="kategori">
-            <option value="">Semua Kategori</option>
-            <?php while($k = mysqli_fetch_assoc($result_kategori)) { ?>
-                <option value="<?= $k['id_kategori_menu']; ?>">
-                    <?= $k['nama_kategori_menu']; ?>
-                </option>
-            <?php } ?>
-        </select>
+    <div class="toolbar-body">
+
+        <div class="toolbar-left">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Cari menu...">
+
+            <select id="kategoriSelect" name="kategori">
+                <option value="">Semua Kategori</option>
+
+                <?php while($k = mysqli_fetch_assoc($result_kategori)) { ?>
+                    <option value="<?= $k['id_kategori_menu']; ?>">
+                        <?= $k['nama_kategori_menu']; ?>
+                    </option>
+                <?php } ?>
+
+            </select>
+
+        </div>
+
+        <div class="toolbar-right">
+
+            <a href="tambah.php" class="btn-tambah">
+                <i data-feather="plus"></i>
+                Tambah Menu
+            </a>
+
+        </div>
+
     </div>
 
-    <div class="toolbar-right">
-        <a href="tambah.php" class="btn-tambah">
-            + Tambah Menu
-        </a>
-    </div>
 </div>
 
     <div class="table-wrapper">
@@ -426,11 +538,32 @@ $result = mysqli_query($conn, $query);
                 </tr>
             <?php } ?>
 
-</tbody>
+    </tbody>
         </table>
     </div>
-</div>
 
+    <div class="table-footer">
+
+        <div>
+            Menampilkan 1 - 4 dari 4 menu
+        </div>
+
+        <div class="pagination">
+
+            <a href="#" class="page-btn">
+                <i data-feather="chevron-left"></i>
+            </a>
+
+            <a href="#" class="page-number active">1</a>
+
+            <a href="#" class="page-btn">
+                <i data-feather="chevron-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+</div>
 </div>
 <script>
 feather.replace();

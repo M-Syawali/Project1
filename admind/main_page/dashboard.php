@@ -85,44 +85,45 @@ $qPesananTerbaru = mysqli_query(
     <!-- NAVBAR -->
     <main class="main-content" id="main-content">
       <header class="navbar">
-        <div class="navbar-left">
-          <h2>Dashboard Admin</h2>
-        </div>
+  <div class="navbar-left">
+    <h2>Laporan Penjualan</h2>
+    <p>
+      Kelola dan pantau seluruh data laporan penjualan, transaksi, dan rekap pendapatan secara detail.
+    </p>
+  </div>
 
-        <div class="navbar-right">
-          <div class="profile">
-            <button id="profile-btn">
-              <i data-feather="user"></i>
+  <div class="navbar-right">
+    <div class="profile">
+      <button id="profile-btn">
+        <i data-feather="user"></i>
+        <span>Admin</span>
+        <i data-feather="chevron-down"></i>
+      </button>
 
-              <span>Admin</span>
+      <div class="profile-menu" id="profile-menu">
+        <a href="#">
+          <i data-feather="user"></i>
+          Profil
+        </a>
 
-              <i data-feather="chevron-down"></i>
-            </button>
+        <a href="#">
+          <i data-feather="lock"></i>
+          Ubah Password
+        </a>
 
-            <div class="profile-menu" id="profile-menu">
-              <a href="#">
-                <i data-feather="user"></i>
-                Profil
-              </a>
+        <a href="#">
+          <i data-feather="settings"></i>
+          Pengaturan Akun
+        </a>
 
-              <a href="#">
-                <i data-feather="lock"></i>
-                Ubah Password
-              </a>
-
-              <a href="#">
-                <i data-feather="settings"></i>
-                Pengaturan Akun
-              </a>
-
-              <a href="../../index.html">
-                <i data-feather="log-out"></i>
-                Halaman Awal
-              </a>
-            </div>
-          </div>
-        </div>
-      </header>
+        <a href="../../index.html">
+          <i data-feather="log-out"></i>
+          Halaman Awal
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
 
       <!-- CARD STATISTIK -->
       <section class="cards">

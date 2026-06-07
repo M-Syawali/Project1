@@ -15,29 +15,36 @@ include "koneksi.php";
 
         body {
             font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
-            background:#f5f6fa;
+            background: #f8f5f2;
             min-height: 100vh;
             margin: 0;
         }
 
         .main-content{
             margin-left: 260px;
-            padding: 40px;
+            padding: 25px;
         }
 
         .page-header{
-            background: linear-gradient(135deg,#7d0a0a,#8b1e2d);
-            padding:30px;
-            border-radius:20px;
+            background:linear-gradient(135deg,#7d0a0a,#a31621);
+            padding:20px 25px;
+            border-radius:18px;
             margin-bottom:25px;
             color:white;
             box-shadow:0 10px 25px rgba(0,0,0,.12);
-        }
+            }
 
         .page-header h1{
             margin:0;
-            font-size:38px;
-            font-weight:700;
+            font-size:24px;
+            font-weight:600;
+        }
+
+        .page-header p{
+            margin-top:6px;
+            opacity:.9;
+            font-size: 14px;
+            color:rgba(255,255,255,.85);
         }
 
         .header-desc{
@@ -48,53 +55,63 @@ include "koneksi.php";
 
         .summary-grid{
             display:grid;
-            grid-template-columns:repeat(4,1fr);
+            grid-template-columns:repeat(5,1fr);
             gap:20px;
             margin-bottom:25px;
         }
 
         .summary-card{
-            background:white;
-            padding:24px;
+    height:120px;
+
+    padding:24px;
+
+    display:flex;
+    align-items:center;
+    gap:18px;
+
+    background:#fff;
+    border-radius:20px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
+}
+
+        .summary-icon{
+            width:64px;
+            height:64px;
+
             border-radius:18px;
-            box-shadow:0 5px 15px rgba(0,0,0,.06);
-            border-left:5px solid #8b1e2d;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            flex-shrink:0;
+
+            background:#fdf1f1;
         }
 
+        .summary-icon svg{
+            width:28px;
+            height:28px;
+}
+
         .summary-card span{
+            font-size:13px;
+            font-weight:600;
             color:#64748b;
-            font-size:14px;
         }
 
         .summary-card h3{
-            margin-top:8px;
-            margin-bottom:0;
-            font-size:32px;
+            margin-top:4px;
+
+            font-size:28px;
+            line-height:1.1;
+
+            font-weight:700;
             color:#7d0a0a;
         }
 
-        @media(max-width:1200px){
-
-        .summary-grid{
-            grid-template-columns:repeat(2,1fr);
-        }
-        }
-
-        @media(max-width:768px){
-
-        .main-content{
-            margin-left:0px;
-            padding:20px;
-        }
-
-        .summary-grid{
-            grid-template-columns:1fr;
-        }
-
-        .page-header h1{
-            font-size:28px;
-        }
-        }
+        
 
         .filter-bar{
             display:flex;
@@ -167,16 +184,7 @@ include "koneksi.php";
         }
 
 
-        .table-footer{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            padding:15px 20px;
-            background:#fff;
-            border-top:1px solid #eee;
-            font-size:14px;
-            color:#6b7280;
-        }
+        
 
         .table-wrapper{
             background:white;
@@ -184,7 +192,6 @@ include "koneksi.php";
             border-radius:20px;
             overflow:hidden;
             box-shadow:0 8px 25px rgba(0,0,0,.08);
-            border-top:5px solid #8b1e2d;
         }
 
         table {
@@ -192,6 +199,14 @@ include "koneksi.php";
             width: 100%;
             background: white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        tbody tr{
+            transition-background: 0.5s ease;
+        }
+
+        tbody tr:hover{
+            background:#f9fafb ;
         }
 
         th, td {
@@ -202,21 +217,15 @@ include "koneksi.php";
         td {
             padding:14px 16px;
             border-bottom:1px solid #e5e7eb;
-        }
-
-        tbody tr{
-            transition:.2s;
-        }
-
-        tbody tr:hover{
-            background:#fff7f7;
+            text-align: left;
         }
         th {
             background: rgba(139,30,45,.92);
             backdrop-filter: blur(10px);
             color: #fff;
             padding: 22px;
-            font-size: 16px;
+            text-align: center;
+            font-size: 14px;
             font-weight: 600;
             border-right: 1px solid rgba(255,255,255,.15);
         }
@@ -250,14 +259,15 @@ include "koneksi.php";
             display: block;
         }
         .nama-pelanggan{
-        font-size: 19px;  
+        font-size: 15px;  
         color: #111;
+        font-weight:500;
         
         }
         
         .total-bayar {
-            font-size: 20px;
-            font-weight: 400;
+            font-size: 16px;
+            font-weight: 600;
             color: #7a1a26;
         }
         
@@ -315,8 +325,8 @@ include "koneksi.php";
             display: flex;
             align-items:center;
             gap: 8px;
-            font-size:25px;
-            font-weight:450;
+            font-size:16px;
+            font-weight:600;
             color:#7a1a26;
             margin-bottom:2px;
         }
@@ -391,13 +401,63 @@ include "koneksi.php";
         }
 
         .badge-meja{
-    background:#ffe5e5;
-    color:#8b1e2d;
-    padding:6px 12px;
-    border-radius:1px;
-    font-weight:600;
-    font-size:18px;
-}
+        background:#ffe5e5;
+        color:#8b1e2d;
+        padding:6px 12px;
+        border-radius:12px;
+        font-weight:600;
+        font-size:13px;
+        }
+
+        .table-footer{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:15px 20px;
+            font-size:14px;
+            color:#6b7280;
+        }
+
+        .pagination{
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+
+        .page-btn,
+        .page-number{
+            width:38px;
+            height:38px;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            border-radius:10px;
+            text-decoration:none;
+
+            border:1px solid #e5e7eb;
+            background:white;
+            color:#64748b;
+
+            transition:.2s;
+        }
+
+        .page-btn:hover,
+        .page-number:hover{
+            background:#f8fafc;
+        }
+
+        .page-number.active{
+            background:#8b1e2d;
+            color:white;
+            border-color:#8b1e2d;
+        }
+
+        .page-btn svg{
+            width:18px;
+            height:18px;
+        }
     </style>
 </head>
 <body>
@@ -436,36 +496,62 @@ $count_batal     = getCount($conn, 'dibatalkan');
 <div class="main-content">
     <div class="page-header">
         <h1>Manajemen Pesanan</h1>
+        <p>Kelola seluruh pesanan pelanggan mulai dari konfirmasi pembayaran hingga pesanan selesai.</p>
     </div>
 
-     <div class="summary-grid">
+<div class="summary-grid">
 
-        <div class="summary-card">
+    <div class="summary-card">
+        <div class="summary-icon">
+            <i data-feather="clock"></i>
+        </div>
+        <div>
             <span>Menunggu Bayar</span>
             <h3><?= $count_pending; ?></h3>
         </div>
+    </div>
 
-        <div class="summary-card">
+    <div class="summary-card">
+        <div class="summary-icon">
+            <i data-feather="credit-card"></i>
+        </div>
+        <div>
             <span>Sudah Dibayar</span>
             <h3><?= $count_dibayar; ?></h3>
         </div>
+    </div>
 
-        <div class="summary-card">
+    <div class="summary-card">
+        <div class="summary-icon">
+            <i data-feather="coffee"></i>
+        </div>
+        <div>
             <span>Diproses</span>
             <h3><?= $count_proses; ?></h3>
         </div>
+    </div>
 
-        <div class="summary-card">
+    <div class="summary-card">
+        <div class="summary-icon">
+            <i data-feather="check-circle"></i>
+        </div>
+        <div>
             <span>Selesai</span>
             <h3><?= $count_selesai; ?></h3>
         </div>
+    </div>
 
-        <div class="summary-card">
+    <div class="summary-card">
+        <div class="summary-icon">
+            <i data-feather="x-circle"></i>
+        </div>
+        <div>
             <span>Dibatalkan</span>
             <h3><?= $count_batal; ?></h3>
         </div>
-
     </div>
+
+</div>
 
         
 
@@ -610,39 +696,45 @@ $count_batal     = getCount($conn, 'dibatalkan');
 
                         <a class="btn-status btn-bayar"
                         href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibayar">
-                            💳 Konfirmasi Bayar
+                            <i data-feather="credit-card"></i>
+                            Konfirmasi Bayar
                         </a>
 
                         <a class="btn-status btn-batal"
                         href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibatalkan"
                         onclick="return confirm('Yakin ingin membatalkan pesanan ini?')">
-                            ❌ Batalkan
+                            <i data-feather="x-circle"></i>
+                            Batalkan
                         </a>
 
                     <?php elseif ($status == 'dibayar'): ?>
 
                         <a class="btn-status btn-proses"
                         href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=diproses">
-                            🍳 Mulai Proses
+                            <i data-feather="coffee"></i>
+                            Mulai Proses
                         </a>
 
                         <a class="btn-status btn-batal"
                         href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibatalkan"
                         onclick="return confirm('Yakin ingin membatalkan pesanan ini?')">
-                            ❌ Batalkan
+                            <i data-feather="x-circle"></i>
+                            Batalkan
                         </a>
 
                     <?php elseif ($status == 'diproses'): ?>
 
                         <a class="btn-status btn-selesai"
                         href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=selesai">
-                            ✅ Set Selesai
+                            <i data-feather="check-circle"></i>
+                            Set Selesai
                         </a>
 
                         <a class="btn-status btn-batal"
                         href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibatalkan"
                         onclick="return confirm('Yakin ingin membatalkan pesanan ini?')">
-                            ❌ Batalkan
+                            <i data-feather="x-circle"></i>
+                            Batalkan
                         </a>
 
                     <?php endif; ?>
@@ -660,10 +752,26 @@ $count_batal     = getCount($conn, 'dibatalkan');
     </table>
     </div>
     <div class="table-footer">
-    <div>Menampilkan 1 - 4 dari 4 pesanan</div>
-    <div>Halaman 1</div>
+
+    <div>
+        Menampilkan 1 - 4 dari 4 pesanan
     </div>
+
+    <div class="pagination">
+
+        <a href="#" class="page-btn">
+            <i data-feather="chevron-left"></i>
+        </a>
+
+        <a href="#" class="page-number active">1</a>
+
+        <a href="#" class="page-btn">
+            <i data-feather="chevron-right"></i>
+        </a>
+
     </div>
+
+</div>
 </div>
 
 <script>
