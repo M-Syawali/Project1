@@ -163,21 +163,25 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
                         <?php $foto = "../admind/crud/menu/upload/" . $row['gambar']; ?>
 
                         <div class="card-menu">
-
                             <img src="<?= $foto ?>" alt="<?= $row['nama_menu'] ?>">
-
                             <h4><?= $row['nama_menu'] ?></h4>
-
                             <p class="desc"><?= $row['deskripsi_menu'] ?></p>
-
+                            
                             <div class="price">
                                 Rp <?= number_format($row['harga'], 0, ',', '.') ?>
                             </div>
 
-                            <a href="tambah_keranjang.php?id=<?= $row['id_menu'] ?>" class="btn-add">
-                                <i class="fa-solid fa-plus"></i> Keranjang
-                            </a>
-
+                            <?php 
+                            // LOGIKA CEK STOK DAN STATUS
+                            if ($row['stok'] > 0 && $row['status'] == 'tersedia') { ?>
+                                <a href="tambah_keranjang.php?id=<?= $row['id_menu'] ?>" class="btn-add">
+                                    <i class="fa-solid fa-plus"></i> Keranjang
+                                </a>
+                            <?php } else { ?>
+                                <button class="btn-add" style="background-color: #ccc; cursor: not-allowed; border: none;" disabled>
+                                    <i class="fa-solid fa-ban"></i> Stok Habis
+                                </button>
+                            <?php } ?>
                         </div>
 
                     <?php } ?>
@@ -200,21 +204,25 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
                         <?php $foto = "../admind/crud/menu/upload/" . $row['gambar']; ?>
 
                         <div class="card-menu">
-
                             <img src="<?= $foto ?>" alt="<?= $row['nama_menu'] ?>">
-
                             <h4><?= $row['nama_menu'] ?></h4>
-
                             <p class="desc"><?= $row['deskripsi_menu'] ?></p>
-
+                            
                             <div class="price">
                                 Rp <?= number_format($row['harga'], 0, ',', '.') ?>
                             </div>
 
-                            <a href="tambah_keranjang.php?id=<?= $row['id_menu'] ?>" class="btn-add">
-                                <i class="fa-solid fa-plus"></i> Keranjang
-                            </a>
-
+                            <?php 
+                            // LOGIKA CEK STOK DAN STATUS
+                            if ($row['stok'] > 0 && $row['status'] == 'tersedia') { ?>
+                                <a href="tambah_keranjang.php?id=<?= $row['id_menu'] ?>" class="btn-add">
+                                    <i class="fa-solid fa-plus"></i> Keranjang
+                                </a>
+                            <?php } else { ?>
+                                <button class="btn-add" style="background-color: #ccc; cursor: not-allowed; border: none;" disabled>
+                                    <i class="fa-solid fa-ban"></i> Stok Habis
+                                </button>
+                            <?php } ?>
                         </div>
 
                     <?php } ?>
@@ -255,4 +263,4 @@ setTimeout(() => {
 </script>
 
 </body>
-</html>
+</html> 

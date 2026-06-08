@@ -83,7 +83,7 @@ try {
         throw new Exception("Gagal membuat pesanan");
     }
 
-    /* =========================
+   /* =========================
        INSERT DETAIL PESANAN
     ========================= */
     foreach ($_SESSION['keranjang'] as $id_menu => $item) {
@@ -97,14 +97,20 @@ try {
 
         $subtotal = $d['harga'] * $qty;
 
+        // 1. Masukkan ke detail_pesanan
         mysqli_query($conn, "
             INSERT INTO detail_pesanan
             (id_pesanan, id_menu, jumlah, subtotal, pedas, catatan)
             VALUES
             ('$id_pesanan', '$id_menu', '$qty', '$subtotal', '$pedas', '$catatan')
         ");
-    }
 
+        // 2. TAMBAHKAN INI: Kurangi stok di tabel menu
+        mysqli_query($conn, "UPDATE menu SET stok = stok - $qty WHERE id_menu = '$id_menu'");
+
+        // 3. TAMBAHKAN INI: Otomatis set status jadi 'habis' jika stok <= 0
+        mysqli_query($conn, "UPDATE menu SET status = 'habis' WHERE id_menu = '$id_menu' AND stok <= 0");
+    }
     /* =========================
        COMMIT
     ========================= */
