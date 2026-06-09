@@ -1,0 +1,479 @@
+body {
+  font-family: "Poppins", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f8f5f2;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.main-content {
+  margin-left: 260px;
+  padding: 25px;
+}
+
+.page-header {
+  background: linear-gradient(135deg, #7d0a0a, #a31621);
+  padding: 20px 25px;
+  border-radius: 18px;
+  margin-bottom: 25px;
+  color: white;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.page-header p {
+  margin-top: 6px;
+  opacity: 0.9;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.header-desc {
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 15px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.summary-card {
+  height: 120px;
+
+  padding: 24px;
+
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  background: #fff;
+  border-radius: 20px;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.summary-icon {
+  width: 64px;
+  height: 64px;
+
+  border-radius: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  background: #fdf1f1;
+}
+
+.summary-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.summary-card span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.summary-card h3 {
+  margin-top: 4px;
+
+  font-size: 28px;
+  line-height: 1.1;
+
+  font-weight: 700;
+  color: #7d0a0a;
+}
+
+/* =========================
+   RINGKASAN STATUS STOK
+========================= */
+
+/* CARD RINGKASAN */
+.stock-overview {
+  margin-bottom: 25px;
+}
+
+.stock-progress-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.stock-top {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.stock-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.stock-label {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.stock-header h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #111827;
+}
+.stock-badge {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.stock-badge.safe {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+/* 🟡 Waspada */
+.stock-badge.warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* 🔴 Kritis */
+.stock-badge.danger {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.stock-bar {
+  height: 16px;
+  border-radius: 999px;
+  display: flex;
+  margin-bottom: 18px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.stock-available {
+  width: 60%;
+  background: #22c55e;
+}
+
+.stock-warning {
+  width: 20%;
+  background: #f59e0b;
+}
+
+.stock-empty {
+  width: 20%;
+  background: #ef4444;
+}
+
+.stock-available,
+.stock-warning,
+.stock-empty {
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.stock-legend {
+  display: flex;
+  gap: 30px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+
+  padding: 14px 18px;
+
+  border-radius: 14px;
+  gap: 10px;
+}
+
+.legend-item span {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.legend-item strong {
+  color: #111827;
+  font-size: 18px;
+  font-weight: 700;
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot.available {
+  background: #22c55e;
+}
+
+.dot.warning {
+  background: #f59e0b;
+}
+
+.dot.empty {
+  background: #ef4444;
+}
+
+/* ALERT */
+
+.stock-alert {
+  background: #f8fbff;
+  border: 1px solid #dbeafe;
+
+  border-radius: 16px;
+
+  padding: 20px;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.alert-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #dbeafe;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.alert-icon svg {
+  color: #2563eb;
+}
+
+.stock-alert h4 {
+  margin: 0 0 4px;
+  font-size: 17px;
+}
+
+.stock-alert p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* tabel */
+/* =========================
+   TABLE WRAPPER
+========================= */
+
+.table-wrapper {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* =========================
+   TOOLBAR
+========================= */
+/* =========================
+   TOOLBAR
+========================= */
+
+.table-toolbar {
+  margin-bottom: 20px;
+}
+
+.filter {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.search-input,
+.filter-select {
+  height: 46px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  transition: all 0.2s ease;
+}
+
+.search-input {
+  width: 320px;
+  padding: 0 16px;
+}
+
+.filter-select {
+  width: 180px;
+  padding: 0 14px;
+  cursor: pointer;
+}
+
+.search-input:focus,
+.filter-select:focus {
+  outline: none;
+  border-color: #7d0a0a;
+  box-shadow: 0 0 0 4px rgba(125, 10, 10, 0.08);
+}
+
+/* =========================
+   TABLE
+========================= */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f8fafc;
+}
+
+thead th {
+  padding: 16px;
+  text-align: left;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  color: #475569;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+tbody td {
+  padding: 16px;
+  border-bottom: 1px solid #f1f5f9;
+
+  font-size: 14px;
+  color: #334155;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background: #fafafa;
+}
+
+/* =========================
+   INPUT STOK
+========================= */
+
+.stok-input {
+  width: 90px;
+  height: 42px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  padding: 0 12px;
+
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.stok-input:focus {
+  outline: none;
+  border-color: #7d0a0a;
+  box-shadow: 0 0 0 4px rgba(125, 10, 10, 0.08);
+}
+
+/* =========================
+   STATUS SELECT
+========================= */
+
+.status-select {
+  min-width: 140px;
+  height: 42px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  padding: 0 12px;
+
+  font-size: 14px;
+  font-family: inherit;
+  background: #fff;
+  cursor: pointer;
+}
+
+.status-select:focus {
+  outline: none;
+  border-color: #7d0a0a;
+  box-shadow: 0 0 0 4px rgba(125, 10, 10, 0.08);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.table-footer {
+  margin-top: 20px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.table-footer span {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.btn-update {
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 14px 22px;
+
+  background: linear-gradient(135deg, #7d0a0a, #a31621);
+  color: white;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: 0.3s;
+}
+
+.btn-update:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(125, 10, 10, 0.2);
+}
+
+.btn-update svg {
+  width: 18px;
+  height: 18px;
+}

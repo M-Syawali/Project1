@@ -1,3 +1,34 @@
+<?php include '../menu/koneksi.php';
+
+    $qPendapatan = mysqli_query($conn, "
+    SELECT SUM(total_harga) as total
+    FROM pesanan
+    WHERE status_pesanan = 'selesai'
+");
+
+$pendapatan = mysqli_fetch_assoc($qPendapatan)['total'] ?? 0;
+
+$qPesanan = mysqli_query($conn, "
+    SELECT COUNT(*) as total
+    FROM pesanan
+    WHERE status_pesanan = 'selesai'
+");
+
+$totalPesanan = mysqli_fetch_assoc($qPesanan)['total'] ?? 0;
+
+$qProduk = mysqli_query($conn, "
+    SELECT SUM(dp.jumlah) as total
+    FROM detail_pesanan dp
+    JOIN pesanan p ON dp.id_pesanan = p.id_pesanan
+    WHERE p.status_pesanan = 'selesai'
+");
+
+$produkTerjual = mysqli_fetch_assoc($qProduk)['total'] ?? 0;
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -49,50 +80,40 @@
     <!-- CARD STATISTIK -->
     <section class="cards">
 
-        <div class="card">
-
-            <div class="card-icon">
-                <i data-feather="package"></i>
-            </div>
-
-            <div>
-                <p>Total Pesanan</p>
-                <h2>125</h2>
-                <span class="card-subtitle">Seluruh Periode</span>
-            </div>
-
+    <div class="card">
+        <div class="card-icon">
+            <i data-feather="package"></i>
         </div>
-
-        <div class="card">
-
-            <div class="card-icon">
-                <i data-feather="dollar-sign"></i>
-            </div>
-
-            <div>
-                <p>Total Pendapatan</p>
-                <h2>Rp 5.200.000</h2>
-                <span class="card-subtitle">Seluruh Periode</span>
-            </div>
-
+        <div>
+            <p>Total Pesanan</p>
+            <h2><?= $totalPesanan; ?></h2>
+            <span class="card-subtitle">Seluruh Periode</span>
         </div>
+    </div>
 
-        <div class="card">
-
-            <div class="card-icon">
-                <i data-feather="shopping-cart"></i>
-            </div>
-
-            <div>
-                <p>Produk Terjual</p>
-                <h2>358</h2>
-                <span class="card-subtitle">Seluruh Periode</span>
-            </div>
-
+    <div class="card">
+        <div class="card-icon">
+            <i data-feather="dollar-sign"></i>
         </div>
+        <div>
+            <p>Total Pendapatan</p>
+            <h2>Rp <?= number_format($pendapatan, 0, ',', '.'); ?></h2>
+            <span class="card-subtitle">Seluruh Periode</span>
+        </div>
+    </div>
 
-    </section>
+    <div class="card">
+        <div class="card-icon">
+            <i data-feather="shopping-cart"></i>
+        </div>
+        <div>
+            <p>Produk Terjual</p>
+            <h2><?= $produkTerjual; ?></h2>
+            <span class="card-subtitle">Seluruh Periode</span>
+        </div>
+    </div>
 
+</section>
     <!-- FILTER -->
     <section class="filter-card">
 

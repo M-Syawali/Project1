@@ -261,7 +261,39 @@ $data = mysqli_query($conn, "SELECT * FROM kategori_menu");
 if (!$data) {
     die("Query error: " . mysqli_error($conn));
 }
+
+$qKategori = mysqli_query($conn, "
+    SELECT COUNT(*) as total 
+    FROM kategori_menu
+");
+
+$totalKategori = mysqli_fetch_assoc($qKategori)['total'] ?? 0;
+
+$qMenu = mysqli_query($conn, "
+    SELECT COUNT(*) as total 
+    FROM menu
+");
+
+$totalMenu = mysqli_fetch_assoc($qMenu)['total'] ?? 0;
+
+$qTopKategori = mysqli_query($conn, "
+    SELECT 
+        k.nama_kategori_menu,
+        COUNT(m.id_menu) as total_menu
+    FROM kategori_menu k
+    LEFT JOIN menu m ON k.id_kategori_menu = m.id_kategori_menu
+    GROUP BY k.id_kategori_menu
+    ORDER BY total_menu DESC
+    LIMIT 1
+");
+
+$top = mysqli_fetch_assoc($qTopKategori);
+
+$namaTopKategori = $top['nama_kategori_menu'] ?? '-';
+$totalTopMenu = $top['total_menu'] ?? 0;
+
 ?>
+
 
 <?php include "../../components/sidebar.php"; ?>
 
@@ -274,43 +306,42 @@ if (!$data) {
     </div>
 
     <!-- SUMMARY -->
-    <div class="summary-grid">
+   <div class="summary-grid">
 
-        <div class="summary-card">
-            <div class="summary-icon">
-                <i data-feather="tag"></i>
-            </div>
-
-            <div>
-                <span>Total Kategori</span>
-                <h3>7</h3>
-            </div>
+    <div class="summary-card">
+        <div class="summary-icon">
+            <i data-feather="tag"></i>
         </div>
-
-        <div class="summary-card">
-            <div class="summary-icon">
-                <i data-feather="grid"></i>
-            </div>
-
-            <div>
-                <span>Total Menu</span>
-                <h3>125</h3>
-            </div>
+        <div>
+            <span>Total Kategori</span>
+            <h3><?= $totalKategori; ?></h3>
         </div>
+    </div>
 
-            <div class="summary-card">
+    <div class="summary-card">
+        <div class="summary-icon">
+            <i data-feather="grid"></i>
+        </div>
+        <div>
+            <span>Total Menu</span>
+            <h3><?= $totalMenu; ?></h3>
+        </div>
+    </div>
+
+    <div class="summary-card">
         <div class="summary-icon">
             <i data-feather="trending-up"></i>
         </div>
-
         <div>
             <span>Kategori Terbanyak</span>
-            <h3>Makanan</h3>
-            <small>48 menu</small>
+            <h3><?= $namaTopKategori; ?></h3>
+            <small><?= $totalTopMenu; ?> menu</small>
         </div>
+    </div>
+
 </div>
         
-    </div>
+    
 
     <!-- TOOLBAR -->
      <div class="toolbar">

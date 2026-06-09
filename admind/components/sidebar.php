@@ -18,6 +18,13 @@
                 <span>Menu</span>
             </a>
             </li>
+
+            <li class="<?= ($halaman == 'stok') ? 'active' : '' ?>">
+            <a href="/Project1/admind/crud/stok/index.php">
+                <i data-feather="package"></i>
+                <span>Stok menu</span>
+            </a>
+            </li>
     
             <li class="<?= ($halaman == 'kategori') ? 'active' : '' ?>">
             <a href="/Project1/admind/crud/kategori/index_kategori.php">

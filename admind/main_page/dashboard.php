@@ -86,11 +86,11 @@ $qPesananTerbaru = mysqli_query(
     <main class="main-content" id="main-content">
       <header class="navbar">
   <div class="navbar-left">
-    <h2>Laporan Penjualan</h2>
+    <h2>Dashboard</h2>
     <p>
-      Kelola dan pantau seluruh data laporan penjualan, transaksi, dan rekap pendapatan secara detail.
+        Ringkasan aktivitas bisnis, pesanan pelanggan, pendapatan hari ini, dan tren penjualan bulanan.
     </p>
-  </div>
+</div>
 
   <div class="navbar-right">
     <div class="profile">
