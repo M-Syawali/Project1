@@ -36,10 +36,22 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
         $boleh_update = true;
 
     } 
-    // B. Alur Normal: Pending -> Dibayar
+    // Cari bagian: elseif (($status_lama == 'pending' || $status_lama == '') && $status_baru == 'dibayar')
     elseif (($status_lama == 'pending' || $status_lama == '') && $status_baru == 'dibayar') {
-        $boleh_update = true;
-    } 
+
+    $uang_diterima = isset($_GET['uang']) ? (int)$_GET['uang'] : 0;
+
+    $query_update = "UPDATE pesanan 
+                     SET status_pesanan='dibayar',
+                         uang_diterima='$uang_diterima'
+                     WHERE id_pesanan='$id'";
+
+    if (mysqli_query($conn, $query_update)) {
+
+        header("Location: cetak_invoice.php?id=$id");
+exit;
+    }
+}
     // C. Alur Normal: Dibayar -> Diproses
     elseif ($status_lama == 'dibayar' && $status_baru == 'diproses') {
         $boleh_update = true;

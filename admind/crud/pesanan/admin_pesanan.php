@@ -691,54 +691,46 @@ $count_batal     = getCount($conn, 'dibatalkan');
                 </td>
                 <td><span class="status-badge <?php echo $status; ?>"><?php echo $status; ?></span></td>
                 <td>
-
                     <?php if ($status == 'pending'): ?>
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                        
+                        <input type="number" id="input_uang_<?= $id_p ?>"
+                            placeholder="Masukkan Uang..."
+                            style="padding: 8px; border-radius: 8px; border: 1px solid #ccc; width: 140px;">
 
-                        <a class="btn-status btn-bayar"
-                        href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibayar">
-                            <i data-feather="credit-card"></i>
-                            Konfirmasi Bayar
-                        </a>
+                        <button type="button"
+                                class="btn-status btn-bayar"
+                                onclick="prosesBayar(<?= $id_p ?>, <?= $row['total_harga'] ?>)"
+                                style="border:none; cursor:pointer;">
+                            <i data-feather="check"></i> Konfirmasi Bayar
+                        </button>
 
                         <a class="btn-status btn-batal"
-                        href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibatalkan"
+                        href="konfirmasi_proses.php?id=<?= $id_p ?>&status=dibatalkan"
                         onclick="return confirm('Yakin ingin membatalkan pesanan ini?')">
-                            <i data-feather="x-circle"></i>
-                            Batalkan
+                            <i data-feather="x-circle"></i> Batalkan
                         </a>
 
+                    </div>
                     <?php elseif ($status == 'dibayar'): ?>
-
-                        <a class="btn-status btn-proses"
-                        href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=diproses">
-                            <i data-feather="coffee"></i>
-                            Mulai Proses
+                        <div style="font-weight: 600; color: #155724; margin-bottom: 8px;">
+                            Kembalian: Rp <?= number_format($row['uang_diterima'] - $row['total_harga'], 0, ',', '.') ?>
+                        </div>
+                        
+                        <a class="btn-status btn-proses" href="konfirmasi_proses.php?id=<?= $id_p ?>&status=diproses">
+                            <i data-feather="coffee"></i> Mulai Proses
                         </a>
-
-                        <a class="btn-status btn-batal"
-                        href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibatalkan"
-                        onclick="return confirm('Yakin ingin membatalkan pesanan ini?')">
-                            <i data-feather="x-circle"></i>
-                            Batalkan
+                        <a class="btn-status btn-batal" href="konfirmasi_proses.php?id=<?= $id_p ?>&status=dibatalkan" 
+                        onclick="return confirm('Yakin ingin membatalkan?')">
+                            <i data-feather="x-circle"></i> Batalkan
                         </a>
 
                     <?php elseif ($status == 'diproses'): ?>
-
                         <a class="btn-status btn-selesai"
-                        href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=selesai">
-                            <i data-feather="check-circle"></i>
-                            Set Selesai
+                        href="konfirmasi_proses.php?id=<?= $id_p ?>&status=selesai">
+                            <i data-feather="check-circle"></i> Selesai
                         </a>
-
-                        <a class="btn-status btn-batal"
-                        href="konfirmasi_proses.php?id=<?php echo $id_p; ?>&status=dibatalkan"
-                        onclick="return confirm('Yakin ingin membatalkan pesanan ini?')">
-                            <i data-feather="x-circle"></i>
-                            Batalkan
-                        </a>
-
                     <?php endif; ?>
-
                 </td>
             </tr>
             <?php 
@@ -775,6 +767,23 @@ $count_batal     = getCount($conn, 'dibatalkan');
 </div>
 
 <script>
+feather.replace();
+</script>
+<script>
+function prosesBayar(id, total) {
+    let inputField = document.getElementById('input_uang_' + id);
+    let uang = inputField.value;
+
+    if (uang === "" || parseInt(uang) < parseInt(total)) {
+        alert("Jumlah uang tidak valid atau kurang dari total harga!");
+        return;
+    }
+
+    window.location.href =
+        'konfirmasi_proses.php?id=' + id +
+        '&status=dibayar&uang=' + uang;
+}
+// Jangan lupa jalankan feather icons agar icon muncul di tombol baru
 feather.replace();
 </script>
 </body>
