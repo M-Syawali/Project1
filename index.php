@@ -1,12 +1,22 @@
-# index.html
+<?php
+// Mengatur agar session cookie bertahan lama di browser (contoh: 30 hari)
+// Mengatur agar session cookie bertahan lama (30 hari)
+$waktu_session = 2592000; 
+ini_set('session.gc_maxlifetime', $waktu_session);
+session_set_cookie_params($waktu_session);
 
-```html
+// Memulai session PHP
+session_start();
+
+// CEK LOGIN: Sekarang kita cek apakah role-nya adalah pelanggan
+$is_logged_in = (isset($_SESSION['role']) && $_SESSION['role'] == 'pelanggan');
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SAGALA LADA </title>
+  <title>SAGALA LADA</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,13 +30,18 @@
   <div class="blur2"></div>
 
   <nav>
-      <h1>SAGALA LADA</h1>
+    <h1>SAGALA LADA</h1>
     <ul>
       <li><a href="#home">Beranda</a></li>
       <li><a href="pelanggan/menu.php">Menu</a></li>
       <li><a href="#tentang">Tentang</a></li>
       <li><a href="#kontak">Kontak</a></li>
-      <li><a href="login/index.php">Login Admin</a></li>
+      
+      <?php if ($is_logged_in): ?>
+        <li><a href="login/logout.php" style="color: #ff4d4d; font-weight: bold;">Logout</a></li>
+      <?php else: ?>
+        <li><a href="login/index.php">Login Admin</a></li>
+      <?php endif; ?>
 
     </ul>
   </nav>
@@ -45,18 +60,20 @@
       </p>
 
       <div class="hero-btn">
-    
-        <a href="pelanggan/menu.php?jenis=dinein"
-           class="btn btn-dayin">
-           🍽️ Dine In
+        <a href="pelanggan/menu.php?jenis=dinein" class="btn btn-dayin">
+            🍽️ Dine In
         </a>
-    
-        <a href="login/index.php?redirect=delivery"
-           class="btn btn-delivery">
-           🛵 Delivery
-        </a>
-    
-    </div>
+
+        <?php if ($is_logged_in): ?>
+          <a href="pelanggan/menu.php?jenis=delivery" class="btn btn-delivery">
+              🛵 Delivery
+          </a>
+        <?php else: ?>
+          <a href="login/index.php?pesan=wajib_login" class="btn btn-delivery" onclick="return alertWajibLogin();">
+              🛵 Delivery
+          </a>
+        <?php endif; ?>
+      </div>
     </div>
 
     <div class="hero-image">
@@ -65,15 +82,13 @@
 
   </section>
 
-  <section class="menu-section"id="tentang">
+  <section class="menu-section" id="tentang">
 
     <h2 class="section-title">Tentang Kami</h2>
 
     <div class="menu-grid">
 
-        <!-- VIDEO -->
         <div class="menu-card">
-
             <video
               autoplay
               muted
@@ -82,17 +97,12 @@
               style="width:100%; height:500px; object-fit:cover; border-radius:20px;"
             >
               <source src="bahan/video.mp4" type="video/mp4">
-          </video>
-
+            </video>
         </div>
 
-        <!-- CONTENT -->
         <div class="menu-content">
-
-            
-
             <h3>
-                Tempat Kuliner Pedas
+                Tempat Kuliner Pedas<br>
                 Favorit Semua Orang
             </h3>
 
@@ -102,33 +112,23 @@
                 suasana nyaman, dan pelayanan terbaik, cocok digunakan untuk kumpul keluarga
                 maupun dengan teman teman
             </p>
-
-            
-
         </div>
 
     </div>
 
   </section>
 
-  <section class="about-section" >
+  <section class="about-section">
 
     <div class="about-image">
-
       <div class="image-card">
-
-<video autoplay muted loop playsinline 
-style="width:100%; height:100%; object-fit:cover; border-radius:20px;">
-    <source src="bahan/WhatsApp Video 2026-05-22 at 14.26.01.mp4" type="video/mp4">
-</video>
-        
-
+        <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; border-radius:20px;">
+            <source src="bahan/WhatsApp Video 2026-05-22 at 14.26.01.mp4" type="video/mp4">
+        </video>
       </div>
-
     </div>
 
     <div class="about-content">
-
       <h2>
         Pedas Modern<br>
         Dengan <span>Cita Rasa Nusantara</span>
@@ -145,98 +145,56 @@ style="width:100%; height:100%; object-fit:cover; border-radius:20px;">
       </p>
 
       <div class="about-features">
-
         <div class="feature-box">
-
-          <div class="feature-icon">
-            🌶
-          </div>
-
+          <div class="feature-icon">🌶</div>
           <div>
             <h3>Cabai Premium</h3>
             <p>Cabai segar pilihan terbaik.</p>
           </div>
-
         </div>
 
         <div class="feature-box">
-
-          <div class="feature-icon">
-            🍜
-          </div>
-
+          <div class="feature-icon">🍜</div>
           <div>
             <h3>Menu Variatif</h3>
             <p>Banyak pilihan makanan pedas.</p>
           </div>
-
         </div>
 
         <div class="feature-box">
-
-          <div class="feature-icon">
-            ⚡
-          </div>
-
+          <div class="feature-icon">⚡</div>
           <div>
             <h3>Pelayanan Cepat</h3>
             <p>Pesanan cepat dan higienis.</p>
           </div>
-
         </div>
-
       </div>
 
     </div>
 
   </section>
 
-
-    <section class="testimoni">
+  <section class="testimoni">
 
     <h2 class="section-title">Testimoni Pelanggan</h2>
 
     <div class="testimoni-grid">
 
       <div class="testi-card">
-         <video 
-        autoplay 
-        muted 
-        loop 
-        playsinline
-        width="300"
-        height="450"
-        style="object-fit:cover; border-radius:20px;"
-    >
-        <source src="bahan/vidio 1.mp4" type="video/mp4">
+         <video autoplay muted loop playsinline width="300" height="450" style="object-fit:cover; border-radius:20px;">
+            <source src="bahan/vidio 1.mp4" type="video/mp4">
+         </video>
+      </div>
+
+      <div class="testi-card">
+        <video autoplay muted loop playsinline width="300" height="450" style="object-fit:cover; border-radius:20px;">
+            <source src="bahan/vidio 3.mp4" type="video/mp4">
         </video>
       </div>
 
       <div class="testi-card">
-        <video 
-        autoplay 
-        muted 
-        loop 
-        playsinline
-        width="300"
-        height="450"
-        style="object-fit:cover; border-radius:20px;"
-    >
-        <source src="bahan/vidio 3.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="testi-card">
-        <video 
-        autoplay 
-        muted 
-        loop 
-        playsinline
-        width="300"
-        height="450"
-        style="object-fit:cover; border-radius:20px;"
-    >
-        <source src="bahan/vidio 2.mp4" type="video/mp4">
+        <video autoplay muted loop playsinline width="300" height="450" style="object-fit:cover; border-radius:20px;">
+            <source src="bahan/vidio 2.mp4" type="video/mp4">
         </video>
       </div>
 
@@ -254,8 +212,6 @@ style="width:100%; height:100%; object-fit:cover; border-radius:20px;">
           UMKM makanan pedas dengan cita rasa khas nusantara dan kualitas premium.
         </p>
       </div>
-
-
 
       <div class="footer-box">
         <h3>Kontak</h3>
@@ -278,6 +234,13 @@ style="width:100%; height:100%; object-fit:cover; border-radius:20px;">
     </div>
 
   </footer>
+
+  <script>
+    function alertWajibLogin() {
+        alert("Silakan login terlebih dahulu untuk menikmati layanan Delivery.");
+        return true; 
+    }
+  </script>
 
 </body>
 </html>

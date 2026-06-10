@@ -1,6 +1,20 @@
 <?php 
+// Mengatur agar session cookie bertahan lama (30 hari) agar tidak keluar sendiri
+$waktu_session = 2592000; 
+ini_set('session.gc_maxlifetime', $waktu_session);
+session_set_cookie_params($waktu_session);
+
 session_start();
 include "koneksi.php";
+
+if (isset($_GET['jenis'])) {
+    if ($_GET['jenis'] === 'delivery') {
+        $_SESSION['jenis_pesanan'] = 'delivery';
+        $_SESSION['no_meja'] = null; // Hapus nomor meja karena delivery
+    } else if ($_GET['jenis'] === 'dinein') {
+        $_SESSION['jenis_pesanan'] = 'dinein';
+    }
+}
 
 /* =========================
    SIMPAN NOMOR MEJA DARI QR
@@ -54,13 +68,10 @@ while ($row = mysqli_fetch_assoc($result)) {
     $menu_berdasarkan_kategori[$cat_name][] = $row;
 }
 
+// PERBAIKAN: Menghapus unset() agar akun tidak ter-logout saat pilih dinein
 if(isset($_GET['jenis']) && $_GET['jenis'] == 'dinein')
 {
     $_SESSION['jenis_pesanan'] = 'dinein';
-
-    unset($_SESSION['username']);
-    unset($_SESSION['role']);
-    unset($_SESSION['id_users']);
 }
 
 /* urutan kategori */
@@ -82,12 +93,9 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
 
 <body>
 
-<!-- NOTIF -->
-
-
 <header class="dashboard-header">
     <div class="logo">
-        <a href="../index.html" class="back-icon">
+        <a href="../index.php" class="back-icon">
             <i class="fa-solid fa-angle-left"></i>
         </a>
         SagalaLada
@@ -103,7 +111,7 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
 
             <button type="button" class="profile-btn" onclick="toggleProfile()">
                 <i class="fa-solid fa-user"></i>
-                <?= $_SESSION['username']; ?>
+                <?= htmlspecialchars($_SESSION['username']); ?>
             </button>
 
                 <div class="profile-content">
@@ -124,7 +132,7 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
 
             <?php } else { ?>
 
-            <a href="../index.html" class="dashboard-link">
+            <a href="../index.php" class="dashboard-link">
                 Beranda
             </a>
 
@@ -145,7 +153,7 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
 
 <h2 class="main-title">
     Selamat datang,
-    <?= htmlspecialchars($_SESSION['username']); ?> 👋
+    <?= htmlspecialchars($_SESSION['username'] ?? 'Pelanggan'); ?> 👋
 </h2>
 
 <p class="sub-title">
@@ -160,7 +168,6 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
 
 <?php } ?>
 
-    <!-- SEARCH -->
     <form action="" method="GET" id="filterForm">
 
         <div class="search-wrapper">
@@ -202,7 +209,6 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
         </div>
     </form>
 
-    <!-- MENU -->
     <?php if (count($menu_berdasarkan_kategori) > 0) { ?>
 
         <?php foreach ($urutan_kategori as $kat_key) { ?>
@@ -245,7 +251,6 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
 
         <?php } ?>
 
-        <!-- kategori tambahan -->
         <?php foreach ($menu_berdasarkan_kategori as $kat_key => $items) { ?>
 
             <?php if (!in_array($kat_key, $urutan_kategori)) { ?>
@@ -313,7 +318,15 @@ setTimeout(() => {
     const notif = document.querySelector('.notif');
     if (notif) notif.style.display = 'none';
 }, 3000);
+
+/* Toggle Dropdown Profil */
+function toggleProfile() {
+    const content = document.querySelector('.profile-content');
+    if(content) {
+        content.classList.toggle('show');
+    }
+}
 </script>
 
 </body>
-</html> 
+</html>
