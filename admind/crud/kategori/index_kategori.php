@@ -67,10 +67,13 @@ body{
 
 /* Summary Card */
 .summary-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:20px;
-    margin-bottom:25px;
+      margin-top: 30px;
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+
+  gap: 20px;
+  margin-bottom: 25px;
 }
 
 .summary-card{

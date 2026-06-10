@@ -126,51 +126,44 @@ $qPesananTerbaru = mysqli_query(
 </header>
 
       <!-- CARD STATISTIK -->
-      <section class="cards">
-        <div class="card">
-          <div class="card-icon">
+      <div class="summary-grid">
+
+    <div class="summary-card">
+        <div class="summary-icon">
             <i data-feather="package"></i>
-          </div>
-
-          <div>
-            <h4>Total Produk</h4>
-            <h2 class="counter" data-target="120">0</h2>
-          </div>
         </div>
+        <div>
+            <span>Total Produk</span>
+            <h3 class="counter" data-target="120">0</h3>
+            <small>Produk Terjual Hari Ini</small>
+        </div>
+    </div>
 
-        <div class="card">
-          <div class="card-icon">
+    <div class="summary-card">
+        <div class="summary-icon">
             <i data-feather="shopping-cart"></i>
-          </div>
-
-          <div>
-            <h4>Pesanan Hari Ini</h4>
-            <h2><?= $pesananHariIni ?></h2>
-          </div>
         </div>
+        <div>
+            <span>Pesanan</span>
+            <h3><?= $pesananHariIni ?></h3>
+            <small>Pesanan Hari Ini</small>
+        </div>
+    </div>
 
-        <div class="card">
-          <div class="card-icon">
+    <div class="summary-card">
+        <div class="summary-icon">
             <i data-feather="dollar-sign"></i>
-          </div>
-
-          <div>
-            <h4>Pendapatan Hari Ini</h4>
-            <h2>Rp <?= number_format($pendapatanHariIni,0,',','.')?></h2>
-          </div>
         </div>
-
-        <div class="card">
-          <div class="card-icon">
-            <i data-feather="trending-up"></i>
-          </div>
-
-          <div>
-            <h4>Pendapatan Keseluruhan</h4>
-            <h2>Rp <?= number_format($pendapatanTotal, 0, ',', '.') ?></h2>
+        <div>
+            <span>Pendapatan</span>
+            <h3>Rp <?= number_format($pendapatanHariIni, 0, ',', '.') ?></h3>
+            <small>Pendapatan Hari Ini</small>
         </div>
-        </div>
-      </section>
+    </div>
+
+
+
+</div>
 
       <!-- GRAFIK -->
       <section class="chart-box">

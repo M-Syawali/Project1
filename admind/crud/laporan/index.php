@@ -78,42 +78,45 @@ $produkTerjual = mysqli_fetch_assoc($qProduk)['total'] ?? 0;
     </section>
 
     <!-- CARD STATISTIK -->
-    <section class="cards">
+    <div class="summary-grid">
 
-    <div class="card">
-        <div class="card-icon">
+    <div class="summary-card">
+        <div class="summary-icon">
             <i data-feather="package"></i>
         </div>
+
         <div>
-            <p>Total Pesanan</p>
-            <h2><?= $totalPesanan; ?></h2>
-            <span class="card-subtitle">Seluruh Periode</span>
+            <span>Total Pesanan</span>
+            <h3><?= $totalPesanan; ?></h3>
+            <small>Seluruh Periode</small>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-icon">
+    <div class="summary-card">
+        <div class="summary-icon">
             <i data-feather="dollar-sign"></i>
         </div>
+
         <div>
-            <p>Total Pendapatan</p>
-            <h2>Rp <?= number_format($pendapatan, 0, ',', '.'); ?></h2>
-            <span class="card-subtitle">Seluruh Periode</span>
+            <span>Total Pendapatan</span>
+            <h3>Rp <?= number_format($pendapatan, 0, ',', '.'); ?></h3>
+            <small>Seluruh Periode</small>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-icon">
+    <div class="summary-card">
+        <div class="summary-icon">
             <i data-feather="shopping-cart"></i>
         </div>
+
         <div>
-            <p>Produk Terjual</p>
-            <h2><?= $produkTerjual; ?></h2>
-            <span class="card-subtitle">Seluruh Periode</span>
+            <span>Produk Terjual</span>
+            <h3><?= $produkTerjual; ?></h3>
+            <small>Seluruh Periode</small>
         </div>
     </div>
 
-</section>
+</div>
     <!-- FILTER -->
     <section class="filter-card">
 

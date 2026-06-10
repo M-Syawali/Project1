@@ -13,6 +13,11 @@ include "koneksi.php";
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
 
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
         body {
             font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
             background: #f8f5f2;
@@ -54,20 +59,23 @@ include "koneksi.php";
         }
 
         .summary-grid{
-            display:grid;
-            grid-template-columns:repeat(5,1fr);
-            gap:20px;
-            margin-bottom:25px;
-        }
+      margin-top: 30px;
+  display: grid;
 
-        .summary-card{
-    height:120px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.summary-card{
+    min-height: 110px;
 
     padding:24px;
 
     display:flex;
     align-items:center;
-    gap:18px;
+    gap:16px;
 
     background:#fff;
     border-radius:20px;
@@ -75,7 +83,7 @@ include "koneksi.php";
     box-shadow:0 8px 20px rgba(0,0,0,.06);
 }
 
-        .summary-icon{
+.summary-icon{
             width:64px;
             height:64px;
 
@@ -110,6 +118,13 @@ include "koneksi.php";
             font-weight:700;
             color:#7d0a0a;
         }
+
+
+.summary-card small{
+    font-size:13px;
+    color:#94a3b8;
+}
+
 
         
 
@@ -500,58 +515,62 @@ $count_batal     = getCount($conn, 'dibatalkan');
     </div>
 
 <div class="summary-grid">
-
     <div class="summary-card">
-        <div class="summary-icon">
-            <i data-feather="clock"></i>
-        </div>
-        <div>
-            <span>Menunggu Bayar</span>
-            <h3><?= $count_pending; ?></h3>
-        </div>
+    <div class="summary-icon">
+        <i data-feather="clock"></i>
     </div>
-
-    <div class="summary-card">
-        <div class="summary-icon">
-            <i data-feather="credit-card"></i>
-        </div>
-        <div>
-            <span>Sudah Dibayar</span>
-            <h3><?= $count_dibayar; ?></h3>
-        </div>
+    <div>
+        <span>Menunggu Bayar</span>
+        <h3><?= $count_pending; ?></h3>
+        <small>Menunggu pembayaran</small>
     </div>
-
-    <div class="summary-card">
-        <div class="summary-icon">
-            <i data-feather="coffee"></i>
-        </div>
-        <div>
-            <span>Diproses</span>
-            <h3><?= $count_proses; ?></h3>
-        </div>
-    </div>
-
-    <div class="summary-card">
-        <div class="summary-icon">
-            <i data-feather="check-circle"></i>
-        </div>
-        <div>
-            <span>Selesai</span>
-            <h3><?= $count_selesai; ?></h3>
-        </div>
-    </div>
-
-    <div class="summary-card">
-        <div class="summary-icon">
-            <i data-feather="x-circle"></i>
-        </div>
-        <div>
-            <span>Dibatalkan</span>
-            <h3><?= $count_batal; ?></h3>
-        </div>
-    </div>
-
 </div>
+
+<div class="summary-card">
+    <div class="summary-icon">
+        <i data-feather="credit-card"></i>
+    </div>
+    <div>
+        <span>Sudah Dibayar</span>
+        <h3><?= $count_dibayar; ?></h3>
+        <small>Pembayaran berhasil diterima</small>
+    </div>
+</div>
+
+<div class="summary-card">
+    <div class="summary-icon">
+        <i data-feather="coffee"></i>
+    </div>
+    <div>
+        <span>Diproses</span>
+        <h3><?= $count_proses; ?></h3>
+        <small>Pesanan sedang disiapkan</small>
+    </div>
+</div>
+
+<div class="summary-card">
+    <div class="summary-icon">
+        <i data-feather="check-circle"></i>
+    </div>
+    <div>
+        <span>Selesai</span>
+        <h3><?= $count_selesai; ?></h3>
+        <small>Pesanan selesai</small>
+    </div>
+</div>
+
+<div class="summary-card">
+    <div class="summary-icon">
+        <i data-feather="x-circle"></i>
+    </div>
+    <div>
+        <span>Dibatalkan</span>
+        <h3><?= $count_batal; ?></h3>
+        <small>Pesanan dibatalkan</small>
+    </div>
+</div>
+</div>
+
 
         
 

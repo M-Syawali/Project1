@@ -20,18 +20,18 @@ $totalUnit = mysqli_fetch_assoc($qTotalUnit)['total'] ?? 0;
 
 $totalMenu = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM menu"))['total'] ?? 0;
 
-$tersedia = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM menu WHERE stok > 0"))['total'] ?? 0;
+$tersedia = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM menu WHERE stok > 5"))['total'] ?? 0;
 
 $percent = $totalMenu > 0 ? round(($tersedia / $totalMenu) * 100) : 0;
 
 if ($percent >= 50) {
-    $label = "Tersedia";
+    $label = "Stok Aman";
     $class = "safe";
 } elseif ($percent >= 30) {
-    $label = "Tersedia";
+    $label = "Perlu Perhatian";
     $class = "warning";
 } else {
-    $label = "Tersedia";
+    $label = "Stok Kritis";
     $class = "danger";
 }
 
@@ -40,6 +40,7 @@ $total = $totalMenu;
 $tersediaPct = $total ? ($tersedia / $total) * 100 : 0;
 $menipisPct = $total ? ($menipis / $total) * 100 : 0;
 $habisPct = $total ? ($habis / $total) * 100 : 0;
+
 
 ?>
 
@@ -68,61 +69,49 @@ $habisPct = $total ? ($habis / $total) * 100 : 0;
     </div>
 
 <div class="summary-grid">
-
-    <div class="summary-card">
-        <div class="summary-icon">
-            <i data-feather="package"></i>
-        </div>
-        <div>
-            <span>Total Menu</span>
-            <h3><?= $totalMenu ?></h3>
-            <p>Semua menu terdaftar</p>
-        </div>
+    <div class="summary-card safe-card">
+    <div class="summary-icon">
+        <i data-feather="check-circle"></i>
     </div>
-
-    <div class="summary-card">
-        <div class="summary-icon">
-            <i data-feather="check-circle"></i>
-        </div>
-        <div>
-            <span>Stok Tersedia</span>
-            <h3><?= $tersedia ?></h3>
-            <p>menu siap dipesan</p>
-        </div>
+    <div>
+        <span>Stok Aman</span>
+        <h3><?= $tersedia ?></h3>
+        <small>menu siap dipesan</small>
     </div>
+</div>
 
-    <div class="summary-card">
-        <div class="summary-icon">
-            <i data-feather="alert-triangle"></i>
-        </div>
-        <div>
-            <span>Stok Menipis</span>
-            <h3><?= $menipis ?></h3>
-            <p>perlu segera isi ulang</p>
-        </div>
+    <div class="summary-card warning-card">
+    <div class="summary-icon">
+        <i data-feather="alert-triangle"></i>
     </div>
+    <div>
+        <span>Stok Menipis</span>
+        <h3><?= $menipis ?></h3>
+        <small>perlu segera isi ulang</small>
+    </div>
+</div>
 
-    <div class="summary-card">
-        <div class="summary-icon">
-            <i data-feather="x-circle"></i>
-        </div>
-        <div>
-            <span>Stok Habis</span>
-            <h3><?= $habis ?></h3>
-            <p>Tidak tersedia hari ini</p>
-        </div>
+<div class="summary-card danger-card">
+    <div class="summary-icon">
+        <i data-feather="x-circle"></i>
     </div>
+    <div>
+        <span>Stok Habis</span>
+        <h3><?= $habis ?></h3>
+        <small>tidak tersedia hari ini</small>
+    </div>
+</div>
 
-    <div class="summary-card">
-        <div class="summary-icon">
-            <i data-feather="layers"></i>
-        </div>
-        <div>
-            <span>Total Unit Stok</span>
-            <h3><?= $totalUnit ?? 0 ?></h3>
-            <p>Jumlah seluruh stok</p>
-        </div>
+    <div class="summary-card stock-card">
+    <div class="summary-icon">
+        <i data-feather="layers"></i>
     </div>
+    <div>
+        <span>Total Unit Stok</span>
+        <h3><?= $totalUnit ?? 0 ?></h3>
+        <small>jumlah seluruh stok</small>
+    </div>
+</div>
 
 </div>
 <div class="stock-overview">
@@ -160,7 +149,7 @@ $habisPct = $total ? ($habis / $total) * 100 : 0;
 
                     <div class="legend-item">
                         <i class="dot available"></i>
-                        <span>Tersedia</span>
+                        <span>Aman</span>
                         <strong><?= $tersedia ?></strong>
                     </div>
 
@@ -288,13 +277,22 @@ $habisPct = $total ? ($habis / $total) * 100 : 0;
             $no = 1;
 
             while ($row = mysqli_fetch_array($data)) {
+
+                if ($row['stok'] == 0) {
+                    $stokClass = 'stok-habis';
+                } elseif ($row['stok'] <= 5) {
+                    $stokClass = 'stok-warning';
+                } else {
+                    $stokClass = 'stok-aman';
+                }
+
             ?>
 
                 <tr>
 
                     <td><?= $no++ ?></td>
 
-                    <td>
+                    <td class="menu-name">
                         <?= htmlspecialchars($row['nama_menu']) ?>
 
                         <input
@@ -311,7 +309,8 @@ $habisPct = $total ? ($habis / $total) * 100 : 0;
                             value="<?= $row['stok'] ?>"
                             min="0"
                             required
-                            class="stok-input">
+                            class="stok-input <?= $stokClass ?>">
+                            
 
                     </td>
 
@@ -319,7 +318,7 @@ $habisPct = $total ? ($habis / $total) * 100 : 0;
 
                         <select
                             name="status[]"
-                            class="status-select">
+                            class="status-select <?= $row['status'] ?> ">
 
                             <option value="tersedia"
                                 <?= $row['status'] == 'tersedia' ? 'selected' : '' ?>>

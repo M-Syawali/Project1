@@ -19,30 +19,25 @@ h2 {
 }
 .report-table {
   width: 100%;
-  border-collapse: collapse;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  border: 1px solid #d9dee7;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+
   background: #ffffff;
-  border-radius: 14px;
-  overflow: hidden;
-
-  box-shadow: none;
-  border: 1px solid #f1f5f9;
 }
 
-.table-card {
-  overflow: hidden;
-  background: #fff;
-  padding: 24px;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-}
 /* HEADER */
 .report-table thead th {
-  background: linear-gradient(135deg, #7d0a0a, #a31621);
+  background: #7d0a0a;
   color: #fff;
   padding: 14px;
   font-size: 14px;
   font-weight: 600;
-  border: none;
 }
 
 /* BODY */
@@ -50,27 +45,53 @@ h2 {
   padding: 12px 14px;
   font-size: 14px;
   color: #334155;
-  border-bottom: 1px solid #f1f5f9;
+
+  border-bottom: 1px solid #dbe3ec;
 }
 
+.report-table th,
+.report-table td {
+  padding: 14px;
+  vertical-align: middle;
+  border-right: 1px solid #e5e7eb;
+}
+
+.report-table thead th:first-child {
+  border-top-left-radius: 10px;
+}
+
+.report-table thead th:last-child {
+  border-top-right-radius: 10px;
+}
 /* ROW hover lebih soft */
-.report-table tbody tr:hover {
-  background: #f8fafc;
+.report-table tbody tr:hover td {
+  background: #f6f7f9;
 }
 
 /* striping lebih halus */
-.report-table tbody tr:nth-child(even) {
-  background: #fcfcfd;
-}
 
+.report-table th:last-child,
+.report-table td:last-child {
+  border-right: none;
+}
 /* footer */
 .report-table tfoot td {
   padding: 14px;
-  background: #f8fafc;
+  background: #f3f4f6;
   font-weight: 700;
   border-top: 2px solid #e2e8f0;
 }
 
+.cell-list {
+  margin: 0;
+  padding-left: 8px;
+  list-style: none;
+}
+
+.cell-list li {
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
 /* alignment helper (pengganti inline style) */
 .text-center {
   text-align: center;
@@ -82,33 +103,27 @@ h2 {
 }
 
 /* tombol kembali dibenerin */
-.btn-kembali {
-  display: inline-block;
-  margin-bottom: 20px;
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 14px;
-
-  background: #7d0a0a;
-  color: white;
-  text-decoration: none;
-
-  transition: 0.3s;
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
 }
 
-.btn-kembali:hover {
-  background: #a31621;
-  transform: translateY(-2px);
-}
-
+.btn-kembali,
 .btn-cetak {
   display: inline-block;
-  margin-top: 20px;
-  padding: 12px 20px;
-  background: #7d0a0a;
-  color: white;
-  text-decoration: none;
-  border-radius: 10px;
+  padding: 14px 24px; /* diperbesar */
+  border-radius: 12px;
   font-weight: 600;
+  font-size: 16px; /* diperbesar */
+  text-decoration: none;
+  background: #7d0a0a;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.btn-kembali:hover,
+.btn-cetak:hover {
+  background: #a31621;
+  transform: translateY(-2px);
 }

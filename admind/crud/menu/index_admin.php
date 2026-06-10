@@ -32,6 +32,12 @@ $result = mysqli_query($conn, $query);
         --text: #0f172a;
     }
 
+    *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
     body {
         font-family: "Poppins", sans-serif;
         background: #f8f5f2;
@@ -67,32 +73,35 @@ $result = mysqli_query($conn, $query);
     }
 
     .summary-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
-    margin-bottom:25px;
-    }
+      margin-top: 30px;
+  display: grid;
 
-    .summary-card{
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.summary-card{
     min-height: 110px;
 
-    padding:20px;
+    padding:24px;
 
     display:flex;
     align-items:center;
     gap:16px;
 
     background:#fff;
-    border-radius:18px;
+    border-radius:20px;
 
     box-shadow:0 8px 20px rgba(0,0,0,.06);
-    }
+}
 
-    .summary-icon{
-            width:56px;
-            height:56px;
+.summary-icon{
+            width:64px;
+            height:64px;
 
-            border-radius:16px;
+            border-radius:18px;
 
             display:flex;
             align-items:center;
@@ -104,9 +113,9 @@ $result = mysqli_query($conn, $query);
         }
 
         .summary-icon svg{
-            width:24px;
-            height:24px;
-    }
+            width:28px;
+            height:28px;
+}
 
         .summary-card span{
             font-size:13px;
@@ -124,6 +133,11 @@ $result = mysqli_query($conn, $query);
             color:#7d0a0a;
         }
 
+
+.summary-card small{
+    font-size:13px;
+    color:#94a3b8;
+}
     .toolbar{
         padding:10px 0;
         margin-bottom: 10px;
@@ -405,50 +419,57 @@ $result = mysqli_query($conn, $query);
         $result_kategori = mysqli_query($conn, $query_kategori);
 
     ?>
-    
     <div class="summary-grid">
 
-        <div class="summary-card">
-            <div class="summary-icon">
-                <i data-feather="grid"></i>
-            </div>
-            <div>
-                <span>Total Menu</span>
-                <h3><?= $totalMenu ?></h3>
-            </div>
+    <div class="summary-card">
+        <div class="summary-icon">
+            <i data-feather="grid"></i>
         </div>
 
-        <div class="summary-card">
-            <div class="summary-icon">
-                <i data-feather="archive"></i>
-            </div>
-            <div>
-                <span>Menu Makanan</span>
-                <h3><?= $totalMakanan ?></h3>
-            </div>
+        <div>
+            <span>Total Menu</span>
+            <h3><?= $totalMenu ?></h3>
+            <small>Seluruh menu yang tersedia</small>
         </div>
-
-        <div class="summary-card">
-            <div class="summary-icon">
-                <i data-feather="coffee"></i>
-            </div>
-            <div>
-                <span>Menu Minuman</span>
-                <h3><?= $totalMinuman ?></h3>
-            </div>
-        </div>
-
-        <div class="summary-card">
-            <div class="summary-icon">
-                <i data-feather="shopping-bag"></i>
-            </div>
-            <div>
-                <span>Menu Paket</span>
-                <h3><?= $totalPaket ?></h3>
-            </div>
-        </div>
-
     </div>
+
+    <div class="summary-card">
+        <div class="summary-icon">
+            <i data-feather="archive"></i>
+        </div>
+
+        <div>
+            <span>Menu Makanan</span>
+            <h3><?= $totalMakanan ?></h3>
+            <small>Kategori makanan</small>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <div class="summary-icon">
+            <i data-feather="coffee"></i>
+        </div>
+
+        <div>
+            <span>Menu Minuman</span>
+            <h3><?= $totalMinuman ?></h3>
+            <small>Kategori minuman</small>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <div class="summary-icon">
+            <i data-feather="shopping-bag"></i>
+        </div>
+
+        <div>
+            <span>Menu Paket</span>
+            <h3><?= $totalPaket ?></h3>
+            <small>Menu dalam bentuk paket</small>
+        </div>
+    </div>
+
+</div>
 
    <div class="toolbar">
 
