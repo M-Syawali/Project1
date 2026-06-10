@@ -12,15 +12,57 @@ date_default_timezone_set('Asia/Jakarta');
 /* =========================
    VALIDASI INPUT
 ========================= */
-if (!isset($_POST['nama']) || !isset($_POST['nomor_pesanan'])) {
+// TAMBAHAN: Menambahkan validasi untuk metode_pembayaran
+if (!isset($_POST['nama']) || !isset($_POST['nomor_pesanan']) || !isset($_POST['metode_pembayaran'])) {
     die("Data tidak lengkap");
 }
 
 $nama_pelanggan = mysqli_real_escape_string($conn, $_POST['nama']);
 $nomor_pesanan = mysqli_real_escape_string($conn, $_POST['nomor_pesanan']);
+$metode_pembayaran = mysqli_real_escape_string($conn, $_POST['metode_pembayaran']);
 
 $tanggal = date("Y-m-d H:i:s");
 $total = 0;
+$nama_file_bukti = ""; // Default kosong jika bayar di kasir
+
+/* =========================
+   PROSES UPLOAD BUKTI PEMBAYARAN (JIKA QRIS)
+========================= */
+if ($metode_pembayaran === 'QRIS') {
+    if (isset($_FILES['bukti_pembayaran']) && $_FILES['bukti_pembayaran']['error'] == 0) {
+        
+        // Tentukan folder tujuan upload (Pastikan folder ini sudah Anda buat: upload/bukti/)
+        $target_dir = "upload/bukti/"; 
+        
+        // Buat folder otomatis jika belum ada di server
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+
+        $nama_file_asli = $_FILES["bukti_pembayaran"]["name"];
+        $ekstensi = strtolower(pathinfo($nama_file_asli, PATHINFO_EXTENSION));
+        
+        // Validasi Ekstensi File
+        $ekstensi_diperbolehkan = array("jpg", "jpeg", "png");
+        if (!in_array($ekstensi, $ekstensi_diperbolehkan)) {
+            echo "<script>alert('Format file tidak didukung! Hanya diperbolehkan .jpg, .jpeg, atau .png'); window.history.back();</script>";
+            exit;
+        }
+
+        // Rename nama file gambar menggunakan nomor pesanan agar unik dan tidak duplikat
+        $nama_file_bukti = $nomor_pesanan . "." . $ekstensi;
+        $target_file = $target_dir . $nama_file_bukti;
+
+        // Pindahkan file dari temporary cache ke folder tujuan
+        if (!move_uploaded_file($_FILES["bukti_pembayaran"]["tmp_name"], $target_file)) {
+            die("Gagal mengunggah bukti pembayaran.");
+        }
+    } else {
+        // Jika memilih QRIS tetapi tidak menyertakan berkas gambar
+        echo "<script>alert('Wajib mengunggah bukti pembayaran untuk metode QRIS!'); window.history.back();</script>";
+        exit;
+    }
+}
 
 /* =========================
    AMBIL MEJA
@@ -50,29 +92,25 @@ try {
        HITUNG TOTAL
     ========================= */
     foreach ($_SESSION['keranjang'] as $id_menu => $item) {
-
         $q = mysqli_query($conn, "SELECT harga FROM menu WHERE id_menu='$id_menu'");
         $d = mysqli_fetch_assoc($q);
-
         $total += $d['harga'] * $item['jumlah'];
     }
 
     /* =========================
        INSERT PESANAN
     ========================= */
+    // PERUBAHAN: Menambahkan kolom metode_pembayaran dan bukti_pembayaran ke dalam SQL query
     if ($no_meja) {
-
-    $sql = "INSERT INTO pesanan 
-    (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan, id_meja)
-    VALUES 
-    ('$nomor_pesanan', '$tanggal', '$total', 'pending', '$id_pelanggan', '$no_meja')";
-
-    } else {
-
         $sql = "INSERT INTO pesanan 
-        (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan)
+        (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan, id_meja, metode_pembayaran, bukti_pembayaran)
         VALUES 
-        ('$nomor_pesanan', '$tanggal', '$total', 'pending', '$id_pelanggan')";
+        ('$nomor_pesanan', '$tanggal', '$total', 'pending', '$id_pelanggan', '$no_meja', '$metode_pembayaran', '$nama_file_bukti')";
+    } else {
+        $sql = "INSERT INTO pesanan 
+        (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan, metode_pembayaran, bukti_pembayaran)
+        VALUES 
+        ('$nomor_pesanan', '$tanggal', '$total', 'pending', '$id_pelanggan', '$metode_pembayaran', '$nama_file_bukti')";
     }
 
     mysqli_query($conn, $sql);
@@ -83,7 +121,7 @@ try {
         throw new Exception("Gagal membuat pesanan");
     }
 
-   /* =========================
+    /* =========================
        INSERT DETAIL PESANAN
     ========================= */
     foreach ($_SESSION['keranjang'] as $id_menu => $item) {
@@ -105,12 +143,13 @@ try {
             ('$id_pesanan', '$id_menu', '$qty', '$subtotal', '$pedas', '$catatan')
         ");
 
-        // 2. TAMBAHKAN INI: Kurangi stok di tabel menu
+        // 2. Kurangi stok di tabel menu
         mysqli_query($conn, "UPDATE menu SET stok = stok - $qty WHERE id_menu = '$id_menu'");
 
-        // 3. TAMBAHKAN INI: Otomatis set status jadi 'habis' jika stok <= 0
+        // 3. Otomatis set status jadi 'habis' jika stok <= 0
         mysqli_query($conn, "UPDATE menu SET status = 'habis' WHERE id_menu = '$id_menu' AND stok <= 0");
     }
+    
     /* =========================
        COMMIT
     ========================= */

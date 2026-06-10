@@ -76,15 +76,127 @@ $no_meja = isset($_SESSION['no_meja']) ? $_SESSION['no_meja'] : null;
             color:#8b1e2d;
             white-space:nowrap;
         }
+
+        /* --- STYLE: METODE PEMBAYARAN & BOX QRIS --- */
+        .payment-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .payment-box .title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #333;
+        }
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+        }
+        .payment-option {
+            position: relative;
+        }
+        .payment-option input[type="radio"] {
+            display: none;
+        }
+        .payment-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .payment-label i {
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        .payment-option input[type="radio"]:checked + .payment-label {
+            border-color: #8b1e2d;
+            background-color: #fff5f5;
+            color: #8b1e2d;
+        }
+        .payment-option input[type="radio"]:checked + .payment-label i {
+            color: #8b1e2d;
+        }
+        .qris-container {
+            display: none; 
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px dashed #8b1e2d;
+            border-radius: 10px;
+            background: #fafafa;
+        }
+        .qris-container img {
+            max-width: 230px;
+            width: 100%;
+            height: auto;
+            margin-top: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* --- STYLE BARU: BUKTI PEMBAYARAN UPLOAD --- */
+        .upload-bukti-wrapper {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            text-align: left;
+        }
+        .upload-bukti-wrapper label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .upload-bukti-wrapper input[type="file"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #555;
+            cursor: pointer;
+        }
+        .upload-bukti-wrapper input[type="file"]::file-selector-button {
+            background: #8b1e2d;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-right: 10px;
+            transition: 0.2s;
+        }
+        .upload-bukti-wrapper input[type="file"]::file-selector-button:hover {
+            background: #6d1723;
+        }
     </style>
 </head>
 <body>
 
-<form action="proses_checkout.php" method="POST">
+<form action="proses_checkout.php" method="POST" enctype="multipart/form-data">
 
 <div class="checkout-container">
 
-    <!-- KIRI -->
     <div class="checkout-left">
 
         <div class="topbar">
@@ -180,40 +292,74 @@ $no_meja = isset($_SESSION['no_meja']) ? $_SESSION['no_meja'] : null;
 
         </div>
 
-        <!-- DATA PEMESAN -->
-            <div class="address-box">
+        <div class="address-box">
 
-                <div class="title">
-                    <i class="fa-solid fa-user"></i>
-                    <span>Detail Pemesan</span>
-                </div>
-
-                <?php if ($no_meja): ?>
-                <div class="input-group">
-                    <label>Nomor Meja</label>
-                    <input 
-                        type="text" 
-                        value="Meja <?= htmlspecialchars($no_meja); ?>" 
-                        readonly 
-                        style="background-color: #f8f9fa; border: 1px solid #ddd; cursor: not-allowed; color: #555;">
-                    <input type="hidden" name="no_meja" value="<?= htmlspecialchars($no_meja); ?>">
-                </div>
-                <?php endif; ?>
-
-                <div class="input-group">
-                    <label>Nama Lengkap</label>
-                    <input 
-                        type="text" 
-                        name="nama" 
-                        required 
-                        placeholder="Masukkan nama Anda">
-                </div>
-
+            <div class="title">
+                <i class="fa-solid fa-user"></i>
+                <span>Detail Pemesan</span>
             </div>
+
+            <?php if ($no_meja): ?>
+            <div class="input-group">
+                <label>Nomor Meja</label>
+                <input 
+                    type="text" 
+                    value="Meja <?= htmlspecialchars($no_meja); ?>" 
+                    readonly 
+                    style="background-color: #f8f9fa; border: 1px solid #ddd; cursor: not-allowed; color: #555;">
+                <input type="hidden" name="no_meja" value="<?= htmlspecialchars($no_meja); ?>">
+            </div>
+            <?php endif; ?>
+
+            <div class="input-group">
+                <label>Nama Lengkap</label>
+                <input 
+                    type="text" 
+                    name="nama" 
+                    required 
+                    placeholder="Masukkan nama Anda">
+            </div>
+
+        </div>
+
+        <div class="payment-box">
+            <div class="title">
+                <i class="fa-solid fa-credit-card"></i>
+                <span>Metode Pembayaran</span>
+            </div>
+            
+            <div class="payment-options">
+                <div class="payment-option">
+                    <input type="radio" id="bayar_kasir" name="metode_pembayaran" value="Kasir" checked required>
+                    <label for="bayar_kasir" class="payment-label">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        <span>Bayar di Kasir</span>
+                    </label>
+                </div>
+
+                <div class="payment-option">
+                    <input type="radio" id="bayar_qris" name="metode_pembayaran" value="QRIS" required>
+                    <label for="bayar_qris" class="payment-label">
+                        <i class="fa-solid fa-qrcode"></i>
+                        <span>QRIS</span>
+                    </label>
+                </div>
+            </div>
+
+            <div id="qris_box" class="qris-container">
+                <p style="font-weight: bold; margin-bottom: 5px; color: #333;">Silahkan Scan QRIS SagalaLada:</p>
+                <img src="../bahan/csan-qr-a.jpg" alt="QRIS SagalaLada">
+                
+                <div class="upload-bukti-wrapper">
+                    <label for="bukti_pembayaran"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Bukti Pembayaran:</label>
+                    <input type="file" id="bukti_pembayaran" name="bukti_pembayaran" accept="image/*">
+                    <small style="color: #c62828; display: block; margin-top: 5px; font-size: 11px;">* Format gambar (.jpg, .jpeg, .png) wajib dilampirkan jika memilih QRIS</small>
+                </div>
+            </div>
+        </div>
 
     </div>
 
-    <!-- KANAN -->
     <div class="checkout-right">
 
         <div class="summary-card">
@@ -256,6 +402,35 @@ $no_meja = isset($_SESSION['no_meja']) ? $_SESSION['no_meja'] : null;
 </div>
 
 </form>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const paymentRadios = document.querySelectorAll('input[name="metode_pembayaran"]');
+    const qrisBox = document.getElementById('qris_box');
+    const inputBukti = document.getElementById('bukti_pembayaran'); // Mengambil element input file
+
+    function toggleQrisBox() {
+        const selectedPayment = document.querySelector('input[name="metode_pembayaran"]:checked');
+        
+        if (selectedPayment && selectedPayment.value === 'QRIS') {
+            qrisBox.style.display = 'block'; // Munculkan gambar QRIS & form upload
+            inputBukti.setAttribute('required', 'required'); // Wajib diisi hanya ketika pilih QRIS
+        } else {
+            qrisBox.style.display = 'none';  // Sembunyikan jika pilih Kasir
+            inputBukti.removeAttribute('required'); // Batalkan wajib diisi agar opsi Kasir bisa lolos submit
+            inputBukti.value = ""; // Reset file yang sempat dipilih jika user berganti pilihan
+        }
+    }
+
+    // Dengarkan setiap perubahan klik pada radio button
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', toggleQrisBox);
+    });
+
+    // Jalankan fungsi saat web pertama kali dibuka untuk memastikan keadaan default (Kasir checked)
+    toggleQrisBox();
+});
+</script>
 
 </body>
 </html>

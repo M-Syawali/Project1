@@ -146,8 +146,16 @@ window.onload = function() {
     <p>No Pesanan : <?= $data['nomor_pesanan']; ?></p>
     <p>Pelanggan : <?= htmlspecialchars($data['nama_pelanggan']); ?></p>
 
-    <?php if(!empty($data['id_meja'])): ?>
-        <p>Meja : <?= $data['id_meja']; ?></p>
+    <p>Tipe Pesanan : 
+        <?php if(!empty($data['id_meja'])): ?>
+            Meja <?= htmlspecialchars($data['id_meja']); ?>
+        <?php else: ?>
+            <strong>Take Away</strong>
+        <?php endif; ?>
+    </p>
+
+    <?php if(!empty($data['metode_pembayaran'])): ?>
+        <p>Metode Bayar : <?= htmlspecialchars(strtoupper($data['metode_pembayaran'])); ?></p>
     <?php endif; ?>
 
     <p>Tanggal : <?= date('d-m-Y H:i', strtotime($data['tanggal'])); ?></p>
@@ -200,24 +208,26 @@ window.onload = function() {
         </span>
     </div>
 
-    <div class="total-row">
-        <span>Uang Tunai</span>
-        <span>
-            Rp <?= number_format($data['uang_diterima'],0,',','.'); ?>
-        </span>
-    </div>
+    <?php if(isset($data['metode_pembayaran']) && strtolower($data['metode_pembayaran']) == 'tunai'): ?>
+        <div class="total-row">
+            <span>Uang Tunai</span>
+            <span>
+                Rp <?= number_format($data['uang_diterima'],0,',','.'); ?>
+            </span>
+        </div>
 
-    <div class="total-row">
-        <span>Kembalian</span>
-        <span>
-            Rp <?= number_format(
-                $data['uang_diterima'] - $data['total_harga'],
-                0,
-                ',',
-                '.'
-            ); ?>
-        </span>
-    </div>
+        <div class="total-row">
+            <span>Kembalian</span>
+            <span>
+                Rp <?= number_format(
+                    $data['uang_diterima'] - $data['total_harga'],
+                    0,
+                    ',',
+                    '.'
+                ); ?>
+            </span>
+        </div>
+    <?php endif; ?>
 
 </div>
 
