@@ -8,7 +8,7 @@ if (!isset($_GET['id'])) {
 
 $id_pesanan = mysqli_real_escape_string($conn, $_GET['id']);
 
-// 2. Ambil data pesanan awal
+// 2. Ambil data pesanan awal (pastikan kolom metode_pembayaran ada di tabel pesanan)
 $query = mysqli_query($conn, "SELECT * FROM pesanan WHERE id_pesanan='$id_pesanan'");
 $data = mysqli_fetch_assoc($query);
 
@@ -17,6 +17,8 @@ if (!$data) {
 }
 
 $status = $data['status_pesanan']; 
+// Mengambil metode pembayaran untuk dicek di JavaScript (default 'tunai' jika kosong)
+$metode_bayar = isset($data['metode_pembayaran']) ? strtolower($data['metode_pembayaran']) : 'tunai';
 ?>
 
 <!DOCTYPE html>
@@ -53,12 +55,13 @@ $status = $data['status_pesanan'];
 <body>
 
 <div class="status-card" id="statusCard">
-    </div>
+</div>
 
 <script>
 const statusCard = document.getElementById("statusCard");
 let currentStatus = ""; 
 const idPesanan = "<?= $id_pesanan; ?>";
+const metodeBayar = "<?= $metode_bayar; ?>"; // Mengambil metode bayar dari PHP
 
 function renderStatus(status) {
     status = status ? status.toLowerCase().trim() : "";
@@ -70,21 +73,39 @@ function renderStatus(status) {
 
     // PENDING
     if (status === "pending") {
+        // CEK JIKALAU METODE BAYAR ADALAH QRIS
+        if (metodeBayar === "qris") {
+            statusCard.innerHTML = `
+                <div class="order-id">PESANAN ${displayID}</div>
 
-        statusCard.innerHTML = `
-            <div class="order-id">PESANAN ${displayID}</div>
+                <div class="check-icon bg-gold">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
 
-            <div class="check-icon bg-gold">
-                <i class="fa-solid fa-money-bill-wave"></i>
-            </div>
+                <h2>Menunggu Konfirmasi Pembayaran</h2>
 
-            <h2>Menunggu Pembayaran</h2>
+                <p>
+                    Bukti pembayaran QRIS Anda telah dikirim. 
+                    Mohon tunggu sebentar, admin sedang memverifikasi pembayaran Anda.
+                </p>
+            `;
+        } else {
+            // JIKA TUNAI / DEFAULT
+            statusCard.innerHTML = `
+                <div class="order-id">PESANAN ${displayID}</div>
 
-            <p>
-                Pesanan berhasil dibuat.
-                Silakan lakukan pembayaran ke kasir agar pesanan dapat diproses.
-            </p>
-        `;
+                <div class="check-icon bg-gold">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+
+                <h2>Menunggu Pembayaran</h2>
+
+                <p>
+                    Pesanan berhasil dibuat.
+                    Silakan lakukan pembayaran ke kasir agar pesanan dapat diproses.
+                </p>
+            `;
+        }
     }
 
     // DIBAYAR
@@ -106,7 +127,7 @@ function renderStatus(status) {
         `;
     }
 
-    // DIPROSES
+    // DIPROSES (UBAH MENJADI PESANAN DIBUAT)
     else if (status === "diproses") {
 
         statusCard.innerHTML = `
@@ -114,7 +135,7 @@ function renderStatus(status) {
 
             <div class="loader"></div>
 
-            <h2>Pesanan Sedang Diproses</h2>
+            <h2>Pesanan Dibuat</h2>
 
             <p>
                 Koki kami sedang menyiapkan pesanan Anda.
@@ -192,7 +213,7 @@ renderStatus("<?= $status; ?>");
 
 // Cek status secara Real-time setiap 3 detik
 const autoCheck = setInterval(() => {
-    // Berhenti cek jika status sudah 'dibayar' (biar hemat resource)
+    // Berhenti cek jika status sudah 'selesai' atau 'dibatalkan'
     if (
     currentStatus === "selesai" ||
     currentStatus === "dibatalkan"
