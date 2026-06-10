@@ -202,15 +202,15 @@ $habisPct = $total ? ($habis / $total) * 100 : 0;
         <input
         type="text"
         name="search"
+        id="searchInput"
         placeholder="Cari menu..."
         value="<?= $_GET['search'] ?? '' ?>"
-        class="search-input"
-        oninput="this.form.submit()">
+        class="search-input">
 
         <select
             name="status"
-            class="filter-select"
-            onchange="this.form.submit()">
+            id="statusSelect"
+            class="filter-select">
             <option value="">Semua Status</option>
 
             <option value="tersedia"
@@ -254,23 +254,8 @@ $habisPct = $total ? ($habis / $total) * 100 : 0;
             $search = $_GET['search'] ?? '';
             $status = $_GET['status'] ?? '';
 
-            $sql = "SELECT * FROM menu WHERE 1=1";
+            $sql = "SELECT * FROM menu ";
 
-            if (!empty($search)) {
-                $search = mysqli_real_escape_string($conn, $search);
-                $sql .= " AND nama_menu LIKE '%$search%'";
-            }
-
-            if (!empty($status)) {
-
-                if ($status == 'tersedia') {
-                    $sql .= " AND stok > 5";
-                }
-
-                if ($status == 'habis') {
-                    $sql .= " AND stok = 0";
-                }
-            }
 
             $data = mysqli_query($conn, $sql);
 
@@ -302,16 +287,21 @@ $habisPct = $total ? ($habis / $total) * 100 : 0;
                     </td>
 
                     <td>
+                        <div class="stok-control <?= $stokClass ?>">
 
-                        <input
-                            type="number"
-                            name="stok[]"
-                            value="<?= $row['stok'] ?>"
-                            min="0"
-                            required
-                            class="stok-input <?= $stokClass ?>">
-                            
+                            <button type="button" class="btn-minus">−</button>
 
+                            <input
+                                type="number"
+                                name="stok[]"
+                                value="<?= $row['stok'] ?>"
+                                min="0"
+                                required
+                                class="stok-input">
+
+                            <button type="button" class="btn-plus">+</button>
+
+                        </div>
                     </td>
 
                     <td>
@@ -362,6 +352,68 @@ $habisPct = $total ? ($habis / $total) * 100 : 0;
 </div>
 <script>
     feather.replace();
+
+</script>
+<script>
+document.querySelectorAll('.btn-plus').forEach(btn => {
+    btn.addEventListener('click', function() {
+
+        let input = this.parentElement.querySelector('.stok-input');
+
+        input.value = parseInt(input.value || 0) + 1;
+    });
+});
+
+document.querySelectorAll('.btn-minus').forEach(btn => {
+    btn.addEventListener('click', function() {
+
+        let input = this.parentElement.querySelector('.stok-input');
+
+        let value = parseInt(input.value || 0);
+
+        if(value > 0){
+            input.value = value - 1;
+        }
+    });
+});
+</script>
+<script>
+document.getElementById("searchInput").addEventListener("input", filterStok);
+document.getElementById("statusSelect").addEventListener("change", filterStok);
+
+function filterStok() {
+
+    const keyword =
+        document.getElementById("searchInput").value.toLowerCase();
+
+    const status =
+        document.getElementById("statusSelect").value;
+
+    const rows =
+        document.querySelectorAll("tbody tr");
+
+    rows.forEach(row => {
+
+        const namaMenu =
+            row.cells[1].textContent.toLowerCase();
+
+       const statusMenu =
+    row.querySelector('select[name="status[]"]').value;
+
+const cocokNama =
+    namaMenu.includes(keyword);
+
+let cocokStatus = true;
+
+if (status !== "") {
+    cocokStatus = statusMenu === status;
+}
+
+        row.style.display =
+            (cocokNama && cocokStatus) ? "" : "none";
+   
+        });
+}
 </script>
 </body>
 </html>
