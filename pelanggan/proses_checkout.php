@@ -12,14 +12,20 @@ date_default_timezone_set('Asia/Jakarta');
 /* =========================
    VALIDASI INPUT
 ========================= */
-// TAMBAHAN: Menambahkan validasi untuk metode_pembayaran
 if (!isset($_POST['nama']) || !isset($_POST['nomor_pesanan']) || !isset($_POST['metode_pembayaran'])) {
     die("Data tidak lengkap");
 }
 
-$nama_pelanggan = mysqli_real_escape_string($conn, $_POST['nama']);
-$nomor_pesanan = mysqli_real_escape_string($conn, $_POST['nomor_pesanan']);
+$nama_pelanggan    = mysqli_real_escape_string($conn, $_POST['nama']);
+$nomor_pesanan     = mysqli_real_escape_string($conn, $_POST['nomor_pesanan']);
 $metode_pembayaran = mysqli_real_escape_string($conn, $_POST['metode_pembayaran']);
+$jenis_pesanan     = isset($_POST['jenis_pesanan']) ? mysqli_real_escape_string($conn, $_POST['jenis_pesanan']) : 'dinein';
+
+// TANGKAP DATA DELIVERY (Jika tipe pesanan adalah delivery)
+$ongkir    = isset($_POST['ongkir']) ? (int)$_POST['ongkir'] : 0;
+$alamat    = isset($_POST['alamat']) ? mysqli_real_escape_string($conn, $_POST['alamat']) : '';
+$latitude  = isset($_POST['latitude']) ? mysqli_real_escape_string($conn, $_POST['latitude']) : '';
+$longitude = isset($_POST['longitude']) ? mysqli_real_escape_string($conn, $_POST['longitude']) : '';
 
 $tanggal = date("Y-m-d H:i:s");
 $total = 0;
@@ -31,10 +37,8 @@ $nama_file_bukti = ""; // Default kosong jika bayar di kasir
 if ($metode_pembayaran === 'QRIS') {
     if (isset($_FILES['bukti_pembayaran']) && $_FILES['bukti_pembayaran']['error'] == 0) {
         
-        // Tentukan folder tujuan upload (Pastikan folder ini sudah Anda buat: upload/bukti/)
         $target_dir = "upload/bukti/"; 
         
-        // Buat folder otomatis jika belum ada di server
         if (!file_exists($target_dir)) {
             mkdir($target_dir, 0777, true);
         }
@@ -42,23 +46,19 @@ if ($metode_pembayaran === 'QRIS') {
         $nama_file_asli = $_FILES["bukti_pembayaran"]["name"];
         $ekstensi = strtolower(pathinfo($nama_file_asli, PATHINFO_EXTENSION));
         
-        // Validasi Ekstensi File
         $ekstensi_diperbolehkan = array("jpg", "jpeg", "png");
         if (!in_array($ekstensi, $ekstensi_diperbolehkan)) {
             echo "<script>alert('Format file tidak didukung! Hanya diperbolehkan .jpg, .jpeg, atau .png'); window.history.back();</script>";
             exit;
         }
 
-        // Rename nama file gambar menggunakan nomor pesanan agar unik dan tidak duplikat
         $nama_file_bukti = $nomor_pesanan . "." . $ekstensi;
         $target_file = $target_dir . $nama_file_bukti;
 
-        // Pindahkan file dari temporary cache ke folder tujuan
         if (!move_uploaded_file($_FILES["bukti_pembayaran"]["tmp_name"], $target_file)) {
             die("Gagal mengunggah bukti pembayaran.");
         }
     } else {
-        // Jika memilih QRIS tetapi tidak menyertakan berkas gambar
         echo "<script>alert('Wajib mengunggah bukti pembayaran untuk metode QRIS!'); window.history.back();</script>";
         exit;
     }
@@ -89,7 +89,7 @@ try {
     }
 
     /* =========================
-       HITUNG TOTAL
+       HITUNG TOTAL MENU
     ========================= */
     foreach ($_SESSION['keranjang'] as $id_menu => $item) {
         $q = mysqli_query($conn, "SELECT harga FROM menu WHERE id_menu='$id_menu'");
@@ -97,20 +97,23 @@ try {
         $total += $d['harga'] * $item['jumlah'];
     }
 
+    // TOTAL BAYAR AKHIR = Total Harga Menu + Ongkir Hasil Maps
+    $total_akhir = $total + $ongkir;
+
     /* =========================
        INSERT PESANAN
     ========================= */
-    // PERUBAHAN: Menambahkan kolom metode_pembayaran dan bukti_pembayaran ke dalam SQL query
-    if ($no_meja) {
+    // Di sini kolom-kolom baru (ongkir, alamat, latitude, longitude, jenis_pesanan) disave ke database
+    if ($no_meja && $jenis_pesanan !== 'delivery') {
         $sql = "INSERT INTO pesanan 
-        (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan, id_meja, metode_pembayaran, bukti_pembayaran)
+        (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan, id_meja, metode_pembayaran, bukti_pembayaran, jenis_pesanan, ongkir, alamat, latitude, longitude)
         VALUES 
-        ('$nomor_pesanan', '$tanggal', '$total', 'pending', '$id_pelanggan', '$no_meja', '$metode_pembayaran', '$nama_file_bukti')";
+        ('$nomor_pesanan', '$tanggal', '$total_akhir', 'pending', '$id_pelanggan', '$no_meja', '$metode_pembayaran', '$nama_file_bukti', '$jenis_pesanan', '$ongkir', '$alamat', '$latitude', '$longitude')";
     } else {
         $sql = "INSERT INTO pesanan 
-        (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan, metode_pembayaran, bukti_pembayaran)
+        (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan, metode_pembayaran, bukti_pembayaran, jenis_pesanan, ongkir, alamat, latitude, longitude)
         VALUES 
-        ('$nomor_pesanan', '$tanggal', '$total', 'pending', '$id_pelanggan', '$metode_pembayaran', '$nama_file_bukti')";
+        ('$nomor_pesanan', '$tanggal', '$total_akhir', 'pending', '$id_pelanggan', '$metode_pembayaran', '$nama_file_bukti', '$jenis_pesanan', '$ongkir', '$alamat', '$latitude', '$longitude')";
     }
 
     mysqli_query($conn, $sql);

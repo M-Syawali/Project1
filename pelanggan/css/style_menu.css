@@ -64,9 +64,9 @@ body::after {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: sticky;
+    position: relative;
     top: 0;
-    z-index: 999;
+    z-index: 9999;
     border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
@@ -94,6 +94,7 @@ body::after {
     display: flex;
     align-items: center;
     gap: 15px;
+    overflow:visible !important;
 }
 
 .dashboard-link {
@@ -111,6 +112,63 @@ body::after {
     background: rgba(255,255,255,0.18);
 }
 
+
+.profile-dropdown{
+    position:relative;
+    display:inline-block;
+}
+
+.profile-btn{
+    background:rgba(255,255,255,0.1);
+    color:white;
+    border:1px solid rgba(255,255,255,0.3);
+    padding:10px 20px;
+    border-radius:30px;
+    cursor:pointer;
+    font-weight:500;
+}
+
+.profile-dropdown{
+    position:relative;
+    display:inline-block;
+    z-index:99999;
+}
+
+.profile-btn{
+    background:none;
+    border:none;
+    color:white;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.profile-content{
+    display:none;
+    position:absolute;
+    right:0;
+    top:50px;
+    min-width:180px;
+    background:#fff;
+    border-radius:10px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.2);
+    z-index:99999;
+}
+
+.profile-content a{
+    display:block;
+    padding:12px 15px;
+    text-decoration:none;
+    color:#333;
+}
+
+.profile-content a:hover{
+    background:#f3f3f3;
+}
+
+.profile-dropdown:hover .profile-content{
+    display:block;
+}
+
 .keranjang-link {
     color: white;
     font-size: 20px;
@@ -120,6 +178,15 @@ body::after {
 .keranjang-link:hover {
     color: var(--soft-pink);
     transform: scale(1.1);
+}
+
+.sub-title{
+    text-align:center;
+    color:#fff;
+    margin-top:-15px;
+    margin-bottom:30px;
+    font-size:18px;
+    font-weight:400;
 }
 
 /* ANIMASI FLY TO CART */

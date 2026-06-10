@@ -51,16 +51,10 @@ include "koneksi.php";
             color:rgba(255,255,255,.85);
         }
 
-        .header-desc{
-            margin-top:8px;
-            color:rgba(255,255,255,.85);
-            font-size:15px;
-        }
-
         .summary-grid{
             margin-top: 30px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
             margin-bottom: 25px;
         }
@@ -213,6 +207,7 @@ include "koneksi.php";
             padding:14px 16px;
             border-bottom:1px solid #e5e7eb;
             text-align: left;
+            vertical-align: top;
         }
         th {
             background: rgba(139,30,45,.92);
@@ -274,38 +269,11 @@ include "koneksi.php";
             display: inline-block;
         }
 
-        /* Warna Status */
-        .diproses {
-            background: #b8daff;
-            color: #004085;
-        }
+        .diproses { background: #b8daff; color: #004085; }
+        .selesai { background: #d4edda; color: #155724; }
+        .dibayar { background: #c3e6cb; color: #155724; border: 1px solid green; }
+        .pending { background: #fff3cd; color: #856404; } 
 
-        .selesai {
-            background: #d4edda;
-            color: #155724;
-        }
-        .dibayar {
-            background: #c3e6cb;
-            color: #155724;
-            border: 1px solid green;
-        }
-
-        .pending {
-            background: #fff3cd;
-            color: #856404;
-        } 
-
-        .btn-batal:hover{
-            background:#b91c1c;
-        }
-
-        .btn-selesai:hover{
-            background:#15803d;
-        }
-
-        .btn-bayar:hover{
-            background:#2563eb;
-        }
         .item-menu {
             padding: 6px 0;
             border-bottom: 1px dashed rgba(0,0,0,0.25);
@@ -349,16 +317,13 @@ include "koneksi.php";
             gap: 6px;
             margin-top: 3px;
         }
-        .detail-menu svg {
+        .detail-menu svg, .catatan-menu svg {
             width: 14px;
             height: 14px;
-            color: #ea580c;
         }
-        .catatan-menu svg {
-            width: 14px;
-            height: 14px;
-            color: #6b7280;
-        }
+        .detail-menu svg { color: #ea580c; }
+        .catatan-menu svg { color: #6b7280; }
+        
         .text-muted{
             color: #4b5563;
             font-size: 12px;
@@ -386,12 +351,12 @@ include "koneksi.php";
         .btn-selesai { background: #28a745; }
         .btn-bayar { background: #007bff; }
         .btn-bukti { background: #6b7280; color: white !important; cursor: pointer; border: none; }
-        .btn-bukti:hover { background: #4b5563; }
-
-        ul{
-            list-style:none;
-            padding:0;
-            margin:0;
+        
+        .btn-maps { 
+            background: #ea4335; 
+            color: white !important; 
+            text-decoration: none;
+            margin-top: 5px;
         }
 
         .badge-meja{
@@ -401,6 +366,17 @@ include "koneksi.php";
             border-radius:12px;
             font-weight:600;
             font-size:13px;
+            display: inline-block;
+        }
+        
+        .badge-delivery {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 13px;
+            display: inline-block;
         }
 
         .badge-metode {
@@ -416,6 +392,15 @@ include "koneksi.php";
         .badge-qris {
             background: #e0f2fe;
             color: #0369a1;
+        }
+
+        .alamat-delivery-box {
+            font-size: 12px;
+            color: #4b5563;
+            max-width: 200px;
+            word-wrap: break-word;
+            margin-top: 4px;
+            line-height: 1.4;
         }
 
         .table-footer{
@@ -448,23 +433,12 @@ include "koneksi.php";
             transition:.2s;
         }
 
-        .page-btn:hover,
-        .page-number:hover{
-            background:#f8fafc;
-        }
-
         .page-number.active{
             background:#8b1e2d;
             color:white;
             border-color:#8b1e2d;
         }
 
-        .page-btn svg{
-            width:18px;
-            height:18px;
-        }
-
-        /* STYLING MODAL LIGHTBOX UNTUK BUKTI PEMBAYARAN */
         .modal {
             display: none;
             position: fixed;
@@ -484,7 +458,6 @@ include "koneksi.php";
             width: 80%;
             max-width: 450px;
             border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
             animation: zoom 0.3s ease-in-out;
         }
         @keyframes zoom {
@@ -498,11 +471,7 @@ include "koneksi.php";
             color: #f1f1f1;
             font-size: 40px;
             font-weight: bold;
-            transition: 0.3s;
             cursor: pointer;
-        }
-        .close-modal:hover {
-            color: #bbb;
         }
     </style>
 </head>
@@ -519,8 +488,6 @@ function getCount($conn, $status, $type = 'status') {
     
     if ($type == 'status') {
         $sql .= " AND LOWER(TRIM(status_pesanan)) = '$status'";
-    } elseif ($type == 'lunas') {
-        $sql .= " AND LOWER(TRIM(status_pesanan)) = 'dibayar'";
     }
     
     $res = mysqli_query($conn, $sql);
@@ -547,7 +514,7 @@ $count_batal     = getCount($conn, 'dibatalkan');
             <div>
                 <span>Menunggu Bayar</span>
                 <h3><?= $count_pending; ?></h3>
-                <small>Menunggu pembayaran</small>
+                <small>Hari ini</small>
             </div>
         </div>
         <div class="summary-card">
@@ -555,7 +522,7 @@ $count_batal     = getCount($conn, 'dibatalkan');
             <div>
                 <span>Sudah Dibayar</span>
                 <h3><?= $count_dibayar; ?></h3>
-                <small>Pembayaran berhasil diterima</small>
+                <small>Hari ini</small>
             </div>
         </div>
         <div class="summary-card">
@@ -563,7 +530,7 @@ $count_batal     = getCount($conn, 'dibatalkan');
             <div>
                 <span>Diproses</span>
                 <h3><?= $count_proses; ?></h3>
-                <small>Pesanan sedang disiapkan</small>
+                <small>Hari ini</small>
             </div>
         </div>
         <div class="summary-card">
@@ -571,7 +538,7 @@ $count_batal     = getCount($conn, 'dibatalkan');
             <div>
                 <span>Selesai</span>
                 <h3><?= $count_selesai; ?></h3>
-                <small>Pesanan selesai</small>
+                <small>Hari ini</small>
             </div>
         </div>
         <div class="summary-card">
@@ -579,7 +546,7 @@ $count_batal     = getCount($conn, 'dibatalkan');
             <div>
                 <span>Dibatalkan</span>
                 <h3><?= $count_batal; ?></h3>
-                <small>Pesanan dibatalkan</small>
+                <small>Hari ini</small>
             </div>
         </div>
     </div>
@@ -608,7 +575,7 @@ $count_batal     = getCount($conn, 'dibatalkan');
         <table>       
             <thead>
                 <tr>
-                    <th>Meja</th>
+                    <th>Tipe / Meja</th>
                     <th>Pelanggan</th>
                     <th>Detail Item</th>
                     <th>Metode</th> 
@@ -644,14 +611,19 @@ $count_batal     = getCount($conn, 'dibatalkan');
                         $id_p = $row['id_pesanan'];
                         $status = strtolower(trim($row['status_pesanan']));
                         $metode = strtoupper($row['metode_pembayaran'] ?? 'KASIR');
+                        $jenis_pesanan = strtolower($row['jenis_pesanan'] ?? 'dinein');
                 ?>
                 <tr>
-                    <td>
+                    <td style="text-align: center;">
                         <?php 
-                            if (!empty($row['id_meja'])) {
-                                echo "<span class='badge-meja'>Meja:".$row['id_meja']."</span>";
+                            if ($jenis_pesanan === 'delivery') {
+                                echo "<span class='badge-delivery'><i data-feather='truck' style='width:12px; height:12px; vertical-align:middle;'></i> Delivery</span>";
                             } else {
-                                echo "-";
+                                if (!empty($row['id_meja'])) {
+                                    echo "<span class='badge-meja'>Meja: ".$row['id_meja']."</span>";
+                                } else {
+                                    echo "<span class='badge-meja'>Take Away</span>";
+                                }
                             }
                         ?>
                     </td>
@@ -660,8 +632,14 @@ $count_batal     = getCount($conn, 'dibatalkan');
                             <div class="pelanggan-icon"><i data-feather="user"></i></div>
                             <div>
                                 <span class="nomor-pesanan"><?php echo $row['nomor_pesanan']; ?></span>
-                                <div class="nama-pelanggan"><?php echo htmlspecialchars($row['nama_pelanggan']); ?><br></div>
+                                <div class="nama-pelanggan"><?php echo htmlspecialchars($row['nama_pelanggan']); ?></div>
                                 <small><?php echo $row['tanggal']; ?></small>
+                                
+                                <?php if ($jenis_pesanan === 'delivery' && !empty($row['alamat'])): ?>
+                                    <div class="alamat-delivery-box">
+                                        <strong>Alamat:</strong> <?php echo htmlspecialchars($row['alamat']); ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </td>
@@ -681,7 +659,7 @@ $count_batal     = getCount($conn, 'dibatalkan');
                                 </div>     
                                 <?php if (!empty($det['pedas'])) { ?>
                                     <div class="detail-menu">
-                                        <span class="menu-pedas">🌶<?php echo $det['pedas']; ?></span>
+                                        <span class="menu-pedas">🌶 <?php echo $det['pedas']; ?></span>
                                     </div>
                                 <?php } ?>
                                 <?php if (!empty($det['catatan'])) { ?>
@@ -699,56 +677,60 @@ $count_batal     = getCount($conn, 'dibatalkan');
                         </span>
                     </td>
                     <td>
-                        <span class="total-bayar"> Rp <?php echo number_format($row['total_harga'], 0, ',', '.'); ?></span>
+                        <span class="total-bayar">Rp <?php echo number_format($row['total_harga'], 0, ',', '.'); ?></span>
+                        <?php if ($jenis_pesanan === 'delivery' && $row['ongkir'] > 0): ?>
+                            <br><small style="color: #0369a1;">(Termasuk Ongkir: Rp <?= number_format($row['ongkir'], 0, ',', '.') ?>)</small>
+                        <?php endif; ?>
                     </td>
                     <td><span class="status-badge <?php echo $status; ?>"><?php echo $status; ?></span></td>
                     <td>
-                        <?php if ($status == 'pending'): ?>
                         <div style="display: flex; flex-direction: column; gap: 5px;">
                             
-                            <?php if ($metode === 'QRIS' && !empty($row['bukti_pembayaran'])): ?>
-                                <button type="button" class="btn-status btn-bukti" onclick="bukaBukti('../../../pelanggan/upload/bukti/<?= $row['bukti_pembayaran']; ?>')">
-                                    <i data-feather="image"></i> Lihat Bukti
-                                </button>
+                            <?php if ($jenis_pesanan === 'delivery' && !empty($row['latitude']) && !empty($row['longitude'])): ?>
+                                <a href="https://www.google.com/maps/search/?api=1&query=<?= $row['latitude'] ?>,<?= $row['longitude'] ?>" 
+                                   target="_blank" class="btn-status btn-maps">
+                                    <i data-feather="map-pin"></i> Rute Lokasi
+                                </a>
                             <?php endif; ?>
 
-                            <input type="text" id="input_uang_<?= $id_p ?>"
-                                placeholder="Masukkan Uang..."
-                                value=""
-                                onkeyup="formatRupiah(this)"
-                                style="padding: 8px; border-radius: 8px; border: 1px solid #ccc; width: 140px;">
-                                                        <button type="button"
-                                    class="btn-status btn-bayar"
-                                    onclick="prosesBayar(<?= $id_p ?>, <?= $row['total_harga'] ?>)"
-                                    style="border:none; cursor:pointer;">
-                                <i data-feather="check"></i> Konfirmasi Bayar
-                            </button>
+                            <?php if ($status == 'pending'): ?>
+                                <?php if ($metode === 'QRIS' && !empty($row['bukti_pembayaran'])): ?>
+                                    <button type="button" class="btn-status btn-bukti" onclick="bukaBukti('../../../pelanggan/upload/bukti/<?= $row['bukti_pembayaran']; ?>')">
+                                        <i data-feather="image"></i> Lihat Bukti
+                                    </button>
+                                <?php endif; ?>
 
-                            <a class="btn-status btn-batal"
-                            href="konfirmasi_proses.php?id=<?= $id_p ?>&status=dibatalkan"
-                            onclick="return confirm('Yakin ingin membatalkan pesanan ini?')">
-                                <i data-feather="x-circle"></i> Batalkan
-                            </a>
+                                <input type="text" id="input_uang_<?= $id_p ?>"
+                                    placeholder="Masukkan Uang..."
+                                    onkeyup="formatRupiah(this)"
+                                    style="padding: 8px; border-radius: 8px; border: 1px solid #ccc; width: 140px;">
+                                
+                                <button type="button" class="btn-status btn-bayar" onclick="prosesBayar(<?= $id_p ?>, <?= $row['total_harga'] ?>)" style="border:none; cursor:pointer;">
+                                    <i data-feather="check"></i> Konfirmasi Bayar
+                                </button>
+
+                                <a class="btn-status btn-batal" href="konfirmasi_proses.php?id=<?= $id_p ?>&status=dibatalkan" onclick="return confirm('Yakin ingin membatalkan pesanan ini?')">
+                                    <i data-feather="x-circle"></i> Batalkan
+                                </a>
+
+                            <?php elseif ($status == 'dibayar'): ?>
+                                <div style="font-weight: 600; color: #155724; margin-bottom: 2px; font-size: 13px;">
+                                    Kembalian: Rp <?= number_format(($row['uang_diterima'] ?? 0) - $row['total_harga'], 0, ',', '.') ?>
+                                </div>
+                                
+                                <a class="btn-status btn-proses" href="konfirmasi_proses.php?id=<?= $id_p ?>&status=diproses">
+                                    <i data-feather="coffee"></i> Mulai Proses
+                                </a>
+                                <a class="btn-status btn-batal" href="konfirmasi_proses.php?id=<?= $id_p ?>&status=dibatalkan" onclick="return confirm('Yakin ingin membatalkan?')">
+                                    <i data-feather="x-circle"></i> Batalkan
+                                </a>
+
+                            <?php elseif ($status == 'diproses'): ?>
+                                <a class="btn-status btn-selesai" href="konfirmasi_proses.php?id=<?= $id_p ?>&status=selesai">
+                                    <i data-feather="check-circle"></i> Selesai
+                                </a>
+                            <?php endif; ?>
                         </div>
-
-                        <?php elseif ($status == 'dibayar'): ?>
-                            <div style="font-weight: 600; color: #155724; margin-bottom: 8px;">
-                                Kembalian: Rp <?= number_format($row['uang_diterima'] - $row['total_harga'], 0, ',', '.') ?>
-                            </div>
-                            
-                            <a class="btn-status btn-proses" href="konfirmasi_proses.php?id=<?= $id_p ?>&status=diproses">
-                                <i data-feather="coffee"></i> Mulai Proses
-                            </a>
-                            <a class="btn-status btn-batal" href="konfirmasi_proses.php?id=<?= $id_p ?>&status=dibatalkan" 
-                            onclick="return confirm('Yakin ingin membatalkan?')">
-                                <i data-feather="x-circle"></i> Batalkan
-                            </a>
-
-                        <?php elseif ($status == 'diproses'): ?>
-                            <a class="btn-status btn-selesai" href="konfirmasi_proses.php?id=<?= $id_p ?>&status=selesai">
-                                <i data-feather="check-circle"></i> Selesai
-                            </a>
-                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php 
@@ -779,7 +761,6 @@ $count_batal     = getCount($conn, 'dibatalkan');
 <script>
 feather.replace();
 
-// Fungsi untuk membuat format titik otomatis saat mengetik
 function formatRupiah(elemen) {
     let angka = elemen.value.replace(/[^,\d]/g, '').toString();
     let split = angka.split(',');
@@ -798,8 +779,6 @@ function formatRupiah(elemen) {
 
 function prosesBayar(id, total) {
     let inputField = document.getElementById('input_uang_' + id);
-    
-    // Hilangkan semua titik terlebih dahulu agar bisa dihitung sebagai angka murni
     let uangMentah = inputField.value.replace(/\./g, ''); 
 
     if (uangMentah === "" || parseInt(uangMentah) < parseInt(total)) {
@@ -807,7 +786,6 @@ function prosesBayar(id, total) {
         return;
     }
 
-    // Kirim uangMentah (tanpa titik) ke sistem proses PHP agar tidak merusak query database
     window.location.href = 'konfirmasi_proses.php?id=' + id + '&status=dibayar&uang=' + uangMentah;
 }
 

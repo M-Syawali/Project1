@@ -72,6 +72,30 @@ nav ul{
     list-style:none;
 }
 
+.hero-btn{
+    display:flex;
+    gap:15px;
+    margin-top:30px;
+}
+
+.btn-dayin,
+.btn-delivery{
+    padding:15px 35px;
+    border-radius:50px;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.btn-dayin{
+    background:#fff;
+    color:#8b0000;
+}
+
+.btn-delivery{
+    background:#ffb703;
+    color:#000;
+}
+
 nav ul li a{
     text-decoration:none;
     color:white;

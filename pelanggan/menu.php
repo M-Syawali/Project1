@@ -1,6 +1,20 @@
 <?php 
+// Mengatur agar session cookie bertahan lama (30 hari) agar tidak keluar sendiri
+$waktu_session = 2592000; 
+ini_set('session.gc_maxlifetime', $waktu_session);
+session_set_cookie_params($waktu_session);
+
 session_start();
 include "koneksi.php";
+
+if (isset($_GET['jenis'])) {
+    if ($_GET['jenis'] === 'delivery') {
+        $_SESSION['jenis_pesanan'] = 'delivery';
+        $_SESSION['no_meja'] = null; // Hapus nomor meja karena delivery
+    } else if ($_GET['jenis'] === 'dinein') {
+        $_SESSION['jenis_pesanan'] = 'dinein';
+    }
+}
 
 /* =========================
    SIMPAN NOMOR MEJA DARI QR
@@ -54,6 +68,12 @@ while ($row = mysqli_fetch_assoc($result)) {
     $menu_berdasarkan_kategori[$cat_name][] = $row;
 }
 
+// PERBAIKAN: Menghapus unset() agar akun tidak ter-logout saat pilih dinein
+if(isset($_GET['jenis']) && $_GET['jenis'] == 'dinein')
+{
+    $_SESSION['jenis_pesanan'] = 'dinein';
+}
+
 /* urutan kategori */
 $urutan_kategori = ['paket', 'makanan', 'minuman'];
 ?>
@@ -73,19 +93,9 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
 
 <body>
 
-<!-- NOTIF -->
-<?php if(isset($_SESSION['notif'])): ?>
-    <div class="notif">
-        <?php 
-            echo $_SESSION['notif']; 
-            unset($_SESSION['notif']);
-        ?>
-    </div>
-<?php endif; ?>
-
 <header class="dashboard-header">
     <div class="logo">
-        <a href="../index.html" class="back-icon">
+        <a href="../index.php" class="back-icon">
             <i class="fa-solid fa-angle-left"></i>
         </a>
         SagalaLada
@@ -95,7 +105,38 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
         <a href="rekomendasi.php" class="dashboard-link">
             Bingung Pilih? Pilihkan Untuk Saya
         </a>
-        <a href="../index.html" class="dashboard-link">Beranda</a>
+        <?php if(isset($_SESSION['username'])) { ?>
+
+            <div class="profile-dropdown">
+
+            <button type="button" class="profile-btn" onclick="toggleProfile()">
+                <i class="fa-solid fa-user"></i>
+                <?= htmlspecialchars($_SESSION['username']); ?>
+            </button>
+
+                <div class="profile-content">
+
+                    <a href="profile.php">
+                        <i class="fa-solid fa-user"></i>
+                        Profile
+                    </a>
+
+                    <a href="../login/logout.php">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Logout
+                    </a>
+
+                </div>
+
+            </div>
+
+            <?php } else { ?>
+
+            <a href="../index.php" class="dashboard-link">
+                Beranda
+            </a>
+
+            <?php } ?>
 
         <a href="keranjang.php" class="keranjang-link cart-icon">
             <i class="fa-solid fa-cart-shopping"></i>
@@ -105,9 +146,28 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
 
 <div class="container" id="menu-section">
 
-    <h2 class="main-title">Silahkan pilih menu pesanan</h2>
+<?php if(
+    isset($_SESSION['jenis_pesanan']) &&
+    $_SESSION['jenis_pesanan'] == 'delivery'
+) { ?>
 
-    <!-- SEARCH -->
+<h2 class="main-title">
+    Selamat datang,
+    <?= htmlspecialchars($_SESSION['username'] ?? 'Pelanggan'); ?> 👋
+</h2>
+
+<p class="sub-title">
+    Silahkan memilih pesanan Anda
+</p>
+
+<?php } else { ?>
+
+<h2 class="main-title">
+    Silahkan pilih menu pesanan
+</h2>
+
+<?php } ?>
+
     <form action="" method="GET" id="filterForm">
 
         <div class="search-wrapper">
@@ -149,7 +209,6 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
         </div>
     </form>
 
-    <!-- MENU -->
     <?php if (count($menu_berdasarkan_kategori) > 0) { ?>
 
         <?php foreach ($urutan_kategori as $kat_key) { ?>
@@ -192,7 +251,6 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
 
         <?php } ?>
 
-        <!-- kategori tambahan -->
         <?php foreach ($menu_berdasarkan_kategori as $kat_key => $items) { ?>
 
             <?php if (!in_array($kat_key, $urutan_kategori)) { ?>
@@ -260,7 +318,15 @@ setTimeout(() => {
     const notif = document.querySelector('.notif');
     if (notif) notif.style.display = 'none';
 }, 3000);
+
+/* Toggle Dropdown Profil */
+function toggleProfile() {
+    const content = document.querySelector('.profile-content');
+    if(content) {
+        content.classList.toggle('show');
+    }
+}
 </script>
 
 </body>
-</html> 
+</html>
