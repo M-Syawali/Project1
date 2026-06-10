@@ -54,6 +54,15 @@ while ($row = mysqli_fetch_assoc($result)) {
     $menu_berdasarkan_kategori[$cat_name][] = $row;
 }
 
+if(isset($_GET['jenis']) && $_GET['jenis'] == 'dinein')
+{
+    $_SESSION['jenis_pesanan'] = 'dinein';
+
+    unset($_SESSION['username']);
+    unset($_SESSION['role']);
+    unset($_SESSION['id_users']);
+}
+
 /* urutan kategori */
 $urutan_kategori = ['paket', 'makanan', 'minuman'];
 ?>
@@ -74,14 +83,7 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
 <body>
 
 <!-- NOTIF -->
-<?php if(isset($_SESSION['notif'])): ?>
-    <div class="notif">
-        <?php 
-            echo $_SESSION['notif']; 
-            unset($_SESSION['notif']);
-        ?>
-    </div>
-<?php endif; ?>
+
 
 <header class="dashboard-header">
     <div class="logo">
@@ -95,7 +97,38 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
         <a href="rekomendasi.php" class="dashboard-link">
             Bingung Pilih? Pilihkan Untuk Saya
         </a>
-        <a href="../index.html" class="dashboard-link">Beranda</a>
+        <?php if(isset($_SESSION['username'])) { ?>
+
+            <div class="profile-dropdown">
+
+            <button type="button" class="profile-btn" onclick="toggleProfile()">
+                <i class="fa-solid fa-user"></i>
+                <?= $_SESSION['username']; ?>
+            </button>
+
+                <div class="profile-content">
+
+                    <a href="profile.php">
+                        <i class="fa-solid fa-user"></i>
+                        Profile
+                    </a>
+
+                    <a href="../login/logout.php">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Logout
+                    </a>
+
+                </div>
+
+            </div>
+
+            <?php } else { ?>
+
+            <a href="../index.html" class="dashboard-link">
+                Beranda
+            </a>
+
+            <?php } ?>
 
         <a href="keranjang.php" class="keranjang-link cart-icon">
             <i class="fa-solid fa-cart-shopping"></i>
@@ -105,7 +138,27 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
 
 <div class="container" id="menu-section">
 
-    <h2 class="main-title">Silahkan pilih menu pesanan</h2>
+<?php if(
+    isset($_SESSION['jenis_pesanan']) &&
+    $_SESSION['jenis_pesanan'] == 'delivery'
+) { ?>
+
+<h2 class="main-title">
+    Selamat datang,
+    <?= htmlspecialchars($_SESSION['username']); ?> 👋
+</h2>
+
+<p class="sub-title">
+    Silahkan memilih pesanan Anda
+</p>
+
+<?php } else { ?>
+
+<h2 class="main-title">
+    Silahkan pilih menu pesanan
+</h2>
+
+<?php } ?>
 
     <!-- SEARCH -->
     <form action="" method="GET" id="filterForm">
