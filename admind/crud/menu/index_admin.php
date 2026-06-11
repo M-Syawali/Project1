@@ -1,18 +1,37 @@
+
 <?php
-// PERBAIKAN: Keluar dari folder main_page, masuk ke crud/pesanan tempat koneksi.php berada
 include "koneksi.php";
 
-global $conn;
-global $query;
+$perPage = 2;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
-// Mengambil data menu sekalian di-join dengan kategori_menu agar tampil nama kategorinya
-// PERBAIKAN: Menyesuaikan nama kolom deskripsi jika ada perbedaan (disesuaikan dengan syntax query Anda)
+/* 1. hitung total data */
+$totalData = mysqli_fetch_assoc(mysqli_query($conn, "
+    SELECT COUNT(*) as total FROM menu
+"))['total'];
+
+$totalPage = max(1, ceil($totalData / $perPage));
+
+/* 2. validasi page */
+if ($page > $totalPage) $page = $totalPage;
+if ($page < 1) $page = 1;
+
+/* 3. baru hitung offset */
+$offset = ($page - 1) * $perPage;
+
+$startData = ($totalData == 0) ? 0 : $offset + 1;
+$endData = min($offset + $perPage, $totalData);
+
+/* 4. baru query data */
 $query = "SELECT menu.*, kategori_menu.nama_kategori_menu
           FROM menu
           LEFT JOIN kategori_menu 
-          ON menu.id_kategori_menu = kategori_menu.id_kategori_menu";
+          ON menu.id_kategori_menu = kategori_menu.id_kategori_menu
+          LIMIT $perPage OFFSET $offset";
+
 $result = mysqli_query($conn, $query);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="id">
@@ -345,6 +364,12 @@ $result = mysqli_query($conn, $query);
             color:#6b7280;
         }
 
+        .page-btn.disabled{
+    pointer-events:none;
+    opacity:.4;
+    cursor:not-allowed;
+}
+
         .pagination{
             display:flex;
             align-items:center;
@@ -508,7 +533,7 @@ $result = mysqli_query($conn, $query);
 
 </div>
 
-    <div class="table-wrapper">
+    <div class="table-wrapper" id="menu-table">
         <table>
             <thead>
                 <tr>
@@ -524,13 +549,9 @@ $result = mysqli_query($conn, $query);
             <tbody>
             <?php 
             // 1. Jalankan query-nya terlebih dahulu DI ATAS perulangan
-            $query = "SELECT menu.*, kategori_menu.nama_kategori_menu 
-                    FROM menu 
-                    LEFT JOIN kategori_menu ON menu.id_kategori_menu = kategori_menu.id_kategori_menu";
-            $result = mysqli_query($conn, $query); 
 
             // 2. Baru lakukan perulangan
-            $no = 1;
+            $no = $offset + 1;
             while($row = mysqli_fetch_assoc($result)) { 
             ?>
                 <tr>
@@ -562,26 +583,34 @@ $result = mysqli_query($conn, $query);
     </tbody>
         </table>
     </div>
+<div class="table-footer">
 
-    <div class="table-footer">
+    <div class="showing-info">
+        Menampilkan <?= $startData ?> - <?= $endData ?>
+        dari <?= $totalData ?> menu
+    </div>
 
-        <div>
-            Menampilkan 1 - 4 dari 4 menu
-        </div>
+    <div class="pagination">
 
-        <div class="pagination">
+        <a href="?page=<?= $page - 1 ?>#menu-table"
+             class="page-btn <?= ($page <= 1) ? 'disabled' : '' ?>">
+            <i data-feather="chevron-left"></i>
+        </a>
 
-            <a href="#" class="page-btn">
-                <i data-feather="chevron-left"></i>
-            </a>
+        <span class="page-number active">
+            <?= $page ?>
+        </span>
 
-            <a href="#" class="page-number active">1</a>
+        <a href="?page=<?= $page + 1 ?>#menu-table"
+   class="page-btn <?= ($page >= $totalPage) ? 'disabled' : '' ?>">
+            <i data-feather="chevron-right"></i>
+        </a>
 
-            <a href="#" class="page-btn">
-                <i data-feather="chevron-right"></i>
-            </a>
+    </div>
 
-        </div>
+</div>
+
+</div>
 
     </div>
 </div>
