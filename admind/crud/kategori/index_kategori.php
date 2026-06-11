@@ -393,10 +393,9 @@ $totalTopMenu = $top['total_menu'] ?? 0;
                         <a
                             href="hapus_kategori.php?id=<?= $row['id_kategori_menu']; ?>"
                             class="btn-hapus"
-                            onclick="return confirm('Yakin hapus?')">
+                            onclick="konfirmasiHapusKategori(event, this.href)">
                             Hapus
                         </a>
-
                     </td>
 
                 </tr>
@@ -410,10 +409,37 @@ $totalTopMenu = $top['total_menu'] ?? 0;
     </div>
 
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 feather.replace();
 </script>
+<script>
+function konfirmasiHapusKategori(event, url) {
+    event.preventDefault();
 
+    Swal.fire({
+        title: 'Hapus Kategori?',
+        html: '<b>Kategori akan dihapus.</b>',
+        icon: 'error',
+
+        showCancelButton: true,
+
+        confirmButtonText: 'Ya, Hapus',
+        cancelButtonText: 'Batal',
+
+        confirmButtonColor: '#8b1e2d',
+        cancelButtonColor: '#6b7280',
+
+        background: '#ffffff',
+        color: '#333'
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+
+    });
+}
+</script>
 </body>
 </html>
