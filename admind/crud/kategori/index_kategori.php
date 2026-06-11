@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -249,6 +250,61 @@ tbody tr:hover{
     gap:8px;
 }
 
+.table-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 20px;
+    font-size:14px;
+    color:#6b7280;
+}
+
+.pagination{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.page-btn,
+.page-number{
+    width:38px;
+    height:38px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:10px;
+    text-decoration:none;
+
+    border:1px solid #e5e7eb;
+    background:white;
+    color:#64748b;
+
+    transition:.2s;
+}
+
+.page-btn:hover,
+.page-number:hover{
+    background:#f8fafc;
+}
+
+.page-number.active{
+    background:#8b1e2d;
+    color:white;
+    border-color:#8b1e2d;
+}
+
+.page-btn.disabled{
+    pointer-events:none;
+    opacity:.4;
+    cursor:not-allowed;
+}
+
+.page-btn svg{
+    width:18px;
+    height:18px;
+}
 </style>
 
 </head>
@@ -259,7 +315,29 @@ include '../menu/koneksi.php';
 
 $halaman = "kategori";
 
-$data = mysqli_query($conn, "SELECT * FROM kategori_menu");
+$perPage = 2;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+$totalData = mysqli_fetch_assoc(mysqli_query($conn, "
+    SELECT COUNT(*) AS total
+    FROM kategori_menu
+"))['total'];
+
+$totalPage = max(1, ceil($totalData / $perPage));
+
+if ($page > $totalPage) $page = $totalPage;
+if ($page < 1) $page = 1;
+
+$offset = ($page - 1) * $perPage;
+
+$startData = ($totalData == 0) ? 0 : $offset + 1;
+$endData = min($offset + $perPage, $totalData);
+
+$data = mysqli_query($conn, "
+    SELECT *
+    FROM kategori_menu
+    LIMIT $perPage OFFSET $offset
+");
 
 if (!$data) {
     die("Query error: " . mysqli_error($conn));
@@ -356,7 +434,7 @@ $totalTopMenu = $top['total_menu'] ?? 0;
 
 </div>
     <!-- TABEL -->
-    <div class="table-wrapper">
+    <div class="table-wrapper" id="kategori-table">
 
         <table>
 
@@ -370,7 +448,7 @@ $totalTopMenu = $top['total_menu'] ?? 0;
 
             <tbody>
 
-            <?php $no = 1; ?>
+           <?php $no = $offset + 1; ?>
 
             <?php while ($row = mysqli_fetch_assoc($data)) : ?>
 
@@ -405,6 +483,37 @@ $totalTopMenu = $top['total_menu'] ?? 0;
             </tbody>
 
         </table>
+       
+</div>
+ <div class="table-footer">
+
+    <div class="showing-info">
+        Menampilkan <?= $startData ?> - <?= $endData ?>
+        dari <?= $totalData ?> kategori
+    </div>
+
+    <div class="pagination">
+
+        <!-- Kiri -->
+        <a href="?page=<?= $page - 1 ?>#kategori-table"
+           class="page-btn <?= ($page <= 1) ? 'disabled' : '' ?>">
+            <i data-feather="chevron-left"></i>
+        </a>
+
+        <!-- Tengah -->
+        <span class="page-number active">
+            <?= $page ?>
+        </span>
+
+        <!-- Kanan -->
+        <a href="?page=<?= $page + 1 ?>#kategori-table"
+           class="page-btn <?= ($page >= $totalPage) ? 'disabled' : '' ?>">
+            <i data-feather="chevron-right"></i>
+        </a>
+
+    </div>
+
+</div>
 
     </div>
 
