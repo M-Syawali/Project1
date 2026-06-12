@@ -708,3 +708,26 @@ nav{
         font-size:40px;
     }
 }
+.blur1,
+.blur2{
+    position:fixed;
+    border-radius:50%;
+    filter:blur(120px);
+    z-index:-1;
+}
+
+.blur1{
+    width:300px;
+    height:300px;
+    background:#ff6b81;
+    top:-100px;
+    left:-100px;
+}
+
+.blur2{
+    width:350px;
+    height:350px;
+    background:#ff4757;
+    bottom:-100px;
+    right:-100px;
+}

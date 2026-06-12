@@ -709,7 +709,8 @@ $count_batal     = getCount($conn, 'dibatalkan');
                                     <i data-feather="check"></i> Konfirmasi Bayar
                                 </button>
 
-                                <a class="btn-status btn-batal" href="konfirmasi_proses.php?id=<?= $id_p ?>&status=dibatalkan" onclick="return confirm('Yakin ingin membatalkan pesanan ini?')">
+                                <a href="batal_pesanan.php?id=<?= $row['id_pesanan']; ?>"
+                                    class="btn-status btn-batal btn-batal-pesanan">
                                     <i data-feather="x-circle"></i> Batalkan
                                 </a>
 
@@ -804,6 +805,32 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.querySelectorAll('.btn-batal-pesanan').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        let url = this.getAttribute('href');
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Batalkan Pesanan?',
+            text: 'Pesanan ini akan dibatalkan.',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Batalkan',
+            cancelButtonText: 'Kembali',
+            confirmButtonColor: '#8b1e2d',
+            cancelButtonColor: '#6b7280',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+    });
+});
 </script>
 </body>
 </html>

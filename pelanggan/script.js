@@ -28,37 +28,67 @@ window.onload = function(){
 
 document.querySelectorAll('.btn-ajax-add').forEach(button => {
     button.addEventListener('click', function(e) {
+
         const menuId = this.getAttribute('data-id');
         const namaMenu = this.getAttribute('data-nama');
-        
-        // Animasi Loading pada tombol (opsional)
-        this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
 
-        // Kirim data ke tambah_keranjang.php di background
+        this.innerHTML =
+            '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
+
         fetch(`tambah_keranjang.php?id=${menuId}`)
-            .then(response => {
-                // Tampilkan Animasi Berhasil
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: namaMenu + ' telah ditambahkan ke keranjang.',
-                    showConfirmButton: false,
-                    timer: 1500, // Hilang otomatis dalam 1.5 detik
-                    position: 'center',
-                    showClass: {
-                        popup: 'animate__animated animate__fadeInDown'
-                    },
-                    hideClass: {
-                        popup: 'animate__animated animate__fadeOutUp'
-                    }
-                });
+            .then(response => response.json())
+            .then(data => {
 
-                // Kembalikan teks tombol semula
-                this.innerHTML = '<i class="fa-solid fa-plus"></i> Keranjang';
+                if (data.status === "success") {
+
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: data.message,
+                        showConfirmButton: false,
+                        timer: 1800,
+                        timerProgressBar: true,
+                        background: '#8b1e2d',
+                        color: '#fff'
+                    });
+
+                } else if (data.status === "warning") {
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Stok Tidak Cukup',
+                        text: data.message,
+                        confirmButtonColor: '#8b1e2d'
+                    });
+
+                } else {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Menu Habis',
+                        text: data.message,
+                        confirmButtonColor: '#8b1e2d'
+                    });
+
+                }
+
+                this.innerHTML =
+                    '<i class="fa-solid fa-plus"></i> Keranjang';
             })
             .catch(error => {
-                Swal.fire('Error', 'Gagal menambahkan menu', 'error');
-                this.innerHTML = '<i class="fa-solid fa-plus"></i> Keranjang';
+
+                console.error(error);
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Gagal menambahkan menu'
+                });
+
+                this.innerHTML =
+                    '<i class="fa-solid fa-plus"></i> Keranjang';
             });
+
     });
 });

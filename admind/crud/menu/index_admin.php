@@ -410,6 +410,24 @@ $result = mysqli_query($conn, $query);
             width:18px;
             height:18px;
         }
+        .swal2-popup{
+            border-radius:20px !important;
+        }
+
+        .swal2-title{
+            font-size:42px !important;
+            font-weight:700 !important;
+        }
+
+        .swal2-confirm{
+            border-radius:10px !important;
+            padding:10px 24px !important;
+        }
+
+        .swal2-cancel{
+            border-radius:10px !important;
+            padding:10px 24px !important;
+        }
     </style>
 </head>
 <body>
@@ -575,7 +593,7 @@ $result = mysqli_query($conn, $query);
                     <td>Rp <?= number_format($row['harga'], 0, ',', '.'); ?></td>
                     <td class="aksi">
                         <a href="edit.php?id=<?= $row['id_menu']; ?>" class="btn btn-edit">Edit</a>
-                        <a href="hapus.php?id=<?= $row['id_menu']; ?>" class="btn btn-hapus" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
+                        <a href="hapus.php?id=<?= $row['id_menu']; ?>"class="btn btn-hapus hapus-menu">Hapus</a>
                     </td>
                 </tr>
             <?php } ?>
@@ -651,6 +669,32 @@ function cariMenu() {
         }
     });
 }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.querySelectorAll('.hapus-menu').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        let url = this.getAttribute('href');
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Hapus Menu?',
+            text: 'Menu akan dihapus.',
+            showCancelButton: true,
+            cancelButtonText: 'Batal',
+            confirmButtonText: 'Ya, Hapus',
+            confirmButtonColor: '#8b1e2d',
+            cancelButtonColor: '#6b7280',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+    });
+});
 </script>
 </body>
 </html>

@@ -11,12 +11,16 @@ session_start();
 <title>Login</title>
 
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-<link rel="stylesheet" href="../bahan/css/style.css?v=2">
+<link rel="stylesheet" href="../bahan/css/style.css?v=999">
 
 </head>
 <body>
-
+<div class="blur1"></div>
+<div class="blur2"></div>
 <div class="container">
+     <a href="../index.php" class="btn-home">
+        ← Beranda
+    </a>
 
     <!-- LOGIN -->
     <div class="form-box login">
@@ -100,7 +104,10 @@ session_start();
                 Register
             </button>
         </div>
-
+        <a href="../index.php" class="btn-home">
+            <i class="fa fa-arrow-left"></i>
+            Kembali ke Beranda
+        </a>
         <div class="toggle-panel toggle-right">
             <h1>Welcome Back!</h1>
             <p>Kamu sudah punya akun?</p>

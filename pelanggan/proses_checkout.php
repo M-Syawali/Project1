@@ -162,7 +162,7 @@ try {
        CLEAR KERANJANG
     ========================= */
     unset($_SESSION['keranjang']);
-
+    
     echo "<script>
         alert('Pesanan berhasil dikirim!');
         window.location='status_pesanan.php?id=$id_pesanan';

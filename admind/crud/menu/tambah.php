@@ -3,12 +3,12 @@ session_start();
 include 'koneksi.php';
 
 // AMBIL ID ADMIN OTOMATIS
-if (isset($_SESSION['id_admin']) && !empty($_SESSION['id_admin'])) {
-    $id_admin = $_SESSION['id_admin'];
+if (isset($_SESSION['id_users']) && !empty($_SESSION['id_users'])) {
+    $id_users = $_SESSION['id_users'];
 } else {
-    $ambil_admin = mysqli_query($conn, "SELECT id_admin FROM admin LIMIT 1");
-    $data_admin  = mysqli_fetch_assoc($ambil_admin);
-    $id_admin    = $data_admin['id_admin'];
+    $ambil_users= mysqli_query($conn, "SELECT id_users FROM users LIMIT 1");
+    $data_users = mysqli_fetch_assoc($ambil_users);
+    $id_users   = $data_users['id_users'];
 }
 
 $kategori_query = mysqli_query($conn, "SELECT * FROM kategori_menu");
@@ -31,8 +31,8 @@ if (isset($_POST['submit'])) {
     move_uploaded_file($tmp, $folder . $nama_gambar);
 
     // Query diperbaiki untuk memasukkan deskripsi_menu
-    $insert = "INSERT INTO menu (nama_menu, id_kategori_menu, harga, gambar, id_admin, deskripsi_menu) 
-               VALUES ('$nama_menu', '$id_kategori', '$harga', '$nama_gambar', '$id_admin', '$deskripsi')";
+    $insert = "INSERT INTO menu (nama_menu, id_kategori_menu, harga, gambar, id_users, deskripsi_menu) 
+               VALUES ('$nama_menu', '$id_kategori', '$harga', '$nama_gambar', '$id_users', '$deskripsi')";
     
     if (mysqli_query($conn, $insert)) {
         header("Location: index_admin.php");

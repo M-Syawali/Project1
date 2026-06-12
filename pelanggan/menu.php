@@ -76,6 +76,13 @@ if(isset($_GET['jenis']) && $_GET['jenis'] == 'dinein')
 
 /* urutan kategori */
 $urutan_kategori = ['paket', 'makanan', 'minuman'];
+$jumlah_keranjang = 0;
+
+if(isset($_SESSION['keranjang'])){
+    foreach($_SESSION['keranjang'] as $item){
+        $jumlah_keranjang += $item['jumlah'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -138,8 +145,14 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
 
             <?php } ?>
 
-        <a href="keranjang.php" class="keranjang-link cart-icon">
+        <a href="keranjang.php" class="cart-icon">
             <i class="fa-solid fa-cart-shopping"></i>
+
+            <?php if($jumlah_keranjang > 0){ ?>
+                <span class="cart-badge">
+                    <?= $jumlah_keranjang ?>
+                </span>
+            <?php } ?>
         </a>
     </div>
 </header>
@@ -233,9 +246,15 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
                             <?php 
                             // LOGIKA CEK STOK DAN STATUS
                             if ($row['stok'] > 0 && $row['status'] == 'tersedia') { ?>
-                                <a href="tambah_keranjang.php?id=<?= $row['id_menu'] ?>" class="btn-add">
+                                <button
+                                    class="btn-add btn-ajax-add"
+                                    data-id="<?= $row['id_menu'] ?>"
+                                    data-nama="<?= htmlspecialchars($row['nama_menu']) ?>"
+                                    type="button">
+
                                     <i class="fa-solid fa-plus"></i> Keranjang
-                                </a>
+
+                                </button>
                             <?php } else { ?>
                                 <button class="btn-add" style="background-color: #ccc; cursor: not-allowed; border: none;" disabled>
                                     <i class="fa-solid fa-ban"></i> Stok Habis
@@ -273,9 +292,15 @@ $urutan_kategori = ['paket', 'makanan', 'minuman'];
                             <?php 
                             // LOGIKA CEK STOK DAN STATUS
                             if ($row['stok'] > 0 && $row['status'] == 'tersedia') { ?>
-                                <a href="tambah_keranjang.php?id=<?= $row['id_menu'] ?>" class="btn-add">
+                                <button
+                                    class="btn-add btn-ajax-add"
+                                    data-id="<?= $row['id_menu'] ?>"
+                                    data-nama="<?= htmlspecialchars($row['nama_menu']) ?>"
+                                    type="button">
+
                                     <i class="fa-solid fa-plus"></i> Keranjang
-                                </a>
+
+                                </button>
                             <?php } else { ?>
                                 <button class="btn-add" style="background-color: #ccc; cursor: not-allowed; border: none;" disabled>
                                     <i class="fa-solid fa-ban"></i> Stok Habis
@@ -318,7 +343,39 @@ setTimeout(() => {
     const notif = document.querySelector('.notif');
     if (notif) notif.style.display = 'none';
 }, 3000);
+function updateCartBadge(){
 
+    let badge = document.querySelector('.cart-badge');
+
+    if(!badge){
+        const cart = document.querySelector('.cart-icon');
+
+        cart.insertAdjacentHTML(
+            'beforeend',
+            '<span class="cart-badge">1</span>'
+        );
+
+        return;
+    }
+
+    let jumlah = parseInt(badge.textContent) || 0;
+
+    badge.textContent = jumlah + 1;
+
+    badge.classList.remove('bounce');
+
+    setTimeout(() => {
+        badge.classList.add('bounce');
+    }, 10);
+
+    const cart = document.querySelector('.cart-icon');
+
+    cart.classList.remove('cart-bounce');
+
+    setTimeout(() => {
+        cart.classList.add('cart-bounce');
+    }, 10);
+}
 /* Toggle Dropdown Profil */
 function toggleProfile() {
     const content = document.querySelector('.profile-content');
@@ -327,6 +384,37 @@ function toggleProfile() {
     }
 }
 </script>
+<script>
+document.querySelectorAll('.btn-ajax-add').forEach(button => {
+    button.addEventListener('click', function() {
 
+        const menuId = this.dataset.id;
+
+        fetch(`tambah_keranjang.php?id=${menuId}`)
+            .then(response => response.json())
+            .then(data => {
+
+                if(data.status === "success"){
+                    updateCartBadge();
+                }
+
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: data.status,
+                    title: data.message,
+                    showConfirmButton: false,
+                    timer: 1800,
+                    timerProgressBar: true,
+                    background: '#8b1e2d',
+                    color: '#fff'
+                });
+
+            });
+
+    });
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

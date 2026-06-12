@@ -42,28 +42,59 @@ function tambahKeSession($id_menu, $conn) {
 
 // 3. LOGIKA TAMBAH MENU
 if (isset($_GET['id_m']) && isset($_GET['id_min'])) {
-    // Paket
+
     $cek1 = tambahKeSession($_GET['id_m'], $conn);
     $cek2 = tambahKeSession($_GET['id_min'], $conn);
-    
+
+    header('Content-Type: application/json');
+
     if ($cek1 === true && $cek2 === true) {
-        echo "<script>alert('Paket berhasil ditambahkan!'); window.location='keranjang.php';</script>";
+
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Paket berhasil ditambahkan!'
+        ]);
+
     } else {
-        echo "<script>alert('Maaf, salah satu menu dalam paket sudah habis!'); window.location='menu.php';</script>";
+
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Salah satu menu dalam paket sudah habis!'
+        ]);
+
     }
 
-} elseif (isset($_GET['id'])) {
-    // Satuan
-    $result = tambahKeSession($_GET['id'], $conn);
-    
+    exit;
+    } elseif (isset($_GET['id'])) {
+        // Satuan
+        $result = tambahKeSession($_GET['id'], $conn);
+        
+        header('Content-Type: application/json');
+
     if ($result === true) {
-        echo "<script>alert('Menu berhasil ditambahkan!'); window.location='menu.php';</script>";
+
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Menu berhasil ditambahkan!'
+        ]);
+
     } elseif ($result === "limit") {
-        echo "<script>alert('Stok tidak mencukupi!'); window.location='menu.php';</script>";
+
+        echo json_encode([
+            'status' => 'warning',
+            'message' => 'Stok tidak mencukupi!'
+        ]);
+
     } else {
-        echo "<script>alert('Menu sudah habis!'); window.location='menu.php';</script>";
+
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Menu sudah habis!'
+        ]);
+
     }
 
+    exit;
 } else {
     header("location:menu.php");
     exit();

@@ -116,7 +116,7 @@ $qPesananTerbaru = mysqli_query(
           Pengaturan Akun
         </a>
 
-        <a href="../../index.html">
+        <a href="../../index.php">
           <i data-feather="log-out"></i>
           Halaman Awal
         </a>
