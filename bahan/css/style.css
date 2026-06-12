@@ -27,7 +27,7 @@ body {
 .container {
     position: relative;
     width: 950px;
-    height: 550px;
+    height:700px;
 
     background: rgba(255,255,255,.08);
     backdrop-filter: blur(20px);
@@ -39,35 +39,44 @@ body {
     box-shadow:
         0 20px 50px rgba(0,0,0,.3);
 
-    margin: 20px;
     overflow: hidden;
 }
-.form-box {
-    position: absolute;
-    right: 0px;
-    width: 50%;
-    height: 100%;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    color: white;
-    text-align: center;
-    padding: 40px;
-    z-index: 1;
-    transition: .6s ease-in-out 1.2s, visibility 0s 1s;
+
+.container h1 {
+    font-size:36px;
+    margin-bottom:30px;
 }
 
-.container.active .form-box {
-    right: 50%;
+.form-box{
+    position:absolute;
+    right:0;
+    width:50%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    color:white;
+    text-align:center;
+    padding:40px;
+    z-index:1;
+    transition:.6s ease-in-out 1.2s, visibility 0s 1s;
 }
 
-.form-box.register {
-    visibility: hidden;
+.container.active .form-box{
+    right:50%;
 }
 
-.container.active .form-box.register {
-    visibility: visible;
+.form-box.register{
+    visibility:hidden;
 }
+
+.container.active .form-box.register{
+    visibility:visible;
+}
+
+.container.active .form-box.login{
+    visibility:hidden;
+}
+
 
 form {
     width: 100%;
@@ -75,14 +84,14 @@ form {
 
 .container h1 {
     font-size: 36px;
-    margin: -10px 0;
+    margin-bottom: 20px;
     color:white;
     font-weight:700;
 }
 
 .input-box {
     position: relative;
-    margin: 30px 0;
+    margin: 18px 0;
 }
 
 .input-box input{
@@ -127,10 +136,10 @@ form {
 .btn{
     width:100%;
     height:50px;
-
+    cursor:pointer;
     background:#ffd166;
 
-    color:#5c0f16;
+    color:#fff;
 
     font-weight:700;
 
@@ -166,9 +175,18 @@ form {
     position: absolute;
     width: 100%;
     height: 100%;
+    inset:0;
+    pointer-events:none;
 }
 
 .toggle-box::before{
+    content:'';
+    position:absolute;
+
+    left:-250%;
+    width:300%;
+    height:100%;
+
     background:
     linear-gradient(
         135deg,
@@ -176,6 +194,11 @@ form {
         #8b1e2d,
         #b33646
     );
+
+    border-radius:150px;
+    z-index:2;
+
+    transition:1.8s ease-in-out;
 }
 
 
@@ -189,6 +212,7 @@ form {
     height: 100%;
     color: #fff;
     display: flex;
+    pointer-events:auto;
     flex-direction: column;
     justify-content: center;
     align-items: center;

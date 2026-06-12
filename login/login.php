@@ -20,6 +20,11 @@ if(isset($_POST['register'])){
         $_POST['reg_username']
     );
 
+    $email = mysqli_real_escape_string(
+        $conn,
+        $_POST['email']
+    );
+
     $password = $_POST['reg_password'];
     $confirm_password = $_POST['confirm_password'];
 
@@ -30,7 +35,9 @@ if(isset($_POST['register'])){
 
     $cek = mysqli_query(
         $conn,
-        "SELECT * FROM users WHERE username='$username'"
+        "SELECT * FROM users
+         WHERE username='$username'
+         OR email='$email'"
     );
 
     if(mysqli_num_rows($cek) > 0){
@@ -45,7 +52,10 @@ if(isset($_POST['register'])){
 
     mysqli_query(
         $conn,
-        "INSERT INTO users (username, password, role) VALUES ('$username', '$password_hash', 'pelanggan')"
+        "INSERT INTO users
+        (username,password,email,role)
+        VALUES
+        ('$username','$password_hash','$email','pelanggan')"
     );
 
     header("Location: index.php?register=sukses");
@@ -64,11 +74,15 @@ if(isset($_POST['login'])){
         $_POST['username']
     );
 
+
+
     $password = $_POST['password'];
 
-    $query = mysqli_query(
+    $cek = mysqli_query(
         $conn,
-        "SELECT * FROM users WHERE username='$username'"
+        "SELECT * FROM users
+         WHERE username='$username'
+         OR email='$email'"
     );
 
     if(mysqli_num_rows($query) > 0){

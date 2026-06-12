@@ -19,7 +19,7 @@ session_start();
 <div class="blur2"></div>
 <div class="container">
      <a href="../index.php" class="btn-home">
-        ← Beranda
+        ←  Beranda
     </a>
 
     <!-- LOGIN -->
@@ -43,7 +43,7 @@ session_start();
             </div>
 
             <div class="forgot-link">
-                <a href="#">Lupa Password?</a>
+                <a href="forgot_password.php">Lupa Password?</a>
             </div>
 
             <button type="submit" name="login" class="btn">
@@ -78,6 +78,11 @@ session_start();
             </div>
 
             <div class="input-box">
+                <input type="email" name="email" placeholder="Email" required>
+                <i class='bx bxs-envelope'></i>
+            </div>
+
+            <div class="input-box">
                 <input type="password" name="reg_password" placeholder="Password" required>
                 <i class='bx bxs-lock-alt'></i>
             </div>
@@ -104,10 +109,6 @@ session_start();
                 Register
             </button>
         </div>
-        <a href="../index.php" class="btn-home">
-            <i class="fa fa-arrow-left"></i>
-            Kembali ke Beranda
-        </a>
         <div class="toggle-panel toggle-right">
             <h1>Welcome Back!</h1>
             <p>Kamu sudah punya akun?</p>
