@@ -120,19 +120,14 @@ while ($row = mysqli_fetch_assoc($qChart)) {
       </button>
 
       <div class="profile-menu" id="profile-menu">
-        <a href="#">
-          <i data-feather="user"></i>
-          Profil
+          <a href="profile.php">
+            <i data-feather="user"></i>
+            Profil
         </a>
 
-        <a href="#">
-          <i data-feather="lock"></i>
-          Ubah Password
-        </a>
-
-        <a href="#">
-          <i data-feather="settings"></i>
-          Pengaturan Akun
+        <a href="ubah_password.php">
+            <i data-feather="lock"></i>
+            Ubah Password
         </a>
 
         <a href="../../index.php">
