@@ -96,7 +96,7 @@ form {
 
 .input-box input{
     width:100%;
-    padding:13px 50px 13px 20px;
+    padding:13px 50px 13px 50px;
 
     background:rgba(255,255,255,.12);
 
@@ -114,13 +114,25 @@ form {
     font-weight: 400;
 }
 
-.input-box i {
-    position: absolute;
-    right: 20px;
-    top: 21px;
-    transform: translateY(-50%);
-    font-size: 20px;
-    color: rgba(255,255,255,.7);
+.left-icon{
+    position:absolute !important;
+    left:15px !important;
+    right:auto !important;
+    top:50% !important;
+    transform:translateY(-50%) !important;
+    font-size:24px !important;
+    color:red !important;
+    z-index:9999 !important;
+}
+
+.toggle-password{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    color:#ffffff;
+    z-index:999;
 }
 
 .forgot-link {
@@ -365,4 +377,7 @@ form {
 
     box-shadow:
         0 12px 25px rgba(139,30,45,.45);
+}
+.bx{
+    color:#ffffff !important;
 }

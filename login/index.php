@@ -34,12 +34,19 @@ session_start();
 
             <div class="input-box">
                 <input type="text" name="username" placeholder="Username" required>
-                <i class='bx bxs-user'></i>
+                <i class='bx bxs-user left-icon'></i>
+                <i class='bx bxs-user' style="color:black;font-size:30px;"></i>
             </div>
 
             <div class="input-box">
-                <input type="password" name="password" placeholder="Password" required>
-                <i class='bx bxs-lock-alt'></i>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+
+                <i class='bx bxs-lock-alt left-icon'></i>
+
+                <span class="toggle-password" onclick="togglePassword()">
+                    <i class='bx bx-show' id="eyeIcon"></i>
+                    <i class='bx bxs-show' style="color:black;font-size:30px;"></i>
+                </span>
             </div>
 
             <div class="forgot-link">
@@ -122,6 +129,19 @@ session_start();
 </div>
 
 <script src="script.js"></script>
+<script>
+function togglePassword() {
+    const password = document.getElementById("password");
+    const eyeIcon = document.getElementById("eyeIcon");
 
+    if(password.type === "password"){
+        password.type = "text";
+        eyeIcon.classList.replace("bx-show","bx-hide");
+    } else {
+        password.type = "password";
+        eyeIcon.classList.replace("bx-hide","bx-show");
+    }
+}
+</script>
 </body>
 </html>

@@ -57,16 +57,19 @@ body::after {
 
 /* HEADER */
 .dashboard-header {
-    background: rgba(92, 15, 22, 0.78);
+    background: rgba(92, 15, 22, 0.85);
     backdrop-filter: blur(12px);
     color: white;
     padding: 1rem 1.5rem;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative;
+
+    position: sticky; /* atau fixed */
     top: 0;
     z-index: 9999;
+
     border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 

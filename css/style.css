@@ -731,3 +731,19 @@ nav{
     bottom:-100px;
     right:-100px;
 }
+.sagala-popup{
+    border-radius: 25px !important;
+    border: 3px solid #d4a017 !important;
+    box-shadow: 0 15px 40px rgba(139,0,0,.3) !important;
+}
+
+.swal2-title{
+    color: #7a0000 !important;
+    font-weight: 800 !important;
+}
+
+.swal2-confirm{
+    border-radius: 12px !important;
+    padding: 12px 28px !important;
+    font-weight: 700 !important;
+}
