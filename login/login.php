@@ -79,15 +79,14 @@ if(isset($_POST['login'])){
     $password = $_POST['password'];
 
     $cek = mysqli_query(
-        $conn,
-        "SELECT * FROM users
-         WHERE username='$username'
-         OR email='$email'"
-    );
+    $conn,
+    "SELECT * FROM users
+     WHERE username='$username'"
+);
 
-    if(mysqli_num_rows($query) > 0){
+if(mysqli_num_rows($cek) > 0){
 
-        $data = mysqli_fetch_assoc($query);
+    $data = mysqli_fetch_assoc($cek);
 
         if(password_verify($password, $data['password'])){
 
