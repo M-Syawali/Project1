@@ -40,14 +40,15 @@ $qPendapatanTotal = mysqli_query(
 $pendapatanTotal = mysqli_fetch_assoc($qPendapatanTotal)['total'];
 
 $qPesananTerbaru = mysqli_query(
-  $conn,
-  "SELECT p.*, pl.nama_pelanggan
-  FROM pesanan p
-  JOIN pelanggan pl ON p.id_pelanggan = pl.id_pelanggan
-  WHERE LOWER(TRIM(p.status_pesanan))
-  IN ('diproses','selesai')
-  ORDER BY p.id_pesanan DESC
-  LIMIT 3"
+    $conn,
+    "SELECT p.*, pl.nama_pelanggan
+     FROM pesanan p
+     JOIN pelanggan pl
+       ON p.id_pelanggan = pl.id_pelanggan
+     WHERE LOWER(TRIM(p.status_pesanan))
+     IN ('pending','dibayar','diproses')
+     ORDER BY p.id_pesanan DESC
+     LIMIT 5"
 );
 
 // QUERY GRAFIK BULANAN
@@ -142,16 +143,7 @@ while ($row = mysqli_fetch_assoc($qChart)) {
       <!-- CARD STATISTIK -->
       <div class="summary-grid">
 
-    <div class="summary-card">
-        <div class="summary-icon">
-            <i data-feather="package"></i>
-        </div>
-        <div>
-            <span>Total Produk</span>
-            <h3 class="counter" data-target="120">0</h3>
-            <small>Produk Terjual Hari Ini</small>
-        </div>
-    </div>
+    
 
     <div class="summary-card">
         <div class="summary-icon">
@@ -206,72 +198,105 @@ while ($row = mysqli_fetch_assoc($qChart)) {
         while($row = mysqli_fetch_assoc($qPesananTerbaru)){
 
             $status = strtolower(trim($row['status_pesanan']));
+    $jenis_pesanan = strtolower($row['jenis_pesanan'] ?? '');
+    $metode = strtoupper($row['metode_pembayaran'] ?? '');
     ?>
     <tr>
         <td>
     <div class="pelanggan-box">
 
         <div class="pelanggan-icon">
-            <i data-feather="user"></i>
-        </div>
-
-        <div>
-            <span class="nomor-pesanan">
-                <?= $row['nomor_pesanan'] ?>
-            </span>
-
-            <div class="nama-pelanggan">
-                <?= htmlspecialchars($row['nama_pelanggan']) ?>
-            </div>
-            <small>
-                <?= $row['tanggal'] ?>
-            </small>
-        </div>
-
-    </div>
-</td>
-
-        <td>
-            <?php
-            $idPesanan = $row['id_pesanan'];
-
-            $qDetail = mysqli_query(
-                $conn,
-                "SELECT m.nama_menu, dp.jumlah
-                FROM detail_pesanan dp
-                JOIN menu m ON dp.id_menu = m.id_menu
-                WHERE dp.id_pesanan = '$idPesanan'"
-            );
-
-            while($detail = mysqli_fetch_assoc($qDetail)){
-            ?>
-                <div class="item-menu">
-
-                    <div class="nama-menu">
-                        <?= $detail['nama_menu'] ?>
-
-                        <span class="qty">
-                            x<?= $detail['jumlah'] ?>
-                        </span>
-                    </div>
-
+                <i data-feather="user"></i>
                 </div>
-            <?php
-            }
-            ?>
-        </td>
+                <div>
 
-        <td>
-          <span class="total-bayar">
-              Rp <?= number_format($row['total_harga'],0,',','.') ?>
-          </span>
-      </td>
+                    <span class="nomor-pesanan">
+                        <?= $row['nomor_pesanan']; ?>
+                    </span>
 
-        <td>
-            <span class="status-badge <?= $status ?>">
-                <?= ucfirst($status) ?>
+    
+                <div class="nama-pelanggan">
+                    <?= htmlspecialchars($row['nama_pelanggan']); ?>
+                </div>
+                    <span class="tanggal-pesanan">
+                        <?= date('d M Y H:i', strtotime($row['tanggal'])); ?>
+                    </span>
+                </div>
+
+            
+
+
+            
+
+        </div>
+    </td>
+
+    <td>
+
+        <?php if($jenis_pesanan == 'delivery'): ?>
+
+            <span class="tipe-badge delivery">
+                Delivery
             </span>
-        </td>
+
+        <?php elseif(!empty($row['id_meja'])): ?>
+
+            <span class="tipe-badge dinein">
+                Dine In
+            </span>
+
+        <?php else: ?>
+
+            <span class="tipe-badge takeaway">
+                Dine In
+            </span>
+
+        <?php endif; ?>
+
+    </td>
+
+    <td>
+        <span class="metode-badge <?= strtolower($metode); ?>">
+            <?= $metode; ?>
+        </span>
+    </td>
+
+
+    <td>
+
+        <?php
+        $labelStatus = '';
+
+        switch($status){
+
+            case 'pending':
+                $labelStatus = 'Menunggu Pembayaran';
+            break;
+
+            case 'dibayar':
+                $labelStatus = 'Siap Diproses';
+            break;
+
+            case 'diproses':
+                $labelStatus = 'Sedang Diproses';
+            break;
+
+            case 'selesai':
+                $labelStatus = 'Selesai';
+            break;
+
+            default:
+                $labelStatus = ucfirst($status);
+        }
+        ?>
+
+        <span
+        id="status_<?= $id_p ?>"
+        class="status-badge <?= $status ?>">
+        <?= $labelStatus ?>
+    </span>
+    </td>
+
     </tr>
 
     <?php
