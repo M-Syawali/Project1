@@ -101,6 +101,12 @@ if(mysqli_num_rows($cek) > 0){
                 exit;
             }
 
+            // JIKA LOGIN SEBAGAI KASIR
+            if($data['role'] == 'kasir'){
+                header("Location: ../kasir/index_kasir.php");
+                exit;
+            }
+
             // JIKA LOGIN SEBAGAI PELANGGAN
             if($data['role'] == 'pelanggan'){
                 $_SESSION['jenis_pesanan'] = 'delivery';

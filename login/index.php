@@ -35,7 +35,6 @@ session_start();
             <div class="input-box">
                 <input type="text" name="username" placeholder="Username" required>
                 <i class='bx bxs-user left-icon'></i>
-                <i class='bx bxs-user' style="color:black;font-size:30px;"></i>
             </div>
 
             <div class="input-box">
@@ -45,7 +44,6 @@ session_start();
 
                 <span class="toggle-password" onclick="togglePassword()">
                     <i class='bx bx-show' id="eyeIcon"></i>
-                    <i class='bx bxs-show' style="color:black;font-size:30px;"></i>
                 </span>
             </div>
 
@@ -80,24 +78,24 @@ session_start();
             <?php } ?>
 
             <div class="input-box">
-                <input type="text" name="reg_username" placeholder="Username" required>
-                <i class='bx bxs-user'></i>
-            </div>
+    <input type="text" name="reg_username" placeholder="Username" required>
+    <i class='bx bxs-user left-icon'></i>
+</div>
 
-            <div class="input-box">
-                <input type="email" name="email" placeholder="Email" required>
-                <i class='bx bxs-envelope'></i>
-            </div>
+<div class="input-box">
+    <input type="email" name="email" placeholder="Email" required>
+    <i class='bx bxs-envelope left-icon'></i>
+</div>
 
-            <div class="input-box">
-                <input type="password" name="reg_password" placeholder="Password" required>
-                <i class='bx bxs-lock-alt'></i>
-            </div>
+<div class="input-box">
+    <input type="password" name="reg_password" placeholder="Password" required>
+    <i class='bx bxs-lock-alt left-icon'></i>
+</div>
 
-            <div class="input-box">
-                <input type="password" name="confirm_password" placeholder="Konfirmasi Password" required>
-                <i class='bx bxs-lock-alt'></i>
-            </div>
+<div class="input-box">
+    <input type="password" name="confirm_password" placeholder="Konfirmasi Password" required>
+    <i class='bx bxs-lock-alt left-icon'></i>
+</div>
 
             <button type="submit" name="register" class="btn">
                 Register
