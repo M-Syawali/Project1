@@ -333,59 +333,140 @@ $jenis_pesanan = isset($_SESSION['jenis_pesanan']) ? $_SESSION['jenis_pesanan'] 
                 <label>Nama Lengkap</label>
                 <input type="text" name="nama" required placeholder="Masukkan nama Anda">
             </div>
+      
+<?php if ($jenis_pesanan === 'delivery'): ?>
 
-            <?php if ($jenis_pesanan === 'delivery'): ?>
-            <div class="input-group" style="margin-top: 15px;">
-                <label><i class="fa-solid fa-map-marker-alt" style="color: #8b1e2d;"></i> Alamat Pengiriman Lengkap</label>
-                
-                <button type="button" id="btn_gps" class="btn-gps-style" onclick="getLokasiGPS()">
-                    <i class="fa-solid fa-location-crosshairs"></i> Gunakan Lokasi GPS Saya
-                </button>
+<div class="input-group">
+    <label>No HP</label>
+    <input
+        type="tel"
+        name="no_hp"
+        required
+        placeholder="Masukan no hp">
+</div>
 
-                <textarea 
-                    name="alamat" 
-                    required 
-                    rows="3"
-                    placeholder="Ketik detail alamat (Nama Jalan, Blok, Nomor Rumah, atau Patokan Terdekat)..."
-                    style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 14px; resize: none; box-sizing: border-box; margin-bottom: 5px;"></textarea>
-                
-                <div id="jarak_badge" class="jarak-info-badge">Jarak ke toko: Hitung...</div>
+<div class="input-group" style="margin-top:15px;">
+    <label>
+        <i class="fa-solid fa-map-marker-alt" style="color:#8b1e2d;"></i>
+        Alamat Pengiriman Lengkap
+    </label>
 
-                <input type="hidden" id="latitude" name="latitude">
-                <input type="hidden" id="longitude" name="longitude">
-                
-                <div id="map"></div>
-                <small style="color: #666; display: block; margin-top: 5px;">* Geser pin merah di peta tepat ke lokasi rumah Anda untuk memperbarui ongkir otomatis.</small>
+    <button
+        type="button"
+        id="btn_gps"
+        class="btn-gps-style"
+        onclick="getLokasiGPS()">
+        <i class="fa-solid fa-location-crosshairs"></i>
+        Gunakan Lokasi GPS Saya
+    </button>
+
+    <textarea
+        name="alamat"
+        required
+        rows="3"
+        placeholder="Ketik detail alamat..."></textarea>
+
+    <div id="jarak_badge" class="jarak-info-badge">
+        Jarak ke toko: Hitung...
+    </div>
+
+    <input type="hidden" id="latitude" name="latitude">
+    <input type="hidden" id="longitude" name="longitude">
+
+    <div id="map"></div>
+
+</div>
+
+<?php endif; ?>
+        </div>
+
+       <div class="payment-box">
+
+    <div class="title">
+        <i class="fa-solid fa-credit-card"></i>
+        <span>Metode Pembayaran</span>
+    </div>
+
+   <?php if ($jenis_pesanan === 'delivery'): ?>
+
+    <input
+        type="hidden"
+        name="metode_pembayaran"
+        value="QRIS">
+
+    <div class="payment-options">
+        <div class="payment-option">
+            <div class="payment-label">
+                <i class="fa-solid fa-qrcode"></i>
+                <span>QRIS</span>
             </div>
-            <?php endif; ?>
+        </div>
+    </div>
+
+    <div
+        id="qris_box"
+        class="qris-container"
+        style="display:block;">
+
+        <p style="font-weight: bold; margin-bottom: 5px; color: #333;">
+            Silahkan Scan QRIS SagalaLada:
+        </p>
+
+        <img src="../bahan/csan-qr-a.jpg" alt="QRIS SagalaLada">
+
+        <div class="upload-bukti-wrapper">
+            <label for="bukti_pembayaran">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                Upload Bukti Pembayaran:
+            </label>
+
+            <input
+                type="file"
+                id="bukti_pembayaran"
+                name="bukti_pembayaran"
+                accept="image/*"
+                required>
+
+            <small style="color: #c62828; display: block; margin-top: 5px; font-size: 11px;">
+                * Format gambar (.jpg, .jpeg, .png) wajib dilampirkan
+            </small>
+        </div>
+    </div>
+
+<?php else: ?>
+        <!-- KODE DINE IN LAMA -->
+        <div class="payment-options">
+
+            <div class="payment-option">
+                <input type="radio"
+                       id="bayar_kasir"
+                       name="metode_pembayaran"
+                       value="Kasir"
+                       checked
+                       required>
+
+                <label for="bayar_kasir" class="payment-label">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    <span>Bayar di Kasir</span>
+                </label>
+            </div>
+
+            <div class="payment-option">
+                <input type="radio"
+                       id="bayar_qris"
+                       name="metode_pembayaran"
+                       value="QRIS"
+                       required>
+
+                <label for="bayar_qris" class="payment-label">
+                    <i class="fa-solid fa-qrcode"></i>
+                    <span>QRIS</span>
+                </label>
+            </div>
 
         </div>
 
-        <div class="payment-box">
-            <div class="title">
-                <i class="fa-solid fa-credit-card"></i>
-                <span>Metode Pembayaran</span>
-            </div>
-            
-            <div class="payment-options">
-                <div class="payment-option">
-                    <input type="radio" id="bayar_kasir" name="metode_pembayaran" value="Kasir" checked required>
-                    <label for="bayar_kasir" class="payment-label">
-                        <i class="fa-solid fa-money-bill-wave"></i>
-                        <span>Bayar di Kasir</span>
-                    </label>
-                </div>
-
-                <div class="payment-option">
-                    <input type="radio" id="bayar_qris" name="metode_pembayaran" value="QRIS" required>
-                    <label for="bayar_qris" class="payment-label">
-                        <i class="fa-solid fa-qrcode"></i>
-                        <span>QRIS</span>
-                    </label>
-                </div>
-            </div>
-
-            <div id="qris_box" class="qris-container">
+        <div id="qris_box" class="qris-container">
                 <p style="font-weight: bold; margin-bottom: 5px; color: #333;">Silahkan Scan QRIS SagalaLada:</p>
                 <img src="../bahan/csan-qr-a.jpg" alt="QRIS SagalaLada">
                 
@@ -395,8 +476,10 @@ $jenis_pesanan = isset($_SESSION['jenis_pesanan']) ? $_SESSION['jenis_pesanan'] 
                     <small style="color: #c62828; display: block; margin-top: 5px; font-size: 11px;">* Format gambar (.jpg, .jpeg, .png) wajib dilampirkan jika memilih QRIS</small>
                 </div>
             </div>
-        </div>
 
+    <?php endif; ?>
+
+</div>
     </div>
 
     <div class="checkout-right">
@@ -469,21 +552,45 @@ document.addEventListener("DOMContentLoaded", function() {
     const inputBukti = document.getElementById('bukti_pembayaran');
 
     function toggleQrisBox() {
-        const selectedPayment = document.querySelector('input[name="metode_pembayaran"]:checked');
-        if (selectedPayment && selectedPayment.value === 'QRIS') {
-            qrisBox.style.display = 'block';
+
+    if (jenisPesanan === "delivery") {
+        qrisBox.style.display = 'block';
+
+        if (inputBukti) {
             inputBukti.setAttribute('required', 'required');
-        } else {
-            qrisBox.style.display = 'none';  
+        }
+
+        return;
+    }
+
+    const selectedPayment = document.querySelector(
+        'input[name="metode_pembayaran"]:checked'
+    );
+
+    if (selectedPayment && selectedPayment.value === 'QRIS') {
+
+        qrisBox.style.display = 'block';
+
+        if (inputBukti) {
+            inputBukti.setAttribute('required', 'required');
+        }
+
+    } else {
+
+        qrisBox.style.display = 'none';
+
+        if (inputBukti) {
             inputBukti.removeAttribute('required');
             inputBukti.value = "";
         }
     }
+}
 
+    if (paymentRadios.length > 0) {
     paymentRadios.forEach(radio => {
         radio.addEventListener('change', toggleQrisBox);
     });
-
+}
     toggleQrisBox();
 
     // LOGIK PETA & HITUNG ONGKIR OTOMATIS
@@ -563,6 +670,46 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     }
+});
+
+// =========================
+// VALIDASI SEBELUM CHECKOUT
+// =========================
+document.querySelector("form").addEventListener("submit", function(e) {
+
+    const metode = document.querySelector('input[name="metode_pembayaran"]:checked').value;
+    const jenis = jenisPesanan;
+
+    // QRIS wajib upload bukti
+    if (metode === "QRIS") {
+        const file = document.getElementById("bukti_pembayaran").files.length;
+
+        if (file === 0) {
+            e.preventDefault();
+            alert("Upload bukti pembayaran QRIS wajib!");
+            return;
+        }
+    }
+
+    // DELIVERY wajib alamat + GPS
+    if (jenis === "delivery") {
+        const alamat = document.querySelector("textarea[name='alamat']").value;
+        const lat = document.getElementById("latitude").value;
+        const lng = document.getElementById("longitude").value;
+
+        if (!alamat) {
+            e.preventDefault();
+            alert("Alamat wajib diisi!");
+            return;
+        }
+
+        if (!lat || !lng) {
+            e.preventDefault();
+            alert("Silakan tentukan lokasi di peta atau GPS!");
+            return;
+        }
+    }
+
 });
 </script>
 

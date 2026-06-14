@@ -214,21 +214,23 @@ body {
 /* =========================
    CONTENT BOX
 ========================= */
-
 .chart-box {
   margin-top: 25px;
-
   background: #fff;
-
   border-radius: 18px;
-
   padding: 25px;
-
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
 
-  opacity: 0;
+  height: 350px; /* FIXED HEIGHT */
+  position: relative; /* WAJIB */
+  opacity: 1; /* JANGAN 0 */
 }
 
+#salesChart {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
 .table-box {
   margin-top: 25px;
   background: white;
@@ -257,10 +259,6 @@ body {
   font-weight: 600;
 
   box-shadow: 0 5px 15px rgba(139, 30, 45, 0.25);
-}
-
-.chart-box {
-  height: 320px;
 }
 
 /* =========================

@@ -8,6 +8,7 @@ $qPesananHariIni = mysqli_query(
   "SELECT COUNT(*) AS total 
   FROM pesanan
   WHERE DATE(tanggal) = CURDATE()
+AND status_pesanan = 'selesai'
   ");
 
   $pesananHariIni = mysqli_fetch_assoc($qPesananHariIni)['total'];
@@ -19,7 +20,7 @@ $qPendapatanHariIni = mysqli_query(
   "SELECT COALESCE(SUM(total_harga),0) AS total
   FROM pesanan
   WHERE DATE(tanggal) = CURDATE()
-  AND status_pesanan IN ('dibayar')"
+  AND status_pesanan IN ('selesai')"
 );
 
 if (!$qPendapatanHariIni) {
@@ -33,7 +34,7 @@ $qPendapatanTotal = mysqli_query(
   $conn,
   "SELECT COALESCE(SUM(total_harga),0) AS total 
   FROM pesanan 
-  WHERE status_pesanan IN ('dibayar')"
+  WHERE status_pesanan IN ('selesai')"
 );
 
 $pendapatanTotal = mysqli_fetch_assoc($qPendapatanTotal)['total'];
@@ -48,6 +49,24 @@ $qPesananTerbaru = mysqli_query(
   ORDER BY p.id_pesanan DESC
   LIMIT 3"
 );
+
+// QUERY GRAFIK BULANAN
+$qChart = mysqli_query($conn,
+"SELECT 
+    MONTH(tanggal) AS bulan,
+    SUM(total_harga) AS total
+FROM pesanan
+WHERE status_pesanan = 'selesai'
+GROUP BY MONTH(tanggal)
+ORDER BY MONTH(tanggal)
+");
+$bulanLabel = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+$dataBulan = array_fill(0, 12, 0);
+
+while ($row = mysqli_fetch_assoc($qChart)) {
+    $bulanIndex = (int)$row['bulan'] - 1;
+    $dataBulan[$bulanIndex] = (int)$row['total'];
+}
 ?>
 
 
@@ -167,7 +186,7 @@ $qPesananTerbaru = mysqli_query(
 
       <!-- GRAFIK -->
       <section class="chart-box">
-        <div class="section-title">Grafik Penjualan Bulanan</div>
+        <div class="section-title">Grafik Pendapatan Bulanan</div>
 
         <canvas id="salesChart"></canvas>
       </section>
@@ -180,8 +199,8 @@ $qPesananTerbaru = mysqli_query(
           <thead>
             <tr>
                 <th>Pelanggan</th>
-                <th>Detail Item</th>
-                <th>Total Bayar</th>
+                <th>Tipe</th>
+                <th>Metode</th>
                 <th>Status</th>
             </tr>
           </thead>
@@ -277,7 +296,76 @@ $qPesananTerbaru = mysqli_query(
 
     <script src="script.js"></script>
     <script>
-      feather.replace();
-    </script>
+feather.replace();
+
+const ctx = document.getElementById('salesChart').getContext('2d');
+
+const dataBulan = <?= json_encode($dataBulan) ?>;
+
+// pastikan tetap render walaupun semua 0
+const formatRp = (v) => {
+    if (v >= 1000000) return (v / 1000000) + ' jt';
+    if (v >= 1000) return (v / 1000) + ' rb';
+    return v;
+};
+
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: <?= json_encode($bulanLabel) ?>,
+        datasets: [{
+            data: dataBulan,
+            borderColor: '#7D0A0A',
+            backgroundColor: 'rgba(125,10,10,0.15)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 5
+        }]
+    },
+
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+
+        plugins: {
+            legend: { display: false }
+        },
+
+        scales: {
+      y: {
+    beginAtZero: true,
+    suggestedMax: 15000000,
+
+    ticks: {
+        stepSize: 2000000,
+
+        callback: function(value) {
+            if (value === 0) return '0';
+
+            if (value >= 1000000) {
+                return (value / 1000000) + ' jt';
+            }
+
+            if (value >= 1000) {
+                return (value / 1000) + ' rb';
+            }
+
+            return value;
+        }
+    },
+
+    grid: {
+        color: "rgba(0,0,0,0.05)"
+    }
+},
+
+            x: {
+                grid: { display: false }
+            }
+        }
+    }
+});
+</script>
   </body>
 </html>

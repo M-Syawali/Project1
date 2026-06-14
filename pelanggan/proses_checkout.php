@@ -2,6 +2,8 @@
 session_start();
 include "koneksi.php";
 
+
+
 if (empty($_SESSION['keranjang'])) {
     echo "<script>alert('Keranjang kosong!'); window.location='keranjang.php';</script>";
     exit;
@@ -15,9 +17,19 @@ date_default_timezone_set('Asia/Jakarta');
 if (!isset($_POST['nama']) || !isset($_POST['nomor_pesanan']) || !isset($_POST['metode_pembayaran'])) {
     die("Data tidak lengkap");
 }
+$nama_pelanggan = mysqli_real_escape_string($conn, $_POST['nama']);
+$nomor_pesanan  = mysqli_real_escape_string($conn, $_POST['nomor_pesanan']);
 
-$nama_pelanggan    = mysqli_real_escape_string($conn, $_POST['nama']);
-$nomor_pesanan     = mysqli_real_escape_string($conn, $_POST['nomor_pesanan']);
+$jenis_pesanan  = isset($_POST['jenis_pesanan']) 
+    ? mysqli_real_escape_string($conn, $_POST['jenis_pesanan']) 
+    : 'dinein';
+
+$no_hp = null;
+
+if ($jenis_pesanan === 'delivery' && isset($_POST['no_hp'])) {
+    $no_hp = mysqli_real_escape_string($conn, $_POST['no_hp']);
+}
+
 $metode_pembayaran = mysqli_real_escape_string($conn, $_POST['metode_pembayaran']);
 $jenis_pesanan     = isset($_POST['jenis_pesanan']) ? mysqli_real_escape_string($conn, $_POST['jenis_pesanan']) : 'dinein';
 
@@ -26,6 +38,23 @@ $ongkir    = isset($_POST['ongkir']) ? (int)$_POST['ongkir'] : 0;
 $alamat    = isset($_POST['alamat']) ? mysqli_real_escape_string($conn, $_POST['alamat']) : '';
 $latitude  = isset($_POST['latitude']) ? mysqli_real_escape_string($conn, $_POST['latitude']) : '';
 $longitude = isset($_POST['longitude']) ? mysqli_real_escape_string($conn, $_POST['longitude']) : '';
+// =========================
+// VALIDASI DELIVERY WAJIB
+// =========================
+if ($jenis_pesanan === 'delivery') {
+
+    if (empty($alamat)) {
+        die("Alamat wajib diisi untuk delivery");
+    }
+
+    if (empty($latitude) || empty($longitude)) {
+        die("Lokasi GPS tidak valid");
+    }
+
+    if ($ongkir < 0) {
+        die("Ongkir tidak valid");
+    }
+}
 
 $tanggal = date("Y-m-d H:i:s");
 $total = 0;
@@ -69,6 +98,11 @@ if ($metode_pembayaran === 'QRIS') {
 ========================= */
 $no_meja = $_SESSION['no_meja'] ?? null;
 
+
+
+
+$ongkir = max(0, $ongkir);
+$total_akhir = $total + $ongkir;
 /* =========================
    TRANSAKSI START
 ========================= */
@@ -81,12 +115,27 @@ try {
     ========================= */
     $cek = mysqli_query($conn, "SELECT id_pelanggan FROM pelanggan WHERE nama_pelanggan='$nama_pelanggan'");
 
-    if (mysqli_num_rows($cek) > 0) {
-        $id_pelanggan = mysqli_fetch_assoc($cek)['id_pelanggan'];
-    } else {
-        mysqli_query($conn, "INSERT INTO pelanggan (nama_pelanggan) VALUES ('$nama_pelanggan')");
-        $id_pelanggan = mysqli_insert_id($conn);
+if (mysqli_num_rows($cek) > 0) {
+
+    $id_pelanggan = mysqli_fetch_assoc($cek)['id_pelanggan'];
+
+    if ($jenis_pesanan === 'delivery' && $no_hp !== null) { 
+        mysqli_query($conn, "
+            UPDATE pelanggan
+            SET no_hp='$no_hp'
+            WHERE id_pelanggan='$id_pelanggan'
+        ");
     }
+
+} else {
+
+    mysqli_query($conn, "
+        INSERT INTO pelanggan (nama_pelanggan, no_hp)
+        VALUES ('$nama_pelanggan', " . ($no_hp ? "'$no_hp'" : "NULL") . ")
+    ");
+
+    $id_pelanggan = mysqli_insert_id($conn);
+}
 
     /* =========================
        HITUNG TOTAL MENU
@@ -104,18 +153,20 @@ try {
        INSERT PESANAN
     ========================= */
     // Di sini kolom-kolom baru (ongkir, alamat, latitude, longitude, jenis_pesanan) disave ke database
-    if ($no_meja && $jenis_pesanan !== 'delivery') {
-        $sql = "INSERT INTO pesanan 
-        (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan, id_meja, metode_pembayaran, bukti_pembayaran, jenis_pesanan, ongkir, alamat, latitude, longitude)
-        VALUES 
-        ('$nomor_pesanan', '$tanggal', '$total_akhir', 'pending', '$id_pelanggan', '$no_meja', '$metode_pembayaran', '$nama_file_bukti', '$jenis_pesanan', '$ongkir', '$alamat', '$latitude', '$longitude')";
-    } else {
-        $sql = "INSERT INTO pesanan 
-        (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan, metode_pembayaran, bukti_pembayaran, jenis_pesanan, ongkir, alamat, latitude, longitude)
-        VALUES 
-        ('$nomor_pesanan', '$tanggal', '$total_akhir', 'pending', '$id_pelanggan', '$metode_pembayaran', '$nama_file_bukti', '$jenis_pesanan', '$ongkir', '$alamat', '$latitude', '$longitude')";
-    }
+  if ($no_meja && $jenis_pesanan !== 'delivery') {
 
+    $sql = "INSERT INTO pesanan 
+    (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan, id_meja, metode_pembayaran, bukti_pembayaran, jenis_pesanan)
+    VALUES 
+    ('$nomor_pesanan', '$tanggal', '$total_akhir', 'pending', '$id_pelanggan', '$no_meja', '$metode_pembayaran', '$nama_file_bukti', '$jenis_pesanan')";
+
+} else {
+
+    $sql = "INSERT INTO pesanan 
+    (nomor_pesanan, tanggal, total_harga, status_pesanan, id_pelanggan, metode_pembayaran, bukti_pembayaran, jenis_pesanan, ongkir, alamat, latitude, longitude)
+    VALUES 
+    ('$nomor_pesanan', '$tanggal', '$total_akhir', 'pending', '$id_pelanggan', '$metode_pembayaran', '$nama_file_bukti', '$jenis_pesanan', '$ongkir', '$alamat', '$latitude', '$longitude')";
+}
     mysqli_query($conn, $sql);
 
     $id_pesanan = mysqli_insert_id($conn);
