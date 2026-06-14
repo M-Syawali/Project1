@@ -347,11 +347,7 @@ include "koneksi.php";
             height: 16px;
         }
         .btn-status:hover { opacity: 0.8; }
-        .btn-batal { background: #dc3545; }
-        .btn-proses { background: #ffc107; color: black !important; }
-        .btn-selesai { background: #28a745; }
-        .btn-bayar { background: #007bff; }
-        .btn-bukti { background: #6b7280; color: white !important; cursor: pointer; border: none; }
+        
         
         .btn-maps { 
             background: #ea4335; 
@@ -400,99 +396,113 @@ include "koneksi.php";
 }
 
 /* DETAIL (abu kebiruan soft) */
+/* ICON */
+
+/* =========================
+   DETAIL (slate / abu modern)
+========================= */
+/* DETAIL (neutral / slate) */
 .btn-detail {
     color: #334155;
-    background: rgba(51, 65, 85, 0.10);
-    border-color: rgba(51, 65, 85, 0.2);
+    background-color: #eef2f7;
+    border: 1px solid #d6dee8;
+    font-weight: 600;
 }
 
 .btn-detail:hover {
-    background: rgba(51, 65, 85, 0.18);
+    background-color: #e2e8f0;
 }
 
-/* VERIFIKASI QRIS (orange soft) */
+/* BUKTI / QRIS (orange soft premium) */
 .btn-bukti {
-    color: #f97316;
-    background: rgba(249, 115, 22, 0.12);
-    border-color: rgba(249, 115, 22, 0.25);
+    color: #d35400;
+    background-color: #fff1e6;
+    border: 1px solid #ffd2b3;
+    font-weight: 600;
 }
 
 .btn-bukti:hover {
-    background: rgba(249, 115, 22, 0.2);
+    background-color: #ffe1cc;
 }
 
-/* TERIMA PEMBAYARAN (blue soft) */
+/* BAYAR (blue trust) */
 .btn-bayar {
-    color: #2563eb;
-    background: rgba(37, 99, 235, 0.12);
-    border-color: rgba(37, 99, 235, 0.25);
+    color: #1e40af;
+    background-color: #e8f0ff;
+    border: 1px solid #b6ccff;
+    font-weight: 600;
 }
 
 .btn-bayar:hover {
-    background: rgba(37, 99, 235, 0.2);
+    background-color: #d6e4ff;
 }
 
-/* PROSES (ungu soft) */
+/* PROSES (violet workflow) */
 .btn-proses {
-    color: #7c3aed;
-    background: rgba(124, 58, 237, 0.12);
-    border-color: rgba(124, 58, 237, 0.25);
+    color: #5b21b6;
+    background-color: #f1e9ff;
+    border: 1px solid #d8c2ff;
+    font-weight: 600;
 }
 
 .btn-proses:hover {
-    background: rgba(124, 58, 237, 0.2);
+    background-color: #e6dbff;
 }
 
-/* SELESAI (hijau soft) */
+/* SELESAI (green success) */
 .btn-selesai {
-    color: #16a34a;
-    background: rgba(22, 163, 74, 0.12);
-    border-color: rgba(22, 163, 74, 0.25);
+    color: #166534;
+    background-color: #e6f7ed;
+    border: 1px solid #a7e3bf;
+    font-weight: 600;
 }
 
 .btn-selesai:hover {
-    background: rgba(22, 163, 74, 0.2);
-}
-
-/* ICON */
-.aksi-group svg {
-    width: 14px;
-    height: 14px;
-}
+    background-color: #d1f2df;
+}/* =========================
+   BADGE DELIVERY
+========================= */
 .badge-delivery {
-            background: #e0f2fe;
-            color: #0369a1;
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 13px;
-            display: inline-block;
-        }
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 13px;
+    display: inline-block;
+}
 
-        .badge-metode {
-            display: inline-block;
-            padding: 5px 10px;
-            background: #f3f4f6;
-            color: #1f2937;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        .badge-qris {
-            background: #e0f2fe;
-            color: #0369a1;
-        }
+/* =========================
+   BADGE METODE
+========================= */
+.badge-metode {
+    display: inline-block;
+    padding: 5px 10px;
+    background: #f3f4f6;
+    color: #1f2937;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
 
-        .alamat-delivery-box {
-            font-size: 12px;
-            color: #4b5563;
-            max-width: 200px;
-            word-wrap: break-word;
-            margin-top: 4px;
-            line-height: 1.4;
-        }
+/* QRIS badge */
+.badge-qris {
+    background: #e0f2fe;
+    color: #0369a1;
+}
 
+/* =========================
+   ALAMAT DELIVERY
+========================= */
+.alamat-delivery-box {
+    font-size: 12px;
+    color: #4b5563;
+    max-width: 200px;
+    word-wrap: break-word;
+    margin-top: 4px;
+    line-height: 1.4;
+}
         .table-footer{
             display:flex;
             justify-content:space-between;
@@ -501,6 +511,11 @@ include "koneksi.php";
             font-size:14px;
             color:#6b7280;
         }
+        .page-btn.disabled{
+    pointer-events:none;
+    opacity:.4;
+    cursor:not-allowed;
+}
 
         .pagination{
             display:flex;
@@ -1069,10 +1084,12 @@ $count_batal     = getCount($conn, 'dibatalkan');
         >
 
         <select id="kategoriSelect">
-            <option value="">Semua Status</option>
-            <option value="diproses">Diproses</option>
-            <option value="selesai">Selesai</option>
-        </select>
+    <option value="">Semua Status</option>
+    <option value="menunggu pembayaran">Menunggu Pembayaran</option>
+    <option value="siap diproses">Siap Diproses</option>
+    <option value="sedang diproses">Sedang Diproses</option>
+    
+</select>
     </div>
 </div>
 
@@ -1090,10 +1107,44 @@ $count_batal     = getCount($conn, 'dibatalkan');
             </thead>
                 <tbody>
                 <?php
-                $sql = "SELECT p.*, pl.nama_pelanggan
-                        FROM pesanan p
-                        JOIN pelanggan pl ON p.id_pelanggan = pl.id_pelanggan
-                        WHERE LOWER(TRIM(p.status_pesanan)) IN ('pending', 'dibayar', 'diproses')";
+               $perPage = 5;
+
+$page = isset($_GET['page'])
+    ? (int)$_GET['page']
+    : 1;
+
+$totalData = mysqli_fetch_assoc(
+    mysqli_query(
+        $conn,
+        "SELECT COUNT(*) AS total
+         FROM pesanan
+         WHERE LOWER(TRIM(status_pesanan))
+         IN ('pending','dibayar','diproses')"
+    )
+)['total'];
+
+$totalPage = max(1, ceil($totalData / $perPage));
+
+if($page < 1) $page = 1;
+if($page > $totalPage) $page = $totalPage;
+
+$offset = ($page - 1) * $perPage;
+
+$startData = ($totalData == 0)
+    ? 0
+    : $offset + 1;
+
+$endData = min(
+    $offset + $perPage,
+    $totalData
+);
+
+$sql = "SELECT p.*, pl.nama_pelanggan
+        FROM pesanan p
+        JOIN pelanggan pl
+            ON p.id_pelanggan = pl.id_pelanggan
+        WHERE LOWER(TRIM(p.status_pesanan))
+        IN ('pending','dibayar','diproses')";
                 
                 $search = $_GET['search'] ?? '';
                 $status = $_GET['status'] ?? '';
@@ -1107,7 +1158,11 @@ $count_batal     = getCount($conn, 'dibatalkan');
                     $sql .= " AND (p.nomor_pesanan LIKE '%$search%' OR pl.nama_pelanggan LIKE '%$search%')";
                 }
 
-                $sql .= " ORDER BY p.id_pesanan DESC";
+                $sql .= "
+    ORDER BY p.id_pesanan DESC
+    LIMIT $perPage
+    OFFSET $offset
+";
                 $query = mysqli_query($conn, $sql);
             
             
@@ -1310,13 +1365,33 @@ if (mysqli_num_rows($query) > 0) {
     </div>
 
     <div class="table-footer">
-        <div>Menampilkan seluruh data pesanan aktif</div>
-        <div class="pagination">
-            <a href="#" class="page-btn"><i data-feather="chevron-left"></i></a>
-            <a href="#" class="page-number active">1</a>
-            <a href="#" class="page-btn"><i data-feather="chevron-right"></i></a>
-        </div>
+
+    <div>
+        Menampilkan <?= $startData ?>
+        - <?= $endData ?>
+        dari <?= $totalData ?> pesanan
     </div>
+
+    <div class="pagination">
+
+        <a
+            href="?page=<?= $page - 1 ?>"
+            class="page-btn <?= ($page <= 1) ? 'disabled' : '' ?>">
+            <i data-feather="chevron-left"></i>
+        </a>
+
+        <span class="page-number active">
+            <?= $page ?>
+        </span>
+
+        <a
+            href="?page=<?= $page + 1 ?>"
+            class="page-btn <?= ($page >= $totalPage) ? 'disabled' : '' ?>">
+            <i data-feather="chevron-right"></i>
+        </a>
+
+    </div>
+
 </div>
 
 
@@ -1455,9 +1530,11 @@ if (mysqli_num_rows($query) > 0) {
                 <div id="map-detail"></div>
             </div>
 
-            <a target="_blank" id="detail_maps" class="btn-maps">
-                Lihat Maps
-            </a>
+            <a href="javascript:void(0)"
+   id="detail_maps"
+   class="btn-maps">
+   Lihat di Google Maps
+</a>
 
         </div>
 
@@ -1837,7 +1914,7 @@ items.forEach(item => {
     if (item.pedas && item.pedas !== "Original") {
         infoTambahan += `
             <div class="item-pedas">
-                🌶 Level Pedas: ${item.pedas}
+                 ${item.pedas}
             </div>
         `;
     }
@@ -1845,7 +1922,7 @@ items.forEach(item => {
     if (item.catatan && item.catatan.trim() !== "") {
         infoTambahan += `
             <div class="item-catatan">
-                📝 Catatan: ${item.catatan}
+                Catatan: ${item.catatan}
             </div>
         `;
     }
@@ -1902,6 +1979,18 @@ items.forEach(item => {
 
         let lat = p.latitude;
 let lng = p.longitude;
+document.getElementById("detail_maps").onclick = function () {
+
+    if (!lat || !lng) {
+        alert("Lokasi tidak tersedia");
+        return;
+    }
+
+    window.open(
+        `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+        "_blank"
+    );
+};
 
 if (lat && lng) {
 
@@ -2118,7 +2207,7 @@ function cariMenu() {
 
     rows.forEach(row => {
         let teksBaris = row.innerText.toLowerCase();
-        let statusBaris = row.cells[3].innerText.trim().toLowerCase();
+        let statusBaris = row.cells[4].innerText.trim().toLowerCase();
 
         let cocokSearch = teksBaris.includes(keyword);
         let cocokStatus = (status === "" || statusBaris === status);
