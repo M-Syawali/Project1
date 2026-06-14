@@ -302,6 +302,22 @@ $result = mysqli_query($conn, $query);
         width: 100%;
         border-collapse: collapse;
     }
+        /* Garis kiri tabel */
+    th:first-child,
+    td:first-child{
+        border-left:1px solid #e5e7eb;
+    }
+
+    /* Hilangkan garis kanan paling ujung */
+    th:last-child,
+    td:last-child{
+        border-right:none;
+    }
+
+    /* Garis antara header dan isi */
+    thead tr{
+        border-bottom:1px solid #d1d5db;
+    }   
 
     tbody tr{
         transition:.2s;
@@ -312,20 +328,24 @@ $result = mysqli_query($conn, $query);
     }
 
     th{
-        text-align:center;
-        font-size:15px;
-        letter-spacing:.3px;
-        background:#8b1e2d;
-        color:white;
-        padding:20px;
-        font-weight:600;
+    text-align:center;
+    font-size:15px;
+    letter-spacing:.3px;
+    background:#8b1e2d;
+    color:white;
+    padding:20px;
+    font-weight:600;
+
+    border-right:1px solid rgba(255,255,255,.15);
     }
 
     td {
-        padding: 18px 16px;
-        font-size: 14px;
-        border-bottom: 1px solid #e5e7eb;
-        vertical-align: middle;
+    padding: 18px 16px;
+    font-size: 14px;
+    vertical-align: middle;
+
+    border-bottom: 1px solid #e5e7eb;
+    border-right: 1px solid #e5e7eb;
     }
 
     td:nth-child(1),
